@@ -1,0 +1,121 @@
+record_id,evidence_status,actual_adoption_pct,actual_quality_pct,stored_decision,production_decision,flag,explanation
+SYN001,OBSERVED,43,95,STOP,STOP,,
+SYN002,MIXED,79,80,PROCEED,PROCEED,,
+SYN003,ASSUMPTION,59,100,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN004,ASSUMPTION,87,100,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN005,MIXED,79,81,STOP,STOP,,
+SYN006,ASSUMPTION,92,92,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN007,ASSUMPTION,74,88,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN008,MIXED,55,76,STOP,STOP,,
+SYN009,OBSERVED,86,98,PROCEED,STOP,,
+SYN010,MIXED,80,70,STOP,STOP,,
+SYN011,MIXED,80,94,PROCEED,PROCEED,,
+SYN012,MIXED,68,81,PROCEED,STOP,,
+SYN013,MIXED,62,92,PROCEED,PROCEED,,
+SYN014,OBSERVED,53,72,STOP,STOP,,
+SYN015,ASSUMPTION,54,75,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN016,OBSERVED,44,81,STOP,STOP,,
+SYN017,MIXED,78,98,PROCEED,PROCEED,,
+SYN018,ASSUMPTION,70,100,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN019,OBSERVED,50,83,PROCEED,PROCEED,,
+SYN020,ASSUMPTION,37,100,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN021,ASSUMPTION,83,74,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN022,ASSUMPTION,67,72,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN023,MIXED,80,67,STOP,STOP,,
+SYN024,MIXED,65,80,STOP,STOP,,
+SYN025,OBSERVED,73,74,STOP,STOP,,
+SYN026,MIXED,36,87,REVISE,REVISE,,
+SYN027,OBSERVED,72,80,PROCEED,STOP,,
+SYN028,MIXED,70,86,PROCEED,STOP,,
+SYN029,ASSUMPTION,52,83,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN030,ASSUMPTION,77,93,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN031,MIXED,68,78,STOP,STOP,,
+SYN032,ASSUMPTION,75,94,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN033,ASSUMPTION,80,90,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN034,MIXED,88,82,STOP,STOP,,
+SYN035,ASSUMPTION,67,100,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN036,MIXED,78,87,PROCEED,STOP,,
+SYN037,OBSERVED,83,73,STOP,STOP,,
+SYN038,ASSUMPTION,100,78,REVISE,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN039,ASSUMPTION,81,83,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN040,ASSUMPTION,97,74,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN041,MIXED,70,86,PROCEED,PROCEED,,
+SYN042,MIXED,100,87,PROCEED,PROCEED,,
+SYN043,OBSERVED,100,95,PROCEED,PROCEED,,
+SYN044,OBSERVED,71,79,PROCEED,PROCEED,,
+SYN045,ASSUMPTION,50,88,REVISE,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN046,ASSUMPTION,79,100,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN047,ASSUMPTION,89,69,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN048,OBSERVED,43,100,REVISE,REVISE,,
+SYN049,MIXED,92,97,PROCEED,STOP,,
+SYN050,MIXED,63,98,PROCEED,STOP,,
+SYN051,ASSUMPTION,85,77,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN052,ASSUMPTION,68,83,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN053,ASSUMPTION,73,96,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN054,ASSUMPTION,61,71,STOP,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN055,OBSERVED,80,76,STOP,STOP,,
+SYN056,MIXED,86,89,PROCEED,STOP,,
+SYN057,MIXED,63,71,STOP,STOP,,
+SYN058,ASSUMPTION,77,86,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN059,OBSERVED,44,82,REVISE,REVISE,,
+SYN060,ASSUMPTION,72,84,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN061,OBSERVED,85,84,PROCEED,PROCEED,,
+SYN062,ASSUMPTION,81,88,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN063,ASSUMPTION,72,100,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN064,ASSUMPTION,52,90,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN065,MIXED,53,77,STOP,STOP,,
+SYN066,MIXED,56,100,REVISE,REVISE,,
+SYN067,MIXED,84,87,PROCEED,PROCEED,,
+SYN068,OBSERVED,74,79,STOP,STOP,,
+SYN069,MIXED,84,87,PROCEED,STOP,,
+SYN070,OBSERVED,61,82,STOP,STOP,,
+SYN071,MIXED,50,83,STOP,STOP,,
+SYN072,OBSERVED,65,77,STOP,STOP,,
+SYN073,OBSERVED,71,73,STOP,STOP,,
+SYN074,MIXED,44,78,STOP,STOP,,
+SYN075,MIXED,50,75,STOP,STOP,,
+SYN076,OBSERVED,78,72,STOP,STOP,,
+SYN077,MIXED,74,92,PROCEED,PROCEED,,
+SYN078,ASSUMPTION,83,92,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN079,MIXED,83,78,PROCEED,PROCEED,,
+SYN080,ASSUMPTION,52,90,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN081,OBSERVED,74,78,STOP,STOP,,
+SYN082,OBSERVED,65,76,STOP,STOP,,
+SYN083,MIXED,70,78,PROCEED,STOP,,
+SYN084,MIXED,88,81,PROCEED,STOP,,
+SYN085,OBSERVED,46,96,REVISE,STOP,,
+SYN086,OBSERVED,82,99,PROCEED,STOP,,
+SYN087,MIXED,53,86,PROCEED,PROCEED,,
+SYN088,OBSERVED,73,100,PROCEED,STOP,,
+SYN089,OBSERVED,89,77,STOP,STOP,,
+SYN090,MIXED,73,79,PROCEED,STOP,,
+SYN091,ASSUMPTION,83,88,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN092,OBSERVED,46,100,STOP,STOP,,
+SYN093,ASSUMPTION,51,89,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN094,ASSUMPTION,90,89,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN095,ASSUMPTION,73,91,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN096,MIXED,69,82,REVISE,STOP,,
+SYN097,OBSERVED,60,88,PROCEED,STOP,,
+SYN098,ASSUMPTION,55,90,REVISE,REVISE,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN099,ASSUMPTION,88,81,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN100,ASSUMPTION,73,86,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN101,OBSERVED,83,80,STOP,STOP,,
+SYN102,ASSUMPTION,73,81,PROCEED,PROCEED,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN103,OBSERVED,73,83,PROCEED,STOP,,
+SYN104,OBSERVED,87,85,PROCEED,PROCEED,,
+SYN105,OBSERVED,63,98,PROCEED,STOP,,
+SYN106,ASSUMPTION,79,86,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN107,OBSERVED,55,74,STOP,STOP,,
+SYN108,MIXED,75,82,STOP,STOP,,
+SYN109,ASSUMPTION,64,98,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN110,OBSERVED,74,85,PROCEED,PROCEED,,
+SYN111,ASSUMPTION,55,94,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN112,ASSUMPTION,70,89,PROCEED,STOP,EVIDENCE_LABEL_INCONSISTENCY,Labelled ASSUMPTION but carries actual (observed) adoption and quality values; the row was not changed.
+SYN113,OBSERVED,38,74,STOP,STOP,,
+SYN114,MIXED,88,88,PROCEED,PROCEED,,
+SYN115,OBSERVED,71,100,PROCEED,PROCEED,,
+SYN116,MIXED,37,93,REVISE,STOP,,
+SYN117,MIXED,70,71,STOP,STOP,,
+SYN118,MIXED,56,96,REVISE,REVISE,,
+SYN119,MIXED,76,98,PROCEED,PROCEED,,
+SYN120,OBSERVED,82,85,PROCEED,STOP,,

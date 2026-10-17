@@ -1,0 +1,121 @@
+record_id,deterministic_decision,adoption_success_probability,adoption_risk_band,actual_adoption_success,combination,interpretation
+SYN001,STOP,0.0809,HIGH,0,STOP + HIGH,Advisory only; the rule decision stands.
+SYN002,PROCEED,0.9997,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN003,STOP,0.3828,HIGH,1,STOP + HIGH,Advisory only; the rule decision stands.
+SYN004,STOP,0.9991,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN005,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN006,STOP,0.9896,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN007,STOP,0.9996,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN008,STOP,0.916,LOW,0,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN009,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN010,STOP,0.9996,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN011,PROCEED,0.9969,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN012,STOP,0.9995,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN013,PROCEED,0.9995,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN014,STOP,0.9948,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN015,STOP,0.5552,MEDIUM,1,STOP + MEDIUM,Advisory only; the rule decision stands.
+SYN016,STOP,0.995,LOW,0,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN017,PROCEED,0.9929,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN018,PROCEED,0.9997,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN019,PROCEED,0.9992,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN020,STOP,0.4178,HIGH,0,STOP + HIGH,Advisory only; the rule decision stands.
+SYN021,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN022,STOP,0.9994,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN023,STOP,0.2517,HIGH,1,STOP + HIGH,Advisory only; the rule decision stands.
+SYN024,STOP,0.5614,MEDIUM,1,STOP + MEDIUM,Advisory only; the rule decision stands.
+SYN025,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN026,REVISE,0.7007,MEDIUM,0,REVISE + MEDIUM,Advisory only; the rule decision stands.
+SYN027,STOP,0.999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN028,STOP,0.9752,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN029,STOP,0.9811,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN030,PROCEED,0.9997,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN031,STOP,0.9869,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN032,PROCEED,0.9978,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN033,STOP,0.9995,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN034,STOP,0.9969,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN035,PROCEED,0.8499,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN036,STOP,0.9998,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN037,STOP,0.9991,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN038,PROCEED,0.9963,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN039,STOP,0.9996,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN040,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN041,PROCEED,0.9919,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN042,PROCEED,0.9991,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN043,PROCEED,0.9994,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN044,PROCEED,0.6857,MEDIUM,1,PROCEED + MEDIUM,Rules permit the pilot; plan an adoption check-in before scaling.
+SYN045,STOP,0.671,MEDIUM,1,STOP + MEDIUM,Advisory only; the rule decision stands.
+SYN046,STOP,0.9994,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN047,STOP,0.9971,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN048,REVISE,0.9072,LOW,0,REVISE + LOW,Advisory only; the rule decision stands.
+SYN049,STOP,0.9998,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN050,STOP,0.8428,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN051,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN052,STOP,0.5217,MEDIUM,1,STOP + MEDIUM,Advisory only; the rule decision stands.
+SYN053,PROCEED,0.9997,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN054,STOP,0.9952,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN055,STOP,0.9989,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN056,STOP,0.9956,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN057,STOP,0.9991,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN058,STOP,0.9995,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN059,REVISE,0.8532,LOW,0,REVISE + LOW,Advisory only; the rule decision stands.
+SYN060,PROCEED,0.9996,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN061,PROCEED,0.9998,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN062,PROCEED,0.999,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN063,STOP,0.9989,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN064,STOP,0.9931,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN065,STOP,0.9993,LOW,0,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN066,REVISE,0.9836,LOW,0,REVISE + LOW,Advisory only; the rule decision stands.
+SYN067,PROCEED,0.9993,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN068,STOP,0.979,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN069,STOP,0.9981,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN070,STOP,0.9998,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN071,STOP,0.0069,HIGH,0,STOP + HIGH,Advisory only; the rule decision stands.
+SYN072,STOP,0.8333,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN073,STOP,0.9928,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN074,STOP,0.7632,LOW,0,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN075,STOP,0.0294,HIGH,0,STOP + HIGH,Advisory only; the rule decision stands.
+SYN076,STOP,0.9995,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN077,PROCEED,0.9999,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN078,PROCEED,0.9993,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN079,PROCEED,0.9991,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN080,STOP,0.7888,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN081,STOP,0.9921,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN082,STOP,0.9995,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN083,STOP,0.2431,HIGH,1,STOP + HIGH,Advisory only; the rule decision stands.
+SYN084,STOP,0.9998,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN085,STOP,0.4069,HIGH,0,STOP + HIGH,Advisory only; the rule decision stands.
+SYN086,STOP,0.9998,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN087,PROCEED,0.9983,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN088,STOP,0.9997,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN089,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN090,STOP,0.9995,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN091,STOP,0.2838,HIGH,1,STOP + HIGH,Advisory only; the rule decision stands.
+SYN092,STOP,0.9448,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN093,PROCEED,0.9975,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN094,PROCEED,0.9996,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN095,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN096,STOP,0.9986,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN097,STOP,0.9998,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN098,REVISE,0.0186,HIGH,0,REVISE + HIGH,"Consistent signals: revise the plan (adoption support, readiness) before funding."
+SYN099,PROCEED,0.9994,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN100,PROCEED,0.9997,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN101,STOP,0.9984,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN102,PROCEED,0.9998,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN103,STOP,0.8093,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN104,PROCEED,0.9989,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN105,STOP,0.9403,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN106,STOP,0.6863,MEDIUM,1,STOP + MEDIUM,Advisory only; the rule decision stands.
+SYN107,STOP,0.7392,MEDIUM,0,STOP + MEDIUM,Advisory only; the rule decision stands.
+SYN108,STOP,0.9988,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN109,STOP,0.9998,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN110,PROCEED,0.9996,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN111,STOP,0.9998,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN112,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN113,STOP,0.2868,HIGH,0,STOP + HIGH,Advisory only; the rule decision stands.
+SYN114,PROCEED,0.9975,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN115,PROCEED,0.9995,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN116,STOP,0.9992,LOW,0,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN117,STOP,0.999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."
+SYN118,REVISE,0.4088,HIGH,0,REVISE + HIGH,"Consistent signals: revise the plan (adoption support, readiness) before funding."
+SYN119,PROCEED,0.9706,LOW,1,PROCEED + LOW,Advisory only; the rule decision stands.
+SYN120,STOP,0.9999,LOW,1,STOP + LOW,"Adoption looks likely, but a hard rule (quality, economics or break-even) still stops the pilot; ML cannot override it."

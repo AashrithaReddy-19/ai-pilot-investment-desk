@@ -1,0 +1,1774 @@
+{
+  "adoption": {
+    "below_breakeven_and_stop": 11,
+    "below_target_viable_and_revise": 8,
+    "below_target_viable_but_stop_from_other_rule": 3,
+    "rule_consistent": 120,
+    "states": {
+      "Above target": 98,
+      "Below economic break-even": 11,
+      "Below target but above break-even": 11
+    },
+    "total": 120
+  },
+  "audit": {
+    "file_consistency": {
+      "differences": [],
+      "summary": {
+        "csv_vs_json": {
+          "columns_only_in_csv": [],
+          "columns_only_in_json": [],
+          "common_columns": 34,
+          "differences": 0,
+          "records": [
+            120,
+            120
+          ],
+          "status": "MATCH"
+        },
+        "csv_vs_xlsx": {
+          "columns_only_in_csv": [],
+          "columns_only_in_xlsx": [],
+          "common_columns": 34,
+          "differences": 0,
+          "records": [
+            120,
+            120
+          ],
+          "status": "MATCH"
+        },
+        "json_vs_xlsx": {
+          "columns_only_in_json": [],
+          "columns_only_in_xlsx": [],
+          "common_columns": 34,
+          "differences": 0,
+          "records": [
+            120,
+            120
+          ],
+          "status": "MATCH"
+        }
+      }
+    },
+    "files": {
+      "official_fixture": {
+        "identical_to_protected_copy": true,
+        "path": "data/C23/fixture.json (delivered as fixture(3).json)",
+        "protected_copy": "data/raw/official_fixture.json",
+        "sha256": "83a42f1c0f4a607fe5bc649158dafbbea174057dc59284ebf57581a473b7faf4"
+      },
+      "synthetic_csv": {
+        "path": "data/C23/C23_complete_valid_synthetic_dataset.csv",
+        "sha256": "0c644e5f728700a4dcaf867b5dbe484ce08ebb36d2a229783dc01fb1686e0100"
+      },
+      "synthetic_json": {
+        "path": "data/C23/C23_complete_valid_synthetic_dataset.json",
+        "sha256": "0116958d0a0febb76782137b0c50c70b1f36aecf0a1257fc74392ef7f27917db"
+      },
+      "synthetic_xlsx": {
+        "note": "present",
+        "path": "data/C23/C23_complete_valid_dataset.xlsx",
+        "present": true,
+        "sha256": "18c761600a10939e9094c1e63dd5b431246ebaf6b02b488592bd4d560436e614"
+      }
+    },
+    "note": "SYNTHETIC dataset = dummy data for testing/comparison. Official fixture = reference inputs. Neither is real-world evidence.",
+    "official_fixture": {
+      "categorical_distributions": {
+        "benefit_type": {
+          "cashable assumption": 5
+        },
+        "id": {
+          "AI1": 1,
+          "AI2": 1,
+          "AI3": 1,
+          "AI4": 1,
+          "AI5": 1
+        },
+        "overlap_group": {
+          "catalog": 1,
+          "finance": 1,
+          "ops": 1,
+          "support": 2
+        },
+        "task": {
+          "Invoice field extraction": 1,
+          "Order exception triage": 1,
+          "Support reply drafting": 1,
+          "Ticket tagging": 1,
+          "Weekly catalogue review": 1
+        }
+      },
+      "column_names": [
+        "id",
+        "task",
+        "setup_cost_inr",
+        "annual_running_cost_inr",
+        "annual_benefit_inr",
+        "benefit_type",
+        "overlap_group"
+      ],
+      "columns": 7,
+      "data_types": {
+        "annual_benefit_inr": "int",
+        "annual_running_cost_inr": "int",
+        "benefit_type": "str",
+        "id": "str",
+        "overlap_group": "str",
+        "setup_cost_inr": "int",
+        "task": "str"
+      },
+      "duplicate_ids": [],
+      "duplicate_rows": 0,
+      "duplicate_rows_ignoring_id": 0,
+      "expected_first_pilot_payback_months": 20,
+      "first_5_rows": [
+        {
+          "annual_benefit_inr": 180000,
+          "annual_running_cost_inr": 60000,
+          "benefit_type": "cashable assumption",
+          "id": "AI1",
+          "overlap_group": "finance",
+          "setup_cost_inr": 200000,
+          "task": "Invoice field extraction"
+        },
+        {
+          "annual_benefit_inr": 180000,
+          "annual_running_cost_inr": 60000,
+          "benefit_type": "cashable assumption",
+          "id": "AI2",
+          "overlap_group": "ops",
+          "setup_cost_inr": 200000,
+          "task": "Order exception triage"
+        },
+        {
+          "annual_benefit_inr": 180000,
+          "annual_running_cost_inr": 60000,
+          "benefit_type": "cashable assumption",
+          "id": "AI3",
+          "overlap_group": "catalog",
+          "setup_cost_inr": 200000,
+          "task": "Weekly catalogue review"
+        },
+        {
+          "annual_benefit_inr": 180000,
+          "annual_running_cost_inr": 60000,
+          "benefit_type": "cashable assumption",
+          "id": "AI4",
+          "overlap_group": "support",
+          "setup_cost_inr": 200000,
+          "task": "Support reply drafting"
+        },
+        {
+          "annual_benefit_inr": 180000,
+          "annual_running_cost_inr": 60000,
+          "benefit_type": "cashable assumption",
+          "id": "AI5",
+          "overlap_group": "support",
+          "setup_cost_inr": 200000,
+          "task": "Ticket tagging"
+        }
+      ],
+      "metadata": {
+        "case_id": "C23",
+        "currency": "INR unless explicitly stated",
+        "data_version": "v3.2",
+        "limit": "Small teaching fixture for a bounded prototype. Market demand, willingness to pay and production performance remain unproven.",
+        "missing_values": "null means unknown, never zero",
+        "public_checks": [
+          "Pilot costing INR 2 lakh once plus INR 0.6 lakh/year with INR 1.8 lakh/year realized benefit has INR 1.2 lakh annual net benefit and 20-month simple payback, assuming steady benefit from day one.",
+          "Portfolio respects budget and prevents double-counting the same hours/revenue across pilots.",
+          "Low adoption or failed quality threshold causes an explicit revise/stop decision."
+        ],
+        "synthetic": true
+      },
+      "null_values_per_column": {},
+      "rows": 5,
+      "summary_statistics": {
+        "annual_benefit_inr": {
+          "count": 5,
+          "max": 180000,
+          "mean": 180000.0,
+          "median": 180000,
+          "min": 180000,
+          "std": 0.0
+        },
+        "annual_running_cost_inr": {
+          "count": 5,
+          "max": 60000,
+          "mean": 60000.0,
+          "median": 60000,
+          "min": 60000,
+          "std": 0.0
+        },
+        "setup_cost_inr": {
+          "count": 5,
+          "max": 200000,
+          "mean": 200000.0,
+          "median": 200000,
+          "min": 200000,
+          "std": 0.0
+        }
+      }
+    },
+    "synthetic_csv": {
+      "categorical_distributions": {
+        "benefit_type": {
+          "capacity value": 28,
+          "cashable assumption": 36,
+          "revenue assumption": 26,
+          "time freed": 30
+        },
+        "decision": {
+          "PROCEED": 67,
+          "REVISE": 11,
+          "STOP": 42
+        },
+        "decision_reason": {
+          "Adoption below economic break-even": 8,
+          "Adoption below target": 8,
+          "Meets current financial and pilot gates": 67,
+          "Quality threshold failed": 34,
+          "Readiness too low": 3
+        },
+        "department_group": {
+          "catalog": 15,
+          "finance": 15,
+          "hr": 15,
+          "it": 15,
+          "ops": 15,
+          "procurement": 15,
+          "sales": 15,
+          "support": 15
+        },
+        "evidence_status": {
+          "ASSUMPTION": 43,
+          "MIXED": 41,
+          "OBSERVED": 36
+        },
+        "notes": {
+          "Complete valid dummy row for backend comparison/testing; not real market evidence.": 120
+        },
+        "overlap_group": {
+          "catalog": 15,
+          "finance": 15,
+          "hr": 15,
+          "it": 15,
+          "ops": 15,
+          "procurement": 15,
+          "sales": 15,
+          "support": 15
+        },
+        "overlap_resolved": {
+          "True": 120
+        },
+        "scenario_tag": {
+          "NORMAL": 120
+        },
+        "source_type": {
+          "SYNTHETIC_COMPARISON": 120
+        },
+        "synthetic": {
+          "True": 120
+        }
+      },
+      "column_names": [
+        "record_id",
+        "source_type",
+        "synthetic",
+        "task",
+        "department_group",
+        "setup_cost_inr",
+        "annual_running_cost_inr",
+        "annual_benefit_inr",
+        "net_annual_benefit_inr",
+        "monthly_net_benefit_inr",
+        "payback_months",
+        "roi_pct",
+        "benefit_type",
+        "capacity_value_inr",
+        "realized_cash_saving_inr",
+        "overlap_group",
+        "overlap_resolved",
+        "expected_adoption_pct",
+        "actual_adoption_pct",
+        "minimum_adoption_pct",
+        "breakeven_adoption_pct",
+        "expected_quality_pct",
+        "actual_quality_pct",
+        "minimum_quality_pct",
+        "data_readiness_pct",
+        "technical_readiness_pct",
+        "process_readiness_pct",
+        "overall_readiness_pct",
+        "evidence_status",
+        "data_completeness_pct",
+        "decision",
+        "decision_reason",
+        "scenario_tag",
+        "notes"
+      ],
+      "columns": 34,
+      "data_types": {
+        "actual_adoption_pct": "int",
+        "actual_quality_pct": "int",
+        "annual_benefit_inr": "int",
+        "annual_running_cost_inr": "int",
+        "benefit_type": "str",
+        "breakeven_adoption_pct": "float",
+        "capacity_value_inr": "int",
+        "data_completeness_pct": "int",
+        "data_readiness_pct": "int",
+        "decision": "str",
+        "decision_reason": "str",
+        "department_group": "str",
+        "evidence_status": "str",
+        "expected_adoption_pct": "int",
+        "expected_quality_pct": "int",
+        "minimum_adoption_pct": "int",
+        "minimum_quality_pct": "int",
+        "monthly_net_benefit_inr": "float",
+        "net_annual_benefit_inr": "int",
+        "notes": "str",
+        "overall_readiness_pct": "float",
+        "overlap_group": "str",
+        "overlap_resolved": "bool",
+        "payback_months": "float",
+        "process_readiness_pct": "int",
+        "realized_cash_saving_inr": "int",
+        "record_id": "str",
+        "roi_pct": "float",
+        "scenario_tag": "str",
+        "setup_cost_inr": "int",
+        "source_type": "str",
+        "synthetic": "bool",
+        "task": "str",
+        "technical_readiness_pct": "int"
+      },
+      "duplicate_ids": [],
+      "duplicate_rows": 0,
+      "duplicate_rows_ignoring_id": 0,
+      "expectation": {
+        "invalid": 0,
+        "missing": 0,
+        "null": 0,
+        "rows": 120
+      },
+      "first_5_rows": [
+        {
+          "actual_adoption_pct": 43,
+          "actual_quality_pct": 95,
+          "annual_benefit_inr": 230000,
+          "annual_running_cost_inr": 160000,
+          "benefit_type": "cashable assumption",
+          "breakeven_adoption_pct": 69.57,
+          "capacity_value_inr": 0,
+          "data_completeness_pct": 100,
+          "data_readiness_pct": 73,
+          "decision": "STOP",
+          "decision_reason": "Adoption below economic break-even",
+          "department_group": "finance",
+          "evidence_status": "OBSERVED",
+          "expected_adoption_pct": 50,
+          "expected_quality_pct": 90,
+          "minimum_adoption_pct": 60,
+          "minimum_quality_pct": 75,
+          "monthly_net_benefit_inr": 5833.33,
+          "net_annual_benefit_inr": 70000,
+          "notes": "Complete valid dummy row for backend comparison/testing; not real market evidence.",
+          "overall_readiness_pct": 77.33,
+          "overlap_group": "finance",
+          "overlap_resolved": true,
+          "payback_months": 44.57,
+          "process_readiness_pct": 92,
+          "realized_cash_saving_inr": 167089,
+          "record_id": "SYN001",
+          "roi_pct": 26.92,
+          "scenario_tag": "NORMAL",
+          "setup_cost_inr": 260000,
+          "source_type": "SYNTHETIC_COMPARISON",
+          "synthetic": true,
+          "task": "Finance policy Q&A assistant",
+          "technical_readiness_pct": 67
+        },
+        {
+          "actual_adoption_pct": 79,
+          "actual_quality_pct": 80,
+          "annual_benefit_inr": 420000,
+          "annual_running_cost_inr": 20000,
+          "benefit_type": "capacity value",
+          "breakeven_adoption_pct": 4.76,
+          "capacity_value_inr": 420000,
+          "data_completeness_pct": 100,
+          "data_readiness_pct": 55,
+          "decision": "PROCEED",
+          "decision_reason": "Meets current financial and pilot gates",
+          "department_group": "ops",
+          "evidence_status": "MIXED",
+          "expected_adoption_pct": 80,
+          "expected_quality_pct": 80,
+          "minimum_adoption_pct": 50,
+          "minimum_quality_pct": 75,
+          "monthly_net_benefit_inr": 33333.33,
+          "net_annual_benefit_inr": 400000,
+          "notes": "Complete valid dummy row for backend comparison/testing; not real market evidence.",
+          "overall_readiness_pct": 59.67,
+          "overlap_group": "ops",
+          "overlap_resolved": true,
+          "payback_months": 10.2,
+          "process_readiness_pct": 56,
+          "realized_cash_saving_inr": 126000,
+          "record_id": "SYN002",
+          "roi_pct": 117.65,
+          "scenario_tag": "NORMAL",
+          "setup_cost_inr": 340000,
+          "source_type": "SYNTHETIC_COMPARISON",
+          "synthetic": true,
+          "task": "Daily operations summary",
+          "technical_readiness_pct": 68
+        },
+        {
+          "actual_adoption_pct": 59,
+          "actual_quality_pct": 100,
+          "annual_benefit_inr": 345000,
+          "annual_running_cost_inr": 125000,
+          "benefit_type": "time freed",
+          "breakeven_adoption_pct": 36.23,
+          "capacity_value_inr": 345000,
+          "data_completeness_pct": 100,
+          "data_readiness_pct": 78,
+          "decision": "PROCEED",
+          "decision_reason": "Meets current financial and pilot gates",
+          "department_group": "catalog",
+          "evidence_status": "ASSUMPTION",
+          "expected_adoption_pct": 55,
+          "expected_quality_pct": 95,
+          "minimum_adoption_pct": 55,
+          "minimum_quality_pct": 75,
+          "monthly_net_benefit_inr": 18333.33,
+          "net_annual_benefit_inr": 220000,
+          "notes": "Complete valid dummy row for backend comparison/testing; not real market evidence.",
+          "overall_readiness_pct": 74.67,
+          "overlap_group": "catalog",
+          "overlap_resolved": true,
+          "payback_months": 14.18,
+          "process_readiness_pct": 61,
+          "realized_cash_saving_inr": 103500,
+          "record_id": "SYN003",
+          "roi_pct": 84.62,
+          "scenario_tag": "NORMAL",
+          "setup_cost_inr": 260000,
+          "source_type": "SYNTHETIC_COMPARISON",
+          "synthetic": true,
+          "task": "Weekly catalogue review",
+          "technical_readiness_pct": 85
+        },
+        {
+          "actual_adoption_pct": 87,
+          "actual_quality_pct": 100,
+          "annual_benefit_inr": 125000,
+          "annual_running_cost_inr": 85000,
+          "benefit_type": "revenue assumption",
+          "breakeven_adoption_pct": 68.0,
+          "capacity_value_inr": 0,
+          "data_completeness_pct": 100,
+          "data_readiness_pct": 95,
+          "decision": "PROCEED",
+          "decision_reason": "Meets current financial and pilot gates",
+          "department_group": "support",
+          "evidence_status": "ASSUMPTION",
+          "expected_adoption_pct": 70,
+          "expected_quality_pct": 90,
+          "minimum_adoption_pct": 60,
+          "minimum_quality_pct": 80,
+          "monthly_net_benefit_inr": 3333.33,
+          "net_annual_benefit_inr": 40000,
+          "notes": "Complete valid dummy row for backend comparison/testing; not real market evidence.",
+          "overall_readiness_pct": 70.33,
+          "overlap_group": "support",
+          "overlap_resolved": true,
+          "payback_months": 42.0,
+          "process_readiness_pct": 65,
+          "realized_cash_saving_inr": 86518,
+          "record_id": "SYN004",
+          "roi_pct": 28.57,
+          "scenario_tag": "NORMAL",
+          "setup_cost_inr": 140000,
+          "source_type": "SYNTHETIC_COMPARISON",
+          "synthetic": true,
+          "task": "Ticket priority suggestion",
+          "technical_readiness_pct": 51
+        },
+        {
+          "actual_adoption_pct": 79,
+          "actual_quality_pct": 81,
+          "annual_benefit_inr": 205000,
+          "annual_running_cost_inr": 115000,
+          "benefit_type": "cashable assumption",
+          "breakeven_adoption_pct": 56.1,
+          "capacity_value_inr": 0,
+          "data_completeness_pct": 100,
+          "data_readiness_pct": 95,
+          "decision": "STOP",
+          "decision_reason": "Quality threshold failed",
+          "department_group": "hr",
+          "evidence_status": "MIXED",
+          "expected_adoption_pct": 85,
+          "expected_quality_pct": 80,
+          "minimum_adoption_pct": 45,
+          "minimum_quality_pct": 85,
+          "monthly_net_benefit_inr": 7500.0,
+          "net_annual_benefit_inr": 90000,
+          "notes": "Complete valid dummy row for backend comparison/testing; not real market evidence.",
+          "overall_readiness_pct": 93.67,
+          "overlap_group": "hr",
+          "overlap_resolved": true,
+          "payback_months": 18.67,
+          "process_readiness_pct": 86,
+          "realized_cash_saving_inr": 151831,
+          "record_id": "SYN005",
+          "roi_pct": 64.29,
+          "scenario_tag": "NORMAL",
+          "setup_cost_inr": 140000,
+          "source_type": "SYNTHETIC_COMPARISON",
+          "synthetic": true,
+          "task": "Leave request triage",
+          "technical_readiness_pct": 100
+        }
+      ],
+      "infinity_values": 0,
+      "invalid_record_ids": [],
+      "invalid_rows": 0,
+      "meets_expectation": true,
+      "missing_values": 0,
+      "nan_values": 0,
+      "negative_costs": 0,
+      "null_values": 0,
+      "null_values_per_column": {},
+      "parse_problems": [],
+      "pct_out_of_range": 0,
+      "rows": 120,
+      "summary_statistics": {
+        "actual_adoption_pct": {
+          "count": 120,
+          "max": 100,
+          "mean": 70.0833,
+          "median": 73.0,
+          "min": 36,
+          "std": 14.9894
+        },
+        "actual_quality_pct": {
+          "count": 120,
+          "max": 100,
+          "mean": 85.525,
+          "median": 85.5,
+          "min": 67,
+          "std": 8.978
+        },
+        "annual_benefit_inr": {
+          "count": 120,
+          "max": 500000,
+          "mean": 306541.6667,
+          "median": 300000.0,
+          "min": 110000,
+          "std": 110458.9278
+        },
+        "annual_running_cost_inr": {
+          "count": 120,
+          "max": 170000,
+          "mean": 92291.6667,
+          "median": 90000.0,
+          "min": 20000,
+          "std": 41977.8645
+        },
+        "breakeven_adoption_pct": {
+          "count": 120,
+          "max": 85.71,
+          "mean": 33.5673,
+          "median": 31.765,
+          "min": 4.76,
+          "std": 17.9872
+        },
+        "capacity_value_inr": {
+          "count": 120,
+          "max": 500000,
+          "mean": 148833.3333,
+          "median": 0.0,
+          "min": 0,
+          "std": 173906.8298
+        },
+        "data_completeness_pct": {
+          "count": 120,
+          "max": 100,
+          "mean": 100.0,
+          "median": 100.0,
+          "min": 100,
+          "std": 0.0
+        },
+        "data_readiness_pct": {
+          "count": 120,
+          "max": 100,
+          "mean": 71.7417,
+          "median": 71.0,
+          "min": 40,
+          "std": 15.0498
+        },
+        "expected_adoption_pct": {
+          "count": 120,
+          "max": 90,
+          "mean": 71.3333,
+          "median": 75.0,
+          "min": 50,
+          "std": 13.6544
+        },
+        "expected_quality_pct": {
+          "count": 120,
+          "max": 95,
+          "mean": 87.5,
+          "median": 90.0,
+          "min": 80,
+          "std": 5.5383
+        },
+        "minimum_adoption_pct": {
+          "count": 120,
+          "max": 65,
+          "mean": 51.7917,
+          "median": 50.0,
+          "min": 40,
+          "std": 7.8536
+        },
+        "minimum_quality_pct": {
+          "count": 120,
+          "max": 85,
+          "mean": 77.1667,
+          "median": 75.0,
+          "min": 70,
+          "std": 5.374
+        },
+        "monthly_net_benefit_inr": {
+          "count": 120,
+          "max": 39166.67,
+          "mean": 17854.1665,
+          "median": 16875.0,
+          "min": 1666.67,
+          "std": 9161.5169
+        },
+        "net_annual_benefit_inr": {
+          "count": 120,
+          "max": 470000,
+          "mean": 214250.0,
+          "median": 202500.0,
+          "min": 20000,
+          "std": 109938.1988
+        },
+        "overall_readiness_pct": {
+          "count": 120,
+          "max": 93.67,
+          "mean": 73.2083,
+          "median": 73.67,
+          "min": 47.67,
+          "std": 8.6802
+        },
+        "payback_months": {
+          "count": 120,
+          "max": 204.0,
+          "mean": 21.1705,
+          "median": 13.879999999999999,
+          "min": 3.31,
+          "std": 24.4153
+        },
+        "process_readiness_pct": {
+          "count": 120,
+          "max": 100,
+          "mean": 71.3833,
+          "median": 73.0,
+          "min": 37,
+          "std": 14.1861
+        },
+        "realized_cash_saving_inr": {
+          "count": 120,
+          "max": 426025,
+          "mean": 146158.675,
+          "median": 115159.5,
+          "min": 17000,
+          "std": 107451.9588
+        },
+        "roi_pct": {
+          "count": 120,
+          "max": 362.5,
+          "mean": 105.0433,
+          "median": 86.445,
+          "min": 5.88,
+          "std": 74.327
+        },
+        "setup_cost_inr": {
+          "count": 120,
+          "max": 420000,
+          "mean": 250083.3333,
+          "median": 250000.0,
+          "min": 80000,
+          "std": 107558.8237
+        },
+        "technical_readiness_pct": {
+          "count": 120,
+          "max": 100,
+          "mean": 76.5,
+          "median": 78.0,
+          "min": 43,
+          "std": 14.0551
+        }
+      },
+      "validity_problems": []
+    },
+    "synthetic_json_vs_csv": {
+      "columns_only_in_json": [],
+      "consistent": true,
+      "differences_sample": [],
+      "field_differences": 0,
+      "json_declared_record_count": 120,
+      "json_metadata": {
+        "contains_invalid_values": false,
+        "contains_missing_values": false,
+        "contains_null_values": false,
+        "dataset_name": "C23 Complete Valid Synthetic Comparison Dataset",
+        "record_count": 120,
+        "synthetic": true
+      },
+      "json_record_count": 120,
+      "records_only_in_json": []
+    },
+    "workbook": {
+      "data_dictionary_has_readiness_rule": false,
+      "data_dictionary_rules": [
+        {
+          "column": "actual_adoption_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        },
+        {
+          "column": "actual_quality_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        },
+        {
+          "column": "annual_benefit_inr",
+          "examples": [],
+          "rule": "Positive numeric",
+          "violations": 0
+        },
+        {
+          "column": "annual_running_cost_inr",
+          "examples": [],
+          "rule": "Positive numeric",
+          "violations": 0
+        },
+        {
+          "column": "data_readiness_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        },
+        {
+          "column": "expected_adoption_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        },
+        {
+          "column": "expected_quality_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        },
+        {
+          "column": "minimum_adoption_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        },
+        {
+          "column": "minimum_quality_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        },
+        {
+          "column": "process_readiness_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        },
+        {
+          "column": "record_id",
+          "examples": [],
+          "rule": "Always present and unique",
+          "violations": 0
+        },
+        {
+          "column": "setup_cost_inr",
+          "examples": [],
+          "rule": "Positive numeric",
+          "violations": 0
+        },
+        {
+          "column": "technical_readiness_pct",
+          "examples": [],
+          "rule": "0-100",
+          "violations": 0
+        }
+      ],
+      "original_fixture_sheet": {
+        "differences": [],
+        "fixture_json_rows": 5,
+        "rows": 5,
+        "status": "MATCH"
+      },
+      "sheets": {
+        "Data_Dictionary": 24,
+        "Original_Fixture": 6,
+        "Summary": 13,
+        "Synthetic_Comparison": 121
+      },
+      "status": "PASS",
+      "summary_sheet_claims": [
+        {
+          "claim": "Original fixture rows",
+          "match": true,
+          "recalculated": 5,
+          "workbook": 5
+        },
+        {
+          "claim": "Synthetic comparison rows",
+          "match": true,
+          "recalculated": 120,
+          "workbook": 120
+        },
+        {
+          "claim": "PROCEED count",
+          "match": true,
+          "recalculated": 67,
+          "workbook": 67
+        },
+        {
+          "claim": "REVISE count",
+          "match": true,
+          "recalculated": 11,
+          "workbook": 11
+        },
+        {
+          "claim": "STOP count",
+          "match": true,
+          "recalculated": 42,
+          "workbook": 42
+        },
+        {
+          "claim": "REVIEW count",
+          "match": true,
+          "recalculated": 0,
+          "workbook": 0
+        },
+        {
+          "claim": "Synthetic missing values",
+          "match": true,
+          "recalculated": 0,
+          "workbook": 0
+        },
+        {
+          "claim": "Synthetic null values",
+          "match": true,
+          "recalculated": 0,
+          "workbook": 0
+        },
+        {
+          "claim": "Synthetic invalid values",
+          "match": true,
+          "recalculated": 0,
+          "workbook": 0
+        },
+        {
+          "claim": "Official AI1 payback",
+          "match": true,
+          "recalculated": "20 months",
+          "workbook": "20 months"
+        }
+      ]
+    }
+  },
+  "cash_vs_capacity": {
+    "by_benefit_type": {
+      "capacity value": {
+        "counted_as_cash_by_engine": false,
+        "decisions_changed_on_cash_basis": 15,
+        "pilots": 28,
+        "total_capacity_value_inr": 8570000,
+        "total_realized_cash_saving_inr": 1808500,
+        "total_stated_benefit_inr": 8570000
+      },
+      "cashable assumption": {
+        "counted_as_cash_by_engine": true,
+        "decisions_changed_on_cash_basis": 0,
+        "pilots": 36,
+        "total_capacity_value_inr": 0,
+        "total_realized_cash_saving_inr": 9191134,
+        "total_stated_benefit_inr": 11460000
+      },
+      "revenue assumption": {
+        "counted_as_cash_by_engine": false,
+        "decisions_changed_on_cash_basis": 4,
+        "pilots": 26,
+        "total_capacity_value_inr": 0,
+        "total_realized_cash_saving_inr": 4973907,
+        "total_stated_benefit_inr": 7465000
+      },
+      "time freed": {
+        "counted_as_cash_by_engine": false,
+        "decisions_changed_on_cash_basis": 20,
+        "pilots": 30,
+        "total_capacity_value_inr": 9290000,
+        "total_realized_cash_saving_inr": 1565500,
+        "total_stated_benefit_inr": 9290000
+      }
+    },
+    "capacity_never_counted_as_cash": true,
+    "decisions_changed": 39,
+    "stored_vs_production_differences": 40
+  },
+  "charts": [
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "original_vs_synthetic_financials.png",
+      "exists": true,
+      "label": "Original vs Synthetic Financials",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 12,
+      "size": [
+        1430,
+        505
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "decision_distribution.png",
+      "exists": true,
+      "label": "Decision Distribution",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 24,
+      "size": [
+        1430,
+        505
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "adoption_comparison.png",
+      "exists": true,
+      "label": "Adoption Comparison",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 480,
+      "size": [
+        1430,
+        550
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "quality_comparison.png",
+      "exists": true,
+      "label": "Quality Comparison",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 360,
+      "size": [
+        1430,
+        550
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "readiness_comparison.png",
+      "exists": true,
+      "label": "Readiness Comparison",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 16,
+      "size": [
+        1320,
+        528
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "roi_vs_payback.png",
+      "exists": true,
+      "label": "ROI vs Payback",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 240,
+      "size": [
+        1210,
+        616
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "cash_vs_capacity.png",
+      "exists": true,
+      "label": "Cash vs Capacity",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 12,
+      "size": [
+        1320,
+        550
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "stress_test_comparison.png",
+      "exists": true,
+      "label": "Stress Test Comparison",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 18,
+      "size": [
+        1540,
+        505
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "portfolio_budget_comparison.png",
+      "exists": true,
+      "label": "Portfolio Budget Comparison",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 16,
+      "size": [
+        1430,
+        528
+      ],
+      "status": "PASS"
+    },
+    {
+      "all_finite": true,
+      "axes_labelled": true,
+      "chart": "ml_vs_rule_comparison.png",
+      "exists": true,
+      "label": "ML vs Rules",
+      "not_blank": true,
+      "opens": true,
+      "points_plotted": 129,
+      "size": [
+        1430,
+        528
+      ],
+      "status": "PASS"
+    }
+  ],
+  "decisions": {
+    "production_decision_counts": {
+      "PROCEED": 33,
+      "REVISE": 6,
+      "STOP": 81
+    },
+    "python_replica_vs_go_engine": {
+      "go_outputs_present": true,
+      "matching": 120,
+      "total": 120
+    },
+    "stated_decision_counts": {
+      "PROCEED": 69,
+      "REVISE": 9,
+      "STOP": 42
+    },
+    "stored_decision_counts": {
+      "PROCEED": 67,
+      "REVISE": 11,
+      "STOP": 42
+    },
+    "stored_vs_production_cash_basis": {
+      "confusion_matrix": {
+        "cols_are": "production_cash_basis_decision",
+        "labels": [
+          "PROCEED",
+          "REVISE",
+          "STOP"
+        ],
+        "matrix": [
+          [
+            32,
+            0,
+            35
+          ],
+          [
+            1,
+            6,
+            4
+          ],
+          [
+            0,
+            0,
+            42
+          ]
+        ],
+        "rows_are": "stored"
+      },
+      "matching": 80,
+      "meaning": "Production engine default: non-cashable benefits count only realized cash saving.",
+      "mismatching": 40,
+      "reproduction_pct": 66.67
+    },
+    "stored_vs_rules_stated_basis": {
+      "confusion_matrix": {
+        "cols_are": "rules_stated_basis_decision",
+        "labels": [
+          "PROCEED",
+          "REVISE",
+          "STOP"
+        ],
+        "matrix": [
+          [
+            67,
+            0,
+            0
+          ],
+          [
+            2,
+            9,
+            0
+          ],
+          [
+            0,
+            0,
+            42
+          ]
+        ],
+        "rows_are": "stored"
+      },
+      "matching": 118,
+      "meaning": "Documented c23-rules-v1 thresholds applied with the stated benefit (the basis of the dataset's derived columns).",
+      "mismatching": 2,
+      "reproduction_pct": 98.33
+    },
+    "total_decisions": 120
+  },
+  "derived_metrics": {
+    "matches_per_metric": {
+      "breakeven_adoption_pct": 120,
+      "monthly_net_benefit_inr": 120,
+      "net_annual_benefit_inr": 120,
+      "overall_readiness_pct": 120,
+      "payback_months": 120,
+      "roi_pct": 120
+    },
+    "max_abs_difference": 0.005,
+    "metric_checks": 720,
+    "metric_checks_matched": 720,
+    "rows_all_metrics_match": 120,
+    "rows_with_mismatch": 0,
+    "tolerance": 0.005,
+    "tolerance_reason": "stored derived values are rounded to 2 decimals",
+    "total_rows": 120
+  },
+  "engine_parity": {
+    "by_dataset": {
+      "official_fixture": {
+        "go_outputs_present": true,
+        "pilots": 5,
+        "pilots_fully_matching": 5
+      },
+      "synthetic": {
+        "go_outputs_present": true,
+        "pilots": 120,
+        "pilots_fully_matching": 120
+      }
+    },
+    "field_checks": 1625,
+    "field_checks_matched": 1625,
+    "fields_compared": [
+      "decision",
+      "reason_codes",
+      "stated_net_annual_benefit_inr",
+      "stated_payback_months",
+      "stated_roi_pct",
+      "cash_benefit_inr",
+      "cash_net_annual_benefit_inr",
+      "cash_payback_months",
+      "cash_payback_status",
+      "cash_roi_pct",
+      "cash_breakeven_adoption_pct",
+      "overall_readiness_pct",
+      "readiness_level"
+    ],
+    "mismatches": [],
+    "pilots": 125,
+    "pilots_fully_matching": 125,
+    "status": "PASS"
+  },
+  "evidence": {
+    "counts": {
+      "ASSUMPTION": 43,
+      "MIXED": 41,
+      "OBSERVED": 36
+    },
+    "evidence_label_inconsistencies": 43,
+    "inconsistency": "All 120 rows carry actual_adoption_pct and actual_quality_pct, including the 43 rows labelled ASSUMPTION. Under the C23 null policy an unmeasured actual is null, which the engine turns into REVIEW (INSUFFICIENT_EVIDENCE). The labels were reported, not changed.",
+    "not_a_confidence_score": true,
+    "stored_proceed_on_assumption_only": 30,
+    "stored_proceed_total": 67
+  },
+  "ml": {
+    "best_beats_baseline_by_0_05_auc": true,
+    "best_model": "GradientBoostingClassifier",
+    "class_balance": {
+      "failure": 18,
+      "success": 102
+    },
+    "disclaimer": "These results describe performance on synthetic test data only and do not prove real-world predictive performance. ML is advisory and never overrides PROCEED / REVISE / STOP.",
+    "interesting_combinations": {
+      "PROCEED + HIGH": 0,
+      "PROCEED + MEDIUM": 1,
+      "REVISE + HIGH": 2,
+      "STOP + LOW": 65
+    },
+    "leakage_check": {
+      "features": [
+        "setup_cost_inr",
+        "annual_running_cost_inr",
+        "annual_benefit_inr",
+        "expected_adoption_pct",
+        "minimum_adoption_pct",
+        "expected_quality_pct",
+        "minimum_quality_pct",
+        "data_readiness_pct",
+        "technical_readiness_pct",
+        "process_readiness_pct",
+        "benefit_type",
+        "department_group",
+        "overlap_group"
+      ],
+      "forbidden": [
+        "actual_adoption_pct",
+        "actual_quality_pct",
+        "adoption_success",
+        "breakeven_adoption_pct",
+        "decision",
+        "decision_reason",
+        "evidence_status",
+        "notes",
+        "realized_cash_saving_inr",
+        "record_id"
+      ],
+      "leaked": [],
+      "status": "PASS"
+    },
+    "model_provenance": "No persisted model exists in the project; this is the same seeded, deterministic experiment re-run (same code, data, features and random_state), not a new model design.",
+    "models": [
+      {
+        "accuracy": 0.8333,
+        "confusion_matrix": [
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            20
+          ]
+        ],
+        "cv5_f1_mean": 0.9188,
+        "cv5_f1_std": 0.0119,
+        "cv5_macro_f1_mean": 0.4594,
+        "cv5_macro_f1_std": 0.0059,
+        "cv5_roc_auc_mean": 0.5,
+        "cv5_roc_auc_std": 0.0,
+        "f1": 0.9091,
+        "macro_f1": 0.4545,
+        "model": "DummyClassifier (baseline)",
+        "precision": 0.8333,
+        "recall": 1.0,
+        "roc_auc": 0.5
+      },
+      {
+        "accuracy": 0.8333,
+        "confusion_matrix": [
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            20
+          ]
+        ],
+        "cv5_f1_mean": 0.9061,
+        "cv5_f1_std": 0.0366,
+        "cv5_macro_f1_mean": 0.6669,
+        "cv5_macro_f1_std": 0.1228,
+        "cv5_roc_auc_mean": 0.8567,
+        "cv5_roc_auc_std": 0.0546,
+        "f1": 0.9091,
+        "macro_f1": 0.4545,
+        "model": "LogisticRegression",
+        "precision": 0.8333,
+        "recall": 1.0,
+        "roc_auc": 0.95
+      },
+      {
+        "accuracy": 0.8333,
+        "confusion_matrix": [
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            20
+          ]
+        ],
+        "cv5_f1_mean": 0.9273,
+        "cv5_f1_std": 0.017,
+        "cv5_macro_f1_mean": 0.5536,
+        "cv5_macro_f1_std": 0.1181,
+        "cv5_roc_auc_mean": 0.8322,
+        "cv5_roc_auc_std": 0.0523,
+        "f1": 0.9091,
+        "macro_f1": 0.4545,
+        "model": "RandomForestClassifier",
+        "precision": 0.8333,
+        "recall": 1.0,
+        "roc_auc": 0.9125
+      },
+      {
+        "accuracy": 0.875,
+        "confusion_matrix": [
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            20
+          ]
+        ],
+        "cv5_f1_mean": 0.933,
+        "cv5_f1_std": 0.0288,
+        "cv5_macro_f1_mean": 0.7268,
+        "cv5_macro_f1_std": 0.0968,
+        "cv5_roc_auc_mean": 0.865,
+        "cv5_roc_auc_std": 0.0684,
+        "f1": 0.9302,
+        "macro_f1": 0.6651,
+        "model": "GradientBoostingClassifier",
+        "precision": 0.8696,
+        "recall": 1.0,
+        "roc_auc": 0.8625
+      }
+    ],
+    "selection_rule": "highest 5-fold CV ROC-AUC (ties: CV macro F1)",
+    "split": {
+      "random_state": 42,
+      "stratified": true,
+      "test": 24,
+      "train": 96
+    },
+    "status": "RUN",
+    "target": "adoption_success = actual_adoption_pct >= minimum_adoption_pct"
+  },
+  "official_fixture_decisions": [
+    {
+      "decision": "REVIEW",
+      "go_decision": "REVIEW",
+      "id": "AI1",
+      "matches_go": true,
+      "reasons": [
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    {
+      "decision": "REVIEW",
+      "go_decision": "REVIEW",
+      "id": "AI2",
+      "matches_go": true,
+      "reasons": [
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    {
+      "decision": "REVIEW",
+      "go_decision": "REVIEW",
+      "id": "AI3",
+      "matches_go": true,
+      "reasons": [
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    {
+      "decision": "REVIEW",
+      "go_decision": "REVIEW",
+      "id": "AI4",
+      "matches_go": true,
+      "reasons": [
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    {
+      "decision": "REVISE",
+      "go_decision": "REVISE",
+      "id": "AI5",
+      "matches_go": true,
+      "reasons": [
+        "LOW_READINESS",
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    }
+  ],
+  "overlap": {
+    "CUSTOM_ALLOCATION(120000/60000)": {
+      "AI4": "120000",
+      "AI5": "60000"
+    },
+    "EXCLUDE_SECOND(primary=AI4)": {
+      "AI4": "180000",
+      "AI5": "0"
+    },
+    "REMOVE_ONE(primary=AI4)": {
+      "AI4": "180000"
+    },
+    "SPLIT_BENEFIT(equal)": {
+      "AI4": "90000",
+      "AI5": "90000"
+    },
+    "claimed_total": 360000,
+    "never_exceeds_pool": true,
+    "official_support_pair": [
+      "AI4",
+      "AI5"
+    ],
+    "over_allocation_rejected": true,
+    "status": "PASS",
+    "synthetic_note": "Every synthetic row has overlap_resolved=True but no resolution details (type, primary, shares). c23-rules-v1 does not accept a bare flag: the pool rule applies and the optimizer funds at most one pilot per group.",
+    "unresolved": {
+      "AI4": "180000",
+      "AI5": "0"
+    }
+  },
+  "portfolio": {
+    "determinism": [
+      {
+        "budget_inr": 200000,
+        "same_after_5_shuffles": true,
+        "selected": "SYN061 SYN062"
+      },
+      {
+        "budget_inr": 400000,
+        "same_after_5_shuffles": true,
+        "selected": "SYN061 SYN062 SYN104"
+      },
+      {
+        "budget_inr": 600000,
+        "same_after_5_shuffles": true,
+        "selected": "SYN061 SYN062 SYN079 SYN104"
+      },
+      {
+        "budget_inr": 800000,
+        "same_after_5_shuffles": true,
+        "selected": "SYN041 SYN061 SYN062 SYN067 SYN104"
+      }
+    ],
+    "go_cross_check": [
+      {
+        "basis": "cash",
+        "budget_inr": 200000,
+        "dataset": "official_fixture",
+        "go_net": "120000",
+        "go_selected": "AI1",
+        "match": true,
+        "python_net": "120000",
+        "python_selected": "AI1"
+      },
+      {
+        "basis": "cash",
+        "budget_inr": 200000,
+        "dataset": "synthetic_first_20",
+        "go_net": "150000",
+        "go_selected": "SYN013",
+        "match": true,
+        "python_net": "150000",
+        "python_selected": "SYN013"
+      },
+      {
+        "basis": "stated",
+        "budget_inr": 200000,
+        "dataset": "official_fixture",
+        "go_net": "120000",
+        "go_selected": "AI1",
+        "match": true,
+        "python_net": "120000",
+        "python_selected": "AI1"
+      },
+      {
+        "basis": "stated",
+        "budget_inr": 200000,
+        "dataset": "synthetic_first_20",
+        "go_net": "150000",
+        "go_selected": "SYN013",
+        "match": true,
+        "python_net": "150000",
+        "python_selected": "SYN013"
+      },
+      {
+        "basis": "cash",
+        "budget_inr": 400000,
+        "dataset": "official_fixture",
+        "go_net": "240000",
+        "go_selected": "AI1 AI4",
+        "match": true,
+        "python_net": "240000",
+        "python_selected": "AI1 AI4"
+      },
+      {
+        "basis": "cash",
+        "budget_inr": 400000,
+        "dataset": "synthetic_first_20",
+        "go_net": "280000",
+        "go_selected": "SYN013 SYN019",
+        "match": true,
+        "python_net": "280000",
+        "python_selected": "SYN013 SYN019"
+      },
+      {
+        "basis": "stated",
+        "budget_inr": 400000,
+        "dataset": "official_fixture",
+        "go_net": "240000",
+        "go_selected": "AI1 AI4",
+        "match": true,
+        "python_net": "240000",
+        "python_selected": "AI1 AI4"
+      },
+      {
+        "basis": "stated",
+        "budget_inr": 400000,
+        "dataset": "synthetic_first_20",
+        "go_net": "400000",
+        "go_selected": "SYN002",
+        "match": true,
+        "python_net": "400000",
+        "python_selected": "SYN002"
+      },
+      {
+        "basis": "cash",
+        "budget_inr": 600000,
+        "dataset": "official_fixture",
+        "go_net": "360000",
+        "go_selected": "AI1 AI2 AI4",
+        "match": true,
+        "python_net": "360000",
+        "python_selected": "AI1 AI2 AI4"
+      },
+      {
+        "basis": "cash",
+        "budget_inr": 600000,
+        "dataset": "synthetic_first_20",
+        "go_net": "280000",
+        "go_selected": "SYN013 SYN019",
+        "match": true,
+        "python_net": "280000",
+        "python_selected": "SYN013 SYN019"
+      },
+      {
+        "basis": "stated",
+        "budget_inr": 600000,
+        "dataset": "official_fixture",
+        "go_net": "360000",
+        "go_selected": "AI1 AI2 AI4",
+        "match": true,
+        "python_net": "360000",
+        "python_selected": "AI1 AI2 AI4"
+      },
+      {
+        "basis": "stated",
+        "budget_inr": 600000,
+        "dataset": "synthetic_first_20",
+        "go_net": "550000",
+        "go_selected": "SYN002 SYN013",
+        "match": true,
+        "python_net": "550000",
+        "python_selected": "SYN002 SYN013"
+      },
+      {
+        "basis": "cash",
+        "budget_inr": 800000,
+        "dataset": "official_fixture",
+        "go_net": "480000",
+        "go_selected": "AI1 AI2 AI3 AI4",
+        "match": true,
+        "python_net": "480000",
+        "python_selected": "AI1 AI2 AI3 AI4"
+      },
+      {
+        "basis": "cash",
+        "budget_inr": 800000,
+        "dataset": "synthetic_first_20",
+        "go_net": "386000",
+        "go_selected": "SYN002 SYN013 SYN019",
+        "match": true,
+        "python_net": "386000",
+        "python_selected": "SYN002 SYN013 SYN019"
+      },
+      {
+        "basis": "stated",
+        "budget_inr": 800000,
+        "dataset": "official_fixture",
+        "go_net": "480000",
+        "go_selected": "AI1 AI2 AI3 AI4",
+        "match": true,
+        "python_net": "480000",
+        "python_selected": "AI1 AI2 AI3 AI4"
+      },
+      {
+        "basis": "stated",
+        "budget_inr": 800000,
+        "dataset": "synthetic_first_20",
+        "go_net": "710000",
+        "go_selected": "SYN002 SYN013 SYN017",
+        "match": true,
+        "python_net": "710000",
+        "python_selected": "SYN002 SYN013 SYN017"
+      }
+    ],
+    "go_full_set_note": "too many candidate pilots for exact search: 33 > 20",
+    "status": "PASS"
+  },
+  "quality": {
+    "decision_consistency": "PASS",
+    "fails_stop_recalculated": 34,
+    "fails_stop_stored": 34,
+    "quality_fail": 34,
+    "quality_pass": 86
+  },
+  "readiness": {
+    "label_inconsistencies": [
+      {
+        "data_readiness_pct": 40,
+        "overall_readiness_pct_recalculated": "69.33",
+        "process_readiness_pct": 68,
+        "recalculated_decision": "PROCEED",
+        "record_id": "SYN038",
+        "stored_decision": "REVISE",
+        "stored_reason": "Readiness too low",
+        "technical_readiness_pct": 100,
+        "weakest_component": "data_readiness",
+        "weakest_value": 40
+      },
+      {
+        "data_readiness_pct": 40,
+        "overall_readiness_pct_recalculated": "58.33",
+        "process_readiness_pct": 68,
+        "recalculated_decision": "PROCEED",
+        "record_id": "SYN096",
+        "stored_decision": "REVISE",
+        "stored_reason": "Readiness too low",
+        "technical_readiness_pct": 67,
+        "weakest_component": "data_readiness",
+        "weakest_value": 40
+      }
+    ],
+    "levels": {
+      "high": 49,
+      "low": 2,
+      "medium": 69
+    },
+    "pilots_with_a_component_below_50": 19,
+    "readiness_decisive_revise": [
+      "SYN045"
+    ],
+    "rule_fires": 2,
+    "stored_readiness_too_low": [
+      "SYN038",
+      "SYN045",
+      "SYN096"
+    ],
+    "threshold": "overall (mean of 3 components) < 50 -> LOW (TEAM assumption, c23-rules-v1)"
+  },
+  "reference_check": {
+    "annual_benefit_inr": 180000,
+    "annual_running_cost_inr": 60000,
+    "calculated_payback_months": "20",
+    "expected_payback_months": 20,
+    "monthly_net_benefit_inr": "10000",
+    "net_annual_benefit_inr": "120000",
+    "pilot": "AI1",
+    "roi_pct": "60",
+    "setup_cost_inr": 200000,
+    "status": "PASS"
+  },
+  "source_files_unchanged": true,
+  "stress": {
+    "all_checks_pass": true,
+    "reference_case": {
+      "case": "AI1 running cost 60000 -> 120000",
+      "monthly_net_benefit_inr": "5000",
+      "net_annual_benefit_inr": "60000",
+      "payback_months": "40",
+      "status": "PASS"
+    },
+    "scenarios": 11
+  },
+  "test_runs": {
+    "ai_evals": {
+      "ok": true,
+      "passed": 294,
+      "pct": "98.3",
+      "ran": true,
+      "total": 299
+    },
+    "go": {
+      "build_ok": true,
+      "gofmt_clean": true,
+      "judge_passed": 15,
+      "judge_ran": true,
+      "judge_total": 15,
+      "ran": true,
+      "test_exit_code": 0,
+      "tests_failed": 0,
+      "tests_passed": 113,
+      "tests_skipped": 0,
+      "vet_ok": true
+    },
+    "go_outputs_refresh": {
+      "ok": true,
+      "ran": true
+    },
+    "python": {
+      "failed": 0,
+      "passed": 196,
+      "ran": true,
+      "skipped": 0,
+      "summary": "196 passed, 1 warning"
+    }
+  }
+}

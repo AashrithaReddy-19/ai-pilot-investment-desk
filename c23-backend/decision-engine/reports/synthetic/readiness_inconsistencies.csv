@@ -1,0 +1,3 @@
+record_id,data_readiness_pct,technical_readiness_pct,process_readiness_pct,overall_readiness_pct_recalculated,weakest_component,weakest_value,stored_decision,stored_reason,recalculated_decision
+SYN038,40,100,68,69.33,data_readiness,40,REVISE,Readiness too low,PROCEED
+SYN096,40,67,68,58.33,data_readiness,40,REVISE,Readiness too low,PROCEED

@@ -1,0 +1,16 @@
+# OPTIONAL analysis extras for python -m synthetic.run (advisory ML experiment + comparison charts).
+# Never used by the Go engine or the AI service. Exact pins, each released well over 14 days before pinning.
+scikit-learn==1.7.2
+numpy==2.3.3
+scipy==1.16.2
+joblib==1.5.2
+threadpoolctl==3.6.0
+matplotlib==3.10.3
+pillow==11.2.1
+kiwisolver==1.4.8
+fonttools==4.58.0
+contourpy==1.3.2
+cycler==0.12.1
+pyparsing==3.2.3
+python-dateutil==2.9.0.post0
+six==1.17.0

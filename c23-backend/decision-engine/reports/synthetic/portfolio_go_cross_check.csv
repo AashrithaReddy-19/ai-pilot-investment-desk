@@ -1,0 +1,17 @@
+dataset,budget_inr,basis,go_selected,python_selected,go_net,python_net,match
+official_fixture,200000,cash,AI1,AI1,120000,120000,True
+synthetic_first_20,200000,cash,SYN013,SYN013,150000,150000,True
+official_fixture,200000,stated,AI1,AI1,120000,120000,True
+synthetic_first_20,200000,stated,SYN013,SYN013,150000,150000,True
+official_fixture,400000,cash,AI1 AI4,AI1 AI4,240000,240000,True
+synthetic_first_20,400000,cash,SYN013 SYN019,SYN013 SYN019,280000,280000,True
+official_fixture,400000,stated,AI1 AI4,AI1 AI4,240000,240000,True
+synthetic_first_20,400000,stated,SYN002,SYN002,400000,400000,True
+official_fixture,600000,cash,AI1 AI2 AI4,AI1 AI2 AI4,360000,360000,True
+synthetic_first_20,600000,cash,SYN013 SYN019,SYN013 SYN019,280000,280000,True
+official_fixture,600000,stated,AI1 AI2 AI4,AI1 AI2 AI4,360000,360000,True
+synthetic_first_20,600000,stated,SYN002 SYN013,SYN002 SYN013,550000,550000,True
+official_fixture,800000,cash,AI1 AI2 AI3 AI4,AI1 AI2 AI3 AI4,480000,480000,True
+synthetic_first_20,800000,cash,SYN002 SYN013 SYN019,SYN002 SYN013 SYN019,386000,386000,True
+official_fixture,800000,stated,AI1 AI2 AI3 AI4,AI1 AI2 AI3 AI4,480000,480000,True
+synthetic_first_20,800000,stated,SYN002 SYN013 SYN017,SYN002 SYN013 SYN017,710000,710000,True

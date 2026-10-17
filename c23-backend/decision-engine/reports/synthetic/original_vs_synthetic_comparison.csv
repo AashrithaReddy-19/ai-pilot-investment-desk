@@ -1,0 +1,128 @@
+metric,statistic,original_fixture,synthetic_dataset,note
+number_of_pilots,count,5,120,
+setup_cost_inr,count,5,120,
+setup_cost_inr,mean,200000.0,250083.33,
+setup_cost_inr,median,200000.0,250000.0,
+setup_cost_inr,min,200000.0,80000.0,
+setup_cost_inr,max,200000.0,420000.0,
+setup_cost_inr,std,0.0,107558.82,
+annual_running_cost_inr,count,5,120,
+annual_running_cost_inr,mean,60000.0,92291.67,
+annual_running_cost_inr,median,60000.0,90000.0,
+annual_running_cost_inr,min,60000.0,20000.0,
+annual_running_cost_inr,max,60000.0,170000.0,
+annual_running_cost_inr,std,0.0,41977.86,
+annual_benefit_inr,count,5,120,
+annual_benefit_inr,mean,180000.0,306541.67,
+annual_benefit_inr,median,180000.0,300000.0,
+annual_benefit_inr,min,180000.0,110000.0,
+annual_benefit_inr,max,180000.0,500000.0,
+annual_benefit_inr,std,0.0,110458.93,
+net_annual_benefit_inr,count,5,120,recalculated from inputs (stated basis)
+net_annual_benefit_inr,mean,120000.0,214250.0,recalculated from inputs (stated basis)
+net_annual_benefit_inr,median,120000.0,202500.0,recalculated from inputs (stated basis)
+net_annual_benefit_inr,min,120000.0,20000.0,recalculated from inputs (stated basis)
+net_annual_benefit_inr,max,120000.0,470000.0,recalculated from inputs (stated basis)
+net_annual_benefit_inr,std,0.0,109938.2,recalculated from inputs (stated basis)
+roi_pct,count,5,120,recalculated from inputs (stated basis)
+roi_pct,mean,60.0,105.04,recalculated from inputs (stated basis)
+roi_pct,median,60.0,86.45,recalculated from inputs (stated basis)
+roi_pct,min,60.0,5.88,recalculated from inputs (stated basis)
+roi_pct,max,60.0,362.5,recalculated from inputs (stated basis)
+roi_pct,std,0.0,74.33,recalculated from inputs (stated basis)
+payback_months,count,5,120,recalculated from inputs (stated basis)
+payback_months,mean,20.0,21.17,recalculated from inputs (stated basis)
+payback_months,median,20.0,13.88,recalculated from inputs (stated basis)
+payback_months,min,20.0,3.31,recalculated from inputs (stated basis)
+payback_months,max,20.0,204.0,recalculated from inputs (stated basis)
+payback_months,std,0.0,24.42,recalculated from inputs (stated basis)
+benefit_type=capacity value,count,0,28,
+benefit_type=cashable assumption,count,5,36,
+benefit_type=revenue assumption,count,0,26,
+benefit_type=time freed,count,0,30,
+overlap_group=catalog,count,1,15,
+overlap_group=finance,count,1,15,
+overlap_group=hr,count,0,15,
+overlap_group=it,count,0,15,
+overlap_group=ops,count,1,15,
+overlap_group=procurement,count,0,15,
+overlap_group=sales,count,0,15,
+overlap_group=support,count,2,15,
+expected_adoption_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_adoption_pct,mean,not provided,71.33,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_adoption_pct,median,not provided,75.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_adoption_pct,min,not provided,50.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_adoption_pct,max,not provided,90.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_adoption_pct,std,not provided,13.65,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_adoption_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_adoption_pct,mean,not provided,70.08,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_adoption_pct,median,not provided,73.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_adoption_pct,min,not provided,36.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_adoption_pct,max,not provided,100.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_adoption_pct,std,not provided,14.99,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_adoption_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_adoption_pct,mean,not provided,51.79,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_adoption_pct,median,not provided,50.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_adoption_pct,min,not provided,40.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_adoption_pct,max,not provided,65.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_adoption_pct,std,not provided,7.85,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_quality_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_quality_pct,mean,not provided,87.5,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_quality_pct,median,not provided,90.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_quality_pct,min,not provided,80.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_quality_pct,max,not provided,95.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+expected_quality_pct,std,not provided,5.54,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_quality_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_quality_pct,mean,not provided,85.53,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_quality_pct,median,not provided,85.5,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_quality_pct,min,not provided,67.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_quality_pct,max,not provided,100.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+actual_quality_pct,std,not provided,8.98,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_quality_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_quality_pct,mean,not provided,77.17,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_quality_pct,median,not provided,75.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_quality_pct,min,not provided,70.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_quality_pct,max,not provided,85.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+minimum_quality_pct,std,not provided,5.37,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+data_readiness_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+data_readiness_pct,mean,not provided,71.74,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+data_readiness_pct,median,not provided,71.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+data_readiness_pct,min,not provided,40.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+data_readiness_pct,max,not provided,100.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+data_readiness_pct,std,not provided,15.05,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+technical_readiness_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+technical_readiness_pct,mean,not provided,76.5,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+technical_readiness_pct,median,not provided,78.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+technical_readiness_pct,min,not provided,43.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+technical_readiness_pct,max,not provided,100.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+technical_readiness_pct,std,not provided,14.06,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+process_readiness_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+process_readiness_pct,mean,not provided,71.38,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+process_readiness_pct,median,not provided,73.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+process_readiness_pct,min,not provided,37.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+process_readiness_pct,max,not provided,100.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+process_readiness_pct,std,not provided,14.19,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+overall_readiness_pct,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture. Recalculated as the mean of the three readiness components.
+overall_readiness_pct,mean,not provided,73.21,This metric is part of the synthetic extension and is not provided by the official C23 fixture. Recalculated as the mean of the three readiness components.
+overall_readiness_pct,median,not provided,73.67,This metric is part of the synthetic extension and is not provided by the official C23 fixture. Recalculated as the mean of the three readiness components.
+overall_readiness_pct,min,not provided,47.67,This metric is part of the synthetic extension and is not provided by the official C23 fixture. Recalculated as the mean of the three readiness components.
+overall_readiness_pct,max,not provided,93.67,This metric is part of the synthetic extension and is not provided by the official C23 fixture. Recalculated as the mean of the three readiness components.
+overall_readiness_pct,std,not provided,8.68,This metric is part of the synthetic extension and is not provided by the official C23 fixture. Recalculated as the mean of the three readiness components.
+capacity_value_inr,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+capacity_value_inr,mean,not provided,148833.33,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+capacity_value_inr,median,not provided,0.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+capacity_value_inr,min,not provided,0.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+capacity_value_inr,max,not provided,500000.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+capacity_value_inr,std,not provided,173906.83,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+realized_cash_saving_inr,count,not provided,120,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+realized_cash_saving_inr,mean,not provided,146158.67,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+realized_cash_saving_inr,median,not provided,115159.5,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+realized_cash_saving_inr,min,not provided,17000.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+realized_cash_saving_inr,max,not provided,426025.0,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+realized_cash_saving_inr,std,not provided,107451.96,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+evidence_status=ASSUMPTION,count,not provided,43,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+evidence_status=MIXED,count,not provided,41,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+evidence_status=OBSERVED,count,not provided,36,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+decision=PROCEED,count,not provided,67,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+decision=REVISE,count,not provided,11,This metric is part of the synthetic extension and is not provided by the official C23 fixture.
+decision=STOP,count,not provided,42,This metric is part of the synthetic extension and is not provided by the official C23 fixture.

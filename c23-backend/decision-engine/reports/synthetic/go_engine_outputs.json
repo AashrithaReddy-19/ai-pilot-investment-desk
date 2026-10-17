@@ -1,0 +1,3590 @@
+{
+  "generated_by": "backend/cmd/synthcheck",
+  "note": "Production engine outputs on SYNTHETIC test data. Not real-world evidence.",
+  "official_pilots": [
+    {
+      "record_id": "AI1",
+      "decision": "REVIEW",
+      "primary_reason": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "20",
+      "stated_roi_pct": "60",
+      "cash_benefit_inr": "180000",
+      "cash_net_annual_benefit_inr": "120000",
+      "cash_payback_months": "20",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "60",
+      "cash_breakeven_adoption_pct": "33.33",
+      "overall_readiness_pct": null,
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "AI2",
+      "decision": "REVIEW",
+      "primary_reason": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "20",
+      "stated_roi_pct": "60",
+      "cash_benefit_inr": "180000",
+      "cash_net_annual_benefit_inr": "120000",
+      "cash_payback_months": "20",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "60",
+      "cash_breakeven_adoption_pct": "33.33",
+      "overall_readiness_pct": null,
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "AI3",
+      "decision": "REVIEW",
+      "primary_reason": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "20",
+      "stated_roi_pct": "60",
+      "cash_benefit_inr": "180000",
+      "cash_net_annual_benefit_inr": "120000",
+      "cash_payback_months": "20",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "60",
+      "cash_breakeven_adoption_pct": "33.33",
+      "overall_readiness_pct": null,
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "AI4",
+      "decision": "REVIEW",
+      "primary_reason": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "20",
+      "stated_roi_pct": "60",
+      "cash_benefit_inr": "180000",
+      "cash_net_annual_benefit_inr": "120000",
+      "cash_payback_months": "20",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "60",
+      "cash_breakeven_adoption_pct": "33.33",
+      "overall_readiness_pct": null,
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "AI5",
+      "decision": "REVISE",
+      "primary_reason": "LOW_READINESS",
+      "reason_codes": [
+        "LOW_READINESS",
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "20",
+      "stated_roi_pct": "60",
+      "cash_benefit_inr": "180000",
+      "cash_net_annual_benefit_inr": "120000",
+      "cash_payback_months": "20",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "60",
+      "cash_breakeven_adoption_pct": "33.33",
+      "overall_readiness_pct": null,
+      "readiness_level": "low"
+    }
+  ],
+  "optimizer": [
+    {
+      "dataset": "official_fixture",
+      "budget_inr": 200000,
+      "basis": "cash",
+      "selected": [
+        "AI1"
+      ],
+      "net_annual_benefit_inr": "120000",
+      "total_setup_cost_inr": "200000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "AI2",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI3",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI4",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI5",
+          "code": "PILOT_NEEDS_REVISION",
+          "reason": "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+        }
+      ]
+    },
+    {
+      "dataset": "synthetic_first_20",
+      "budget_inr": 200000,
+      "basis": "cash",
+      "selected": [
+        "SYN013"
+      ],
+      "net_annual_benefit_inr": "150000",
+      "total_setup_cost_inr": "130000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "SYN001",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN002",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 340000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN003",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN004",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN005",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN006",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN007",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN008",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN009",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN010",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN011",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 420000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN012",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN014",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN015",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN016",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN017",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 310000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN018",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 420000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN019",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 260000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN020",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        }
+      ]
+    },
+    {
+      "dataset": "official_fixture",
+      "budget_inr": 200000,
+      "basis": "stated",
+      "selected": [
+        "AI1"
+      ],
+      "net_annual_benefit_inr": "120000",
+      "total_setup_cost_inr": "200000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "AI2",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI3",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI4",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI5",
+          "code": "PILOT_NEEDS_REVISION",
+          "reason": "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+        }
+      ]
+    },
+    {
+      "dataset": "synthetic_first_20",
+      "budget_inr": 200000,
+      "basis": "stated",
+      "selected": [
+        "SYN013"
+      ],
+      "net_annual_benefit_inr": "150000",
+      "total_setup_cost_inr": "130000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "SYN001",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN002",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 340000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN003",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN004",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN005",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN006",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN007",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN008",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN009",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN010",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN011",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 420000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN012",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN014",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN015",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN016",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN017",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 310000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN018",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 420000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN019",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 260000 alone exceeds the budget INR 200000."
+        },
+        {
+          "pilot_id": "SYN020",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        }
+      ]
+    },
+    {
+      "dataset": "official_fixture",
+      "budget_inr": 400000,
+      "basis": "cash",
+      "selected": [
+        "AI1",
+        "AI4"
+      ],
+      "net_annual_benefit_inr": "240000",
+      "total_setup_cost_inr": "400000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "AI2",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI3",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI5",
+          "code": "PILOT_NEEDS_REVISION",
+          "reason": "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+        }
+      ]
+    },
+    {
+      "dataset": "synthetic_first_20",
+      "budget_inr": 400000,
+      "basis": "cash",
+      "selected": [
+        "SYN013",
+        "SYN019"
+      ],
+      "net_annual_benefit_inr": "280000",
+      "total_setup_cost_inr": "390000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "SYN001",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN002",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN003",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN004",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN005",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN006",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN007",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN008",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN009",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN010",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN011",
+          "code": "DOUBLE_COUNT_RISK",
+          "reason": "Shares benefit group \"catalog\" with selected SYN019; the benefit is counted once."
+        },
+        {
+          "pilot_id": "SYN012",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN014",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN015",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN016",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN017",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN018",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 420000 alone exceeds the budget INR 400000."
+        },
+        {
+          "pilot_id": "SYN020",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        }
+      ]
+    },
+    {
+      "dataset": "official_fixture",
+      "budget_inr": 400000,
+      "basis": "stated",
+      "selected": [
+        "AI1",
+        "AI4"
+      ],
+      "net_annual_benefit_inr": "240000",
+      "total_setup_cost_inr": "400000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "AI2",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI3",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI5",
+          "code": "PILOT_NEEDS_REVISION",
+          "reason": "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+        }
+      ]
+    },
+    {
+      "dataset": "synthetic_first_20",
+      "budget_inr": 400000,
+      "basis": "stated",
+      "selected": [
+        "SYN002"
+      ],
+      "net_annual_benefit_inr": "400000",
+      "total_setup_cost_inr": "340000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "SYN001",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN003",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN004",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN005",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN006",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN007",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN008",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN009",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN010",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN011",
+          "code": "BUDGET_EXCEEDED",
+          "reason": "Setup INR 420000 alone exceeds the budget INR 400000."
+        },
+        {
+          "pilot_id": "SYN012",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN013",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN014",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN015",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN016",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN017",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN018",
+          "code": "DOUBLE_COUNT_RISK",
+          "reason": "Shares benefit group \"ops\" with selected SYN002; the benefit is counted once."
+        },
+        {
+          "pilot_id": "SYN019",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN020",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        }
+      ]
+    },
+    {
+      "dataset": "official_fixture",
+      "budget_inr": 600000,
+      "basis": "cash",
+      "selected": [
+        "AI1",
+        "AI2",
+        "AI4"
+      ],
+      "net_annual_benefit_inr": "360000",
+      "total_setup_cost_inr": "600000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "AI3",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI5",
+          "code": "PILOT_NEEDS_REVISION",
+          "reason": "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+        }
+      ]
+    },
+    {
+      "dataset": "synthetic_first_20",
+      "budget_inr": 600000,
+      "basis": "cash",
+      "selected": [
+        "SYN013",
+        "SYN019"
+      ],
+      "net_annual_benefit_inr": "280000",
+      "total_setup_cost_inr": "390000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "SYN001",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN002",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN003",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN004",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN005",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN006",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN007",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN008",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN009",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN010",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN011",
+          "code": "DOUBLE_COUNT_RISK",
+          "reason": "Shares benefit group \"catalog\" with selected SYN019; the benefit is counted once."
+        },
+        {
+          "pilot_id": "SYN012",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN014",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN015",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN016",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN017",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN018",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN020",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        }
+      ]
+    },
+    {
+      "dataset": "official_fixture",
+      "budget_inr": 600000,
+      "basis": "stated",
+      "selected": [
+        "AI1",
+        "AI2",
+        "AI4"
+      ],
+      "net_annual_benefit_inr": "360000",
+      "total_setup_cost_inr": "600000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "AI3",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "AI5",
+          "code": "PILOT_NEEDS_REVISION",
+          "reason": "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+        }
+      ]
+    },
+    {
+      "dataset": "synthetic_first_20",
+      "budget_inr": 600000,
+      "basis": "stated",
+      "selected": [
+        "SYN002",
+        "SYN013"
+      ],
+      "net_annual_benefit_inr": "550000",
+      "total_setup_cost_inr": "470000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "SYN001",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN003",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN004",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN005",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN006",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN007",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN008",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN009",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN010",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN011",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN012",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN014",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN015",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN016",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN017",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN018",
+          "code": "DOUBLE_COUNT_RISK",
+          "reason": "Shares benefit group \"ops\" with selected SYN002; the benefit is counted once."
+        },
+        {
+          "pilot_id": "SYN019",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN020",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        }
+      ]
+    },
+    {
+      "dataset": "official_fixture",
+      "budget_inr": 800000,
+      "basis": "cash",
+      "selected": [
+        "AI1",
+        "AI2",
+        "AI3",
+        "AI4"
+      ],
+      "net_annual_benefit_inr": "480000",
+      "total_setup_cost_inr": "800000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "AI5",
+          "code": "PILOT_NEEDS_REVISION",
+          "reason": "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+        }
+      ]
+    },
+    {
+      "dataset": "synthetic_first_20",
+      "budget_inr": 800000,
+      "basis": "cash",
+      "selected": [
+        "SYN002",
+        "SYN013",
+        "SYN019"
+      ],
+      "net_annual_benefit_inr": "386000",
+      "total_setup_cost_inr": "730000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "SYN001",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN003",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN004",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN005",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN006",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN007",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN008",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN009",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN010",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN011",
+          "code": "DOUBLE_COUNT_RISK",
+          "reason": "Shares benefit group \"catalog\" with selected SYN019; the benefit is counted once."
+        },
+        {
+          "pilot_id": "SYN012",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN014",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN015",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN016",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN017",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN018",
+          "code": "DOUBLE_COUNT_RISK",
+          "reason": "Shares benefit group \"ops\" with selected SYN002; the benefit is counted once."
+        },
+        {
+          "pilot_id": "SYN020",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        }
+      ]
+    },
+    {
+      "dataset": "official_fixture",
+      "budget_inr": 800000,
+      "basis": "stated",
+      "selected": [
+        "AI1",
+        "AI2",
+        "AI3",
+        "AI4"
+      ],
+      "net_annual_benefit_inr": "480000",
+      "total_setup_cost_inr": "800000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "AI5",
+          "code": "PILOT_NEEDS_REVISION",
+          "reason": "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+        }
+      ]
+    },
+    {
+      "dataset": "synthetic_first_20",
+      "budget_inr": 800000,
+      "basis": "stated",
+      "selected": [
+        "SYN002",
+        "SYN013",
+        "SYN017"
+      ],
+      "net_annual_benefit_inr": "710000",
+      "total_setup_cost_inr": "780000",
+      "assessment_status": "VALID",
+      "excluded": [
+        {
+          "pilot_id": "SYN001",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN003",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN004",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN005",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN006",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN007",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN008",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN009",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN010",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN011",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN012",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN)."
+        },
+        {
+          "pilot_id": "SYN014",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (QUALITY_THRESHOLD_FAILED)."
+        },
+        {
+          "pilot_id": "SYN015",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN016",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        },
+        {
+          "pilot_id": "SYN018",
+          "code": "DOUBLE_COUNT_RISK",
+          "reason": "Shares benefit group \"ops\" with selected SYN002; the benefit is counted once."
+        },
+        {
+          "pilot_id": "SYN019",
+          "code": "NOT_FUNDED",
+          "reason": "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+        },
+        {
+          "pilot_id": "SYN020",
+          "code": "STOP_PILOT_SELECTED",
+          "reason": "Mandatory STOP decision (NEVER_PAYS_BACK)."
+        }
+      ]
+    }
+  ],
+  "optimizer_full_check": {
+    "dataset": "synthetic_all_120",
+    "budget_inr": 800000,
+    "basis": "stated",
+    "selected": [],
+    "net_annual_benefit_inr": null,
+    "total_setup_cost_inr": "",
+    "assessment_status": "",
+    "excluded": [],
+    "error": "too many candidate pilots for exact search: 33 \u003e 20"
+  },
+  "rules_version": "c23-rules-v1",
+  "synthetic_pilots": [
+    {
+      "record_id": "SYN001",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "70000",
+      "stated_payback_months": "44.57",
+      "stated_roi_pct": "26.92",
+      "cash_benefit_inr": "230000",
+      "cash_net_annual_benefit_inr": "70000",
+      "cash_payback_months": "44.57",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "26.92",
+      "cash_breakeven_adoption_pct": "69.57",
+      "overall_readiness_pct": "77.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN002",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "400000",
+      "stated_payback_months": "10.2",
+      "stated_roi_pct": "117.65",
+      "cash_benefit_inr": "126000",
+      "cash_net_annual_benefit_inr": "106000",
+      "cash_payback_months": "38.49",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "31.18",
+      "cash_breakeven_adoption_pct": "15.87",
+      "overall_readiness_pct": "59.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN003",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "220000",
+      "stated_payback_months": "14.18",
+      "stated_roi_pct": "84.62",
+      "cash_benefit_inr": "103500",
+      "cash_net_annual_benefit_inr": "-21500",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-8.27",
+      "cash_breakeven_adoption_pct": "120.77",
+      "overall_readiness_pct": "74.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN004",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "40000",
+      "stated_payback_months": "42",
+      "stated_roi_pct": "28.57",
+      "cash_benefit_inr": "86518",
+      "cash_net_annual_benefit_inr": "1518",
+      "cash_payback_months": "1106.72",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "1.08",
+      "cash_breakeven_adoption_pct": "98.25",
+      "overall_readiness_pct": "70.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN005",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "90000",
+      "stated_payback_months": "18.67",
+      "stated_roi_pct": "64.29",
+      "cash_benefit_inr": "205000",
+      "cash_net_annual_benefit_inr": "90000",
+      "cash_payback_months": "18.67",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "64.29",
+      "cash_breakeven_adoption_pct": "56.1",
+      "overall_readiness_pct": "93.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN006",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "75000",
+      "stated_payback_months": "12.8",
+      "stated_roi_pct": "93.75",
+      "cash_benefit_inr": "26000",
+      "cash_net_annual_benefit_inr": "-29000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-36.25",
+      "cash_breakeven_adoption_pct": "211.54",
+      "overall_readiness_pct": "74.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN007",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "200000",
+      "stated_payback_months": "22.2",
+      "stated_roi_pct": "54.05",
+      "cash_benefit_inr": "111000",
+      "cash_net_annual_benefit_inr": "-59000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-15.95",
+      "cash_breakeven_adoption_pct": "153.15",
+      "overall_readiness_pct": "83.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN008",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "470000",
+      "stated_payback_months": "8.68",
+      "stated_roi_pct": "138.24",
+      "cash_benefit_inr": "50000",
+      "cash_net_annual_benefit_inr": "20000",
+      "cash_payback_months": "204",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "5.88",
+      "cash_breakeven_adoption_pct": "60",
+      "overall_readiness_pct": "72",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN009",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "380000",
+      "stated_payback_months": "5.05",
+      "stated_roi_pct": "237.5",
+      "cash_benefit_inr": "45000",
+      "cash_net_annual_benefit_inr": "-25000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-15.63",
+      "cash_breakeven_adoption_pct": "155.56",
+      "overall_readiness_pct": "75.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN010",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "110000",
+      "stated_payback_months": "9.82",
+      "stated_roi_pct": "122.22",
+      "cash_benefit_inr": "51000",
+      "cash_net_annual_benefit_inr": "-94000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-104.44",
+      "cash_breakeven_adoption_pct": "284.31",
+      "overall_readiness_pct": "71",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN011",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "130000",
+      "stated_payback_months": "38.77",
+      "stated_roi_pct": "30.95",
+      "cash_benefit_inr": "188620",
+      "cash_net_annual_benefit_inr": "53620",
+      "cash_payback_months": "93.99",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "12.77",
+      "cash_breakeven_adoption_pct": "71.57",
+      "overall_readiness_pct": "67.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN012",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "240000",
+      "stated_payback_months": "14",
+      "stated_roi_pct": "85.71",
+      "cash_benefit_inr": "97500",
+      "cash_net_annual_benefit_inr": "12500",
+      "cash_payback_months": "268.8",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "4.46",
+      "cash_breakeven_adoption_pct": "87.18",
+      "overall_readiness_pct": "75.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN013",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "150000",
+      "stated_payback_months": "10.4",
+      "stated_roi_pct": "115.38",
+      "cash_benefit_inr": "230000",
+      "cash_net_annual_benefit_inr": "150000",
+      "cash_payback_months": "10.4",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "115.38",
+      "cash_breakeven_adoption_pct": "34.78",
+      "overall_readiness_pct": "81.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN014",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "335000",
+      "stated_payback_months": "13.61",
+      "stated_roi_pct": "88.16",
+      "cash_benefit_inr": "256965",
+      "cash_net_annual_benefit_inr": "231965",
+      "cash_payback_months": "19.66",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "61.04",
+      "cash_breakeven_adoption_pct": "9.73",
+      "overall_readiness_pct": "69.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN015",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "13",
+      "stated_roi_pct": "92.31",
+      "cash_benefit_inr": "70500",
+      "cash_net_annual_benefit_inr": "-44500",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-34.23",
+      "cash_breakeven_adoption_pct": "163.12",
+      "overall_readiness_pct": "70.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN016",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "40000",
+      "stated_payback_months": "42",
+      "stated_roi_pct": "28.57",
+      "cash_benefit_inr": "33000",
+      "cash_net_annual_benefit_inr": "-37000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-26.43",
+      "cash_breakeven_adoption_pct": "212.12",
+      "overall_readiness_pct": "70.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN017",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "160000",
+      "stated_payback_months": "23.25",
+      "stated_roi_pct": "51.61",
+      "cash_benefit_inr": "164987",
+      "cash_net_annual_benefit_inr": "59987",
+      "cash_payback_months": "62.01",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "19.35",
+      "cash_breakeven_adoption_pct": "63.64",
+      "overall_readiness_pct": "74.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN018",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "185000",
+      "stated_payback_months": "27.24",
+      "stated_roi_pct": "44.05",
+      "cash_benefit_inr": "144506",
+      "cash_net_annual_benefit_inr": "99506",
+      "cash_payback_months": "50.65",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "23.69",
+      "cash_breakeven_adoption_pct": "31.14",
+      "overall_readiness_pct": "75",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN019",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "130000",
+      "stated_payback_months": "24",
+      "stated_roi_pct": "50",
+      "cash_benefit_inr": "220000",
+      "cash_net_annual_benefit_inr": "130000",
+      "cash_payback_months": "24",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "50",
+      "cash_breakeven_adoption_pct": "40.91",
+      "overall_readiness_pct": "75",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN020",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "70000",
+      "stated_payback_months": "54.86",
+      "stated_roi_pct": "21.88",
+      "cash_benefit_inr": "39000",
+      "cash_net_annual_benefit_inr": "-21000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-6.56",
+      "cash_breakeven_adoption_pct": "153.85",
+      "overall_readiness_pct": "65.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN021",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "340000",
+      "stated_payback_months": "4.24",
+      "stated_roi_pct": "283.33",
+      "cash_benefit_inr": "480000",
+      "cash_net_annual_benefit_inr": "340000",
+      "cash_payback_months": "4.24",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "283.33",
+      "cash_breakeven_adoption_pct": "29.17",
+      "overall_readiness_pct": "59",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN022",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "140000",
+      "stated_payback_months": "36",
+      "stated_roi_pct": "33.33",
+      "cash_benefit_inr": "78000",
+      "cash_net_annual_benefit_inr": "-42000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-10",
+      "cash_breakeven_adoption_pct": "153.85",
+      "overall_readiness_pct": "82.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN023",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "150000",
+      "stated_payback_months": "13.6",
+      "stated_roi_pct": "88.24",
+      "cash_benefit_inr": "180000",
+      "cash_net_annual_benefit_inr": "150000",
+      "cash_payback_months": "13.6",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "88.24",
+      "cash_breakeven_adoption_pct": "16.67",
+      "overall_readiness_pct": "76.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN024",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "20000",
+      "stated_payback_months": "204",
+      "stated_roi_pct": "5.88",
+      "cash_benefit_inr": "28000",
+      "cash_net_annual_benefit_inr": "-92000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-27.06",
+      "cash_breakeven_adoption_pct": "428.57",
+      "overall_readiness_pct": "86.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN025",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_READINESS"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "40000",
+      "stated_payback_months": "96",
+      "stated_roi_pct": "12.5",
+      "cash_benefit_inr": "180000",
+      "cash_net_annual_benefit_inr": "40000",
+      "cash_payback_months": "96",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "12.5",
+      "cash_breakeven_adoption_pct": "77.78",
+      "overall_readiness_pct": "47.67",
+      "readiness_level": "low"
+    },
+    {
+      "record_id": "SYN026",
+      "decision": "REVISE",
+      "primary_reason": "LOW_ADOPTION",
+      "reason_codes": [
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "425000",
+      "stated_payback_months": "7.91",
+      "stated_roi_pct": "151.79",
+      "cash_benefit_inr": "490000",
+      "cash_net_annual_benefit_inr": "425000",
+      "cash_payback_months": "7.91",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "151.79",
+      "cash_breakeven_adoption_pct": "13.27",
+      "overall_readiness_pct": "70",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN027",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "20",
+      "stated_roi_pct": "60",
+      "cash_benefit_inr": "26500",
+      "cash_net_annual_benefit_inr": "-118500",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-59.25",
+      "cash_breakeven_adoption_pct": "547.17",
+      "overall_readiness_pct": "83",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN028",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "200000",
+      "stated_payback_months": "18",
+      "stated_roi_pct": "66.67",
+      "cash_benefit_inr": "23000",
+      "cash_net_annual_benefit_inr": "-7000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-2.33",
+      "cash_breakeven_adoption_pct": "130.43",
+      "overall_readiness_pct": "65.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN029",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "50000",
+      "stated_payback_months": "55.2",
+      "stated_roi_pct": "21.74",
+      "cash_benefit_inr": "24000",
+      "cash_net_annual_benefit_inr": "-46000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-20",
+      "cash_breakeven_adoption_pct": "291.67",
+      "overall_readiness_pct": "79.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN030",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "230000",
+      "stated_payback_months": "19.3",
+      "stated_roi_pct": "62.16",
+      "cash_benefit_inr": "360000",
+      "cash_net_annual_benefit_inr": "230000",
+      "cash_payback_months": "19.3",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "62.16",
+      "cash_breakeven_adoption_pct": "36.11",
+      "overall_readiness_pct": "67.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN031",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "285000",
+      "stated_payback_months": "3.79",
+      "stated_roi_pct": "316.67",
+      "cash_benefit_inr": "93000",
+      "cash_net_annual_benefit_inr": "68000",
+      "cash_payback_months": "15.88",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "75.56",
+      "cash_breakeven_adoption_pct": "26.88",
+      "overall_readiness_pct": "62.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN032",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "130000",
+      "stated_payback_months": "36.92",
+      "stated_roi_pct": "32.5",
+      "cash_benefit_inr": "140256",
+      "cash_net_annual_benefit_inr": "60256",
+      "cash_payback_months": "79.66",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "15.06",
+      "cash_breakeven_adoption_pct": "57.04",
+      "overall_readiness_pct": "60.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN033",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "70000",
+      "stated_payback_months": "58.29",
+      "stated_roi_pct": "20.59",
+      "cash_benefit_inr": "39000",
+      "cash_net_annual_benefit_inr": "-86000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-25.29",
+      "cash_breakeven_adoption_pct": "320.51",
+      "overall_readiness_pct": "70",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN034",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "110000",
+      "stated_payback_months": "20.73",
+      "stated_roi_pct": "57.89",
+      "cash_benefit_inr": "215000",
+      "cash_net_annual_benefit_inr": "110000",
+      "cash_payback_months": "20.73",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "57.89",
+      "cash_breakeven_adoption_pct": "48.84",
+      "overall_readiness_pct": "68",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN035",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "100000",
+      "stated_payback_months": "18",
+      "stated_roi_pct": "66.67",
+      "cash_benefit_inr": "106739",
+      "cash_net_annual_benefit_inr": "76739",
+      "cash_payback_months": "23.46",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "51.16",
+      "cash_breakeven_adoption_pct": "28.11",
+      "overall_readiness_pct": "72.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN036",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "200000",
+      "stated_payback_months": "19.8",
+      "stated_roi_pct": "60.61",
+      "cash_benefit_inr": "181684",
+      "cash_net_annual_benefit_inr": "21684",
+      "cash_payback_months": "182.62",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "6.57",
+      "cash_breakeven_adoption_pct": "88.06",
+      "overall_readiness_pct": "67.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN037",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "160000",
+      "stated_payback_months": "27",
+      "stated_roi_pct": "44.44",
+      "cash_benefit_inr": "300000",
+      "cash_net_annual_benefit_inr": "160000",
+      "cash_payback_months": "27",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "44.44",
+      "cash_breakeven_adoption_pct": "46.67",
+      "overall_readiness_pct": "85",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN038",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "130000",
+      "stated_payback_months": "37.85",
+      "stated_roi_pct": "31.71",
+      "cash_benefit_inr": "225000",
+      "cash_net_annual_benefit_inr": "130000",
+      "cash_payback_months": "37.85",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "31.71",
+      "cash_breakeven_adoption_pct": "42.22",
+      "overall_readiness_pct": "69.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN039",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "160000",
+      "stated_payback_months": "18.75",
+      "stated_roi_pct": "64",
+      "cash_benefit_inr": "310000",
+      "cash_net_annual_benefit_inr": "160000",
+      "cash_payback_months": "18.75",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "64",
+      "cash_breakeven_adoption_pct": "48.39",
+      "overall_readiness_pct": "82.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN040",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "190000",
+      "stated_payback_months": "5.68",
+      "stated_roi_pct": "211.11",
+      "cash_benefit_inr": "42000",
+      "cash_net_annual_benefit_inr": "22000",
+      "cash_payback_months": "49.09",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "24.44",
+      "cash_breakeven_adoption_pct": "47.62",
+      "overall_readiness_pct": "68.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN041",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "95000",
+      "stated_payback_months": "10.11",
+      "stated_roi_pct": "118.75",
+      "cash_benefit_inr": "130000",
+      "cash_net_annual_benefit_inr": "95000",
+      "cash_payback_months": "10.11",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "118.75",
+      "cash_breakeven_adoption_pct": "26.92",
+      "overall_readiness_pct": "68",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN042",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "280000",
+      "stated_payback_months": "7.71",
+      "stated_roi_pct": "155.56",
+      "cash_benefit_inr": "90000",
+      "cash_net_annual_benefit_inr": "70000",
+      "cash_payback_months": "30.86",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "38.89",
+      "cash_breakeven_adoption_pct": "22.22",
+      "overall_readiness_pct": "64.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN043",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "130000",
+      "stated_payback_months": "36.92",
+      "stated_roi_pct": "32.5",
+      "cash_benefit_inr": "285000",
+      "cash_net_annual_benefit_inr": "130000",
+      "cash_payback_months": "36.92",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "32.5",
+      "cash_breakeven_adoption_pct": "54.39",
+      "overall_readiness_pct": "73.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN044",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "280000",
+      "stated_payback_months": "13.71",
+      "stated_roi_pct": "87.5",
+      "cash_benefit_inr": "410000",
+      "cash_net_annual_benefit_inr": "280000",
+      "cash_payback_months": "13.71",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "87.5",
+      "cash_breakeven_adoption_pct": "31.71",
+      "overall_readiness_pct": "82.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN045",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_READINESS"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "160000",
+      "stated_payback_months": "10.5",
+      "stated_roi_pct": "114.29",
+      "cash_benefit_inr": "52000",
+      "cash_net_annual_benefit_inr": "-48000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-34.29",
+      "cash_breakeven_adoption_pct": "192.31",
+      "overall_readiness_pct": "48.33",
+      "readiness_level": "low"
+    },
+    {
+      "record_id": "SYN046",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "285000",
+      "stated_payback_months": "17.68",
+      "stated_roi_pct": "67.86",
+      "cash_benefit_inr": "33000",
+      "cash_net_annual_benefit_inr": "-12000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-2.86",
+      "cash_breakeven_adoption_pct": "136.36",
+      "overall_readiness_pct": "75",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN047",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "190000",
+      "stated_payback_months": "24",
+      "stated_roi_pct": "50",
+      "cash_benefit_inr": "240000",
+      "cash_net_annual_benefit_inr": "190000",
+      "cash_payback_months": "24",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "50",
+      "cash_breakeven_adoption_pct": "20.83",
+      "overall_readiness_pct": "71.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN048",
+      "decision": "REVISE",
+      "primary_reason": "LOW_ADOPTION",
+      "reason_codes": [
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "150000",
+      "stated_payback_months": "21.6",
+      "stated_roi_pct": "55.56",
+      "cash_benefit_inr": "220000",
+      "cash_net_annual_benefit_inr": "150000",
+      "cash_payback_months": "21.6",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "55.56",
+      "cash_breakeven_adoption_pct": "31.82",
+      "overall_readiness_pct": "73.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN049",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "85000",
+      "stated_payback_months": "18.35",
+      "stated_roi_pct": "65.38",
+      "cash_benefit_inr": "28000",
+      "cash_net_annual_benefit_inr": "-27000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-20.77",
+      "cash_breakeven_adoption_pct": "196.43",
+      "overall_readiness_pct": "78",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN050",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "190000",
+      "stated_payback_months": "17.05",
+      "stated_roi_pct": "70.37",
+      "cash_benefit_inr": "99000",
+      "cash_net_annual_benefit_inr": "-41000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-15.19",
+      "cash_breakeven_adoption_pct": "141.41",
+      "overall_readiness_pct": "79.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN051",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "270000",
+      "stated_payback_months": "14.67",
+      "stated_roi_pct": "81.82",
+      "cash_benefit_inr": "385000",
+      "cash_net_annual_benefit_inr": "270000",
+      "cash_payback_months": "14.67",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "81.82",
+      "cash_breakeven_adoption_pct": "29.87",
+      "overall_readiness_pct": "91.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN052",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "290000",
+      "stated_payback_months": "3.72",
+      "stated_roi_pct": "322.22",
+      "cash_benefit_inr": "262352",
+      "cash_net_annual_benefit_inr": "107352",
+      "cash_payback_months": "10.06",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "119.28",
+      "cash_breakeven_adoption_pct": "59.08",
+      "overall_readiness_pct": "75.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN053",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "320000",
+      "stated_payback_months": "12.38",
+      "stated_roi_pct": "96.97",
+      "cash_benefit_inr": "360000",
+      "cash_net_annual_benefit_inr": "320000",
+      "cash_payback_months": "12.38",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "96.97",
+      "cash_breakeven_adoption_pct": "11.11",
+      "overall_readiness_pct": "58.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN054",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "190000",
+      "stated_payback_months": "5.68",
+      "stated_roi_pct": "211.11",
+      "cash_benefit_inr": "56000",
+      "cash_net_annual_benefit_inr": "-34000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-37.78",
+      "cash_breakeven_adoption_pct": "160.71",
+      "overall_readiness_pct": "71",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN055",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "305000",
+      "stated_payback_months": "15.34",
+      "stated_roi_pct": "78.21",
+      "cash_benefit_inr": "108000",
+      "cash_net_annual_benefit_inr": "53000",
+      "cash_payback_months": "88.3",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "13.59",
+      "cash_breakeven_adoption_pct": "50.93",
+      "overall_readiness_pct": "74.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN056",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "90000",
+      "stated_payback_months": "13.33",
+      "stated_roi_pct": "90",
+      "cash_benefit_inr": "46000",
+      "cash_net_annual_benefit_inr": "-94000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-94",
+      "cash_breakeven_adoption_pct": "304.35",
+      "overall_readiness_pct": "78.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN057",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "230000",
+      "stated_payback_months": "14.61",
+      "stated_roi_pct": "82.14",
+      "cash_benefit_inr": "39000",
+      "cash_net_annual_benefit_inr": "-121000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-43.21",
+      "cash_breakeven_adoption_pct": "410.26",
+      "overall_readiness_pct": "83.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN058",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "350000",
+      "stated_payback_months": "5.14",
+      "stated_roi_pct": "233.33",
+      "cash_benefit_inr": "45000",
+      "cash_net_annual_benefit_inr": "-55000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-36.67",
+      "cash_breakeven_adoption_pct": "222.22",
+      "overall_readiness_pct": "59.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN059",
+      "decision": "REVISE",
+      "primary_reason": "LOW_ADOPTION",
+      "reason_codes": [
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "240000",
+      "stated_payback_months": "5.5",
+      "stated_roi_pct": "218.18",
+      "cash_benefit_inr": "345000",
+      "cash_net_annual_benefit_inr": "240000",
+      "cash_payback_months": "5.5",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "218.18",
+      "cash_breakeven_adoption_pct": "30.43",
+      "overall_readiness_pct": "74",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN060",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "250000",
+      "stated_payback_months": "18.72",
+      "stated_roi_pct": "64.1",
+      "cash_benefit_inr": "243105",
+      "cash_net_annual_benefit_inr": "123105",
+      "cash_payback_months": "38.02",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "31.57",
+      "cash_breakeven_adoption_pct": "49.36",
+      "overall_readiness_pct": "84",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN061",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "290000",
+      "stated_payback_months": "3.31",
+      "stated_roi_pct": "362.5",
+      "cash_benefit_inr": "460000",
+      "cash_net_annual_benefit_inr": "290000",
+      "cash_payback_months": "3.31",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "362.5",
+      "cash_breakeven_adoption_pct": "36.96",
+      "overall_readiness_pct": "87.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN062",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "320000",
+      "stated_payback_months": "3.75",
+      "stated_roi_pct": "320",
+      "cash_benefit_inr": "415000",
+      "cash_net_annual_benefit_inr": "320000",
+      "cash_payback_months": "3.75",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "320",
+      "cash_breakeven_adoption_pct": "22.89",
+      "overall_readiness_pct": "76.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN063",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "170000",
+      "stated_payback_months": "16.24",
+      "stated_roi_pct": "73.91",
+      "cash_benefit_inr": "59000",
+      "cash_net_annual_benefit_inr": "-66000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-28.7",
+      "cash_breakeven_adoption_pct": "211.86",
+      "overall_readiness_pct": "89",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN064",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "310000",
+      "stated_payback_months": "10.84",
+      "stated_roi_pct": "110.71",
+      "cash_benefit_inr": "38000",
+      "cash_net_annual_benefit_inr": "-32000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-11.43",
+      "cash_breakeven_adoption_pct": "184.21",
+      "overall_readiness_pct": "76.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN065",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "260000",
+      "stated_payback_months": "15.69",
+      "stated_roi_pct": "76.47",
+      "cash_benefit_inr": "58000",
+      "cash_net_annual_benefit_inr": "28000",
+      "cash_payback_months": "145.71",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "8.24",
+      "cash_breakeven_adoption_pct": "51.72",
+      "overall_readiness_pct": "77",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN066",
+      "decision": "REVISE",
+      "primary_reason": "LOW_ADOPTION",
+      "reason_codes": [
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "22",
+      "stated_roi_pct": "54.55",
+      "cash_benefit_inr": "172629",
+      "cash_net_annual_benefit_inr": "77629",
+      "cash_payback_months": "34.01",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "35.29",
+      "cash_breakeven_adoption_pct": "55.03",
+      "overall_readiness_pct": "91.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN067",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "390000",
+      "stated_payback_months": "11.69",
+      "stated_roi_pct": "102.63",
+      "cash_benefit_inr": "475000",
+      "cash_net_annual_benefit_inr": "390000",
+      "cash_payback_months": "11.69",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "102.63",
+      "cash_breakeven_adoption_pct": "17.89",
+      "overall_readiness_pct": "81",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN068",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "400000",
+      "stated_payback_months": "11.4",
+      "stated_roi_pct": "105.26",
+      "cash_benefit_inr": "49000",
+      "cash_net_annual_benefit_inr": "-41000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-10.79",
+      "cash_breakeven_adoption_pct": "183.67",
+      "overall_readiness_pct": "61.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN069",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "255000",
+      "stated_payback_months": "8",
+      "stated_roi_pct": "150",
+      "cash_benefit_inr": "30000",
+      "cash_net_annual_benefit_inr": "-15000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-8.82",
+      "cash_breakeven_adoption_pct": "150",
+      "overall_readiness_pct": "75.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN070",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "245000",
+      "stated_payback_months": "6.86",
+      "stated_roi_pct": "175",
+      "cash_benefit_inr": "270000",
+      "cash_net_annual_benefit_inr": "245000",
+      "cash_payback_months": "6.86",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "175",
+      "cash_breakeven_adoption_pct": "9.26",
+      "overall_readiness_pct": "74.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN071",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "30000",
+      "stated_payback_months": "56",
+      "stated_roi_pct": "21.43",
+      "cash_benefit_inr": "120000",
+      "cash_net_annual_benefit_inr": "30000",
+      "cash_payback_months": "56",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "21.43",
+      "cash_breakeven_adoption_pct": "75",
+      "overall_readiness_pct": "73.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN072",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "420000",
+      "stated_payback_months": "7.14",
+      "stated_roi_pct": "168",
+      "cash_benefit_inr": "141000",
+      "cash_net_annual_benefit_inr": "91000",
+      "cash_payback_months": "32.97",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "36.4",
+      "cash_breakeven_adoption_pct": "35.46",
+      "overall_readiness_pct": "71.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN073",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "380000",
+      "stated_payback_months": "12",
+      "stated_roi_pct": "100",
+      "cash_benefit_inr": "80000",
+      "cash_net_annual_benefit_inr": "60000",
+      "cash_payback_months": "76",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "15.79",
+      "cash_breakeven_adoption_pct": "25",
+      "overall_readiness_pct": "62.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN074",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "160000",
+      "stated_payback_months": "18",
+      "stated_roi_pct": "66.67",
+      "cash_benefit_inr": "208041",
+      "cash_net_annual_benefit_inr": "78041",
+      "cash_payback_months": "36.9",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "32.52",
+      "cash_breakeven_adoption_pct": "62.49",
+      "overall_readiness_pct": "82",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN075",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "65000",
+      "stated_payback_months": "62.77",
+      "stated_roi_pct": "19.12",
+      "cash_benefit_inr": "28000",
+      "cash_net_annual_benefit_inr": "-47000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-13.82",
+      "cash_breakeven_adoption_pct": "267.86",
+      "overall_readiness_pct": "74.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN076",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "110000",
+      "stated_payback_months": "8.73",
+      "stated_roi_pct": "137.5",
+      "cash_benefit_inr": "260000",
+      "cash_net_annual_benefit_inr": "110000",
+      "cash_payback_months": "8.73",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "137.5",
+      "cash_breakeven_adoption_pct": "57.69",
+      "overall_readiness_pct": "82.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN077",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "290000",
+      "stated_payback_months": "7.45",
+      "stated_roi_pct": "161.11",
+      "cash_benefit_inr": "291997",
+      "cash_net_annual_benefit_inr": "201997",
+      "cash_payback_months": "10.69",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "112.22",
+      "cash_breakeven_adoption_pct": "30.82",
+      "overall_readiness_pct": "64.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN078",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "340000",
+      "stated_payback_months": "6.35",
+      "stated_roi_pct": "188.89",
+      "cash_benefit_inr": "470000",
+      "cash_net_annual_benefit_inr": "340000",
+      "cash_payback_months": "6.35",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "188.89",
+      "cash_breakeven_adoption_pct": "27.66",
+      "overall_readiness_pct": "69",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN079",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "360000",
+      "stated_payback_months": "8.67",
+      "stated_roi_pct": "138.46",
+      "cash_benefit_inr": "485000",
+      "cash_net_annual_benefit_inr": "360000",
+      "cash_payback_months": "8.67",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "138.46",
+      "cash_breakeven_adoption_pct": "25.77",
+      "overall_readiness_pct": "85.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN080",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "95000",
+      "stated_payback_months": "50.53",
+      "stated_roi_pct": "23.75",
+      "cash_benefit_inr": "24000",
+      "cash_net_annual_benefit_inr": "-1000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-0.25",
+      "cash_breakeven_adoption_pct": "104.17",
+      "overall_readiness_pct": "69",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN081",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "265000",
+      "stated_payback_months": "7.7",
+      "stated_roi_pct": "155.88",
+      "cash_benefit_inr": "210793",
+      "cash_net_annual_benefit_inr": "165793",
+      "cash_payback_months": "12.3",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "97.53",
+      "cash_breakeven_adoption_pct": "21.35",
+      "overall_readiness_pct": "73.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN082",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "260000",
+      "stated_payback_months": "7.85",
+      "stated_roi_pct": "152.94",
+      "cash_benefit_inr": "289280",
+      "cash_net_annual_benefit_inr": "194280",
+      "cash_payback_months": "10.5",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "114.28",
+      "cash_breakeven_adoption_pct": "32.84",
+      "overall_readiness_pct": "82",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN083",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "205000",
+      "stated_payback_months": "19.9",
+      "stated_roi_pct": "60.29",
+      "cash_benefit_inr": "52000",
+      "cash_net_annual_benefit_inr": "-3000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-0.88",
+      "cash_breakeven_adoption_pct": "105.77",
+      "overall_readiness_pct": "72",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN084",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "180000",
+      "stated_payback_months": "10",
+      "stated_roi_pct": "120",
+      "cash_benefit_inr": "62000",
+      "cash_net_annual_benefit_inr": "-68000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-45.33",
+      "cash_breakeven_adoption_pct": "209.68",
+      "overall_readiness_pct": "86.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN085",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "220000",
+      "stated_payback_months": "21.82",
+      "stated_roi_pct": "55",
+      "cash_benefit_inr": "63000",
+      "cash_net_annual_benefit_inr": "-32000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-8",
+      "cash_breakeven_adoption_pct": "150.79",
+      "overall_readiness_pct": "73",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN086",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "320000",
+      "stated_payback_months": "9.38",
+      "stated_roi_pct": "128",
+      "cash_benefit_inr": "47000",
+      "cash_net_annual_benefit_inr": "-103000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-41.2",
+      "cash_breakeven_adoption_pct": "319.15",
+      "overall_readiness_pct": "66.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN087",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "340000",
+      "stated_payback_months": "13.76",
+      "stated_roi_pct": "87.18",
+      "cash_benefit_inr": "355430",
+      "cash_net_annual_benefit_inr": "215430",
+      "cash_payback_months": "21.72",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "55.24",
+      "cash_breakeven_adoption_pct": "39.39",
+      "overall_readiness_pct": "69.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN088",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "50000",
+      "stated_payback_months": "100.8",
+      "stated_roi_pct": "11.9",
+      "cash_benefit_inr": "73370",
+      "cash_net_annual_benefit_inr": "-21630",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-5.15",
+      "cash_breakeven_adoption_pct": "129.48",
+      "overall_readiness_pct": "76.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN089",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "280000",
+      "stated_payback_months": "12.43",
+      "stated_roi_pct": "96.55",
+      "cash_benefit_inr": "228425",
+      "cash_net_annual_benefit_inr": "143425",
+      "cash_payback_months": "24.26",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "49.46",
+      "cash_breakeven_adoption_pct": "37.21",
+      "overall_readiness_pct": "74.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN090",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "260000",
+      "stated_payback_months": "18.46",
+      "stated_roi_pct": "65",
+      "cash_benefit_inr": "70000",
+      "cash_net_annual_benefit_inr": "-20000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-5",
+      "cash_breakeven_adoption_pct": "128.57",
+      "overall_readiness_pct": "72.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN091",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "100000",
+      "stated_payback_months": "45.6",
+      "stated_roi_pct": "26.32",
+      "cash_benefit_inr": "44000",
+      "cash_net_annual_benefit_inr": "-76000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-20",
+      "cash_breakeven_adoption_pct": "272.73",
+      "overall_readiness_pct": "64.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN092",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "80000",
+      "stated_payback_months": "19.5",
+      "stated_roi_pct": "61.54",
+      "cash_benefit_inr": "87123",
+      "cash_net_annual_benefit_inr": "2123",
+      "cash_payback_months": "734.81",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "1.63",
+      "cash_breakeven_adoption_pct": "97.56",
+      "overall_readiness_pct": "64.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN093",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "180000",
+      "stated_payback_months": "27.33",
+      "stated_roi_pct": "43.9",
+      "cash_benefit_inr": "135458",
+      "cash_net_annual_benefit_inr": "85458",
+      "cash_payback_months": "57.57",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "20.84",
+      "cash_breakeven_adoption_pct": "36.91",
+      "overall_readiness_pct": "85.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN094",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "240000",
+      "stated_payback_months": "7.5",
+      "stated_roi_pct": "160",
+      "cash_benefit_inr": "260453",
+      "cash_net_annual_benefit_inr": "175453",
+      "cash_payback_months": "10.26",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "116.97",
+      "cash_breakeven_adoption_pct": "32.64",
+      "overall_readiness_pct": "64.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN095",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "220000",
+      "stated_payback_months": "10.91",
+      "stated_roi_pct": "110",
+      "cash_benefit_inr": "111000",
+      "cash_net_annual_benefit_inr": "-39000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-19.5",
+      "cash_breakeven_adoption_pct": "135.14",
+      "overall_readiness_pct": "91.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN096",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "340000",
+      "stated_payback_months": "4.94",
+      "stated_roi_pct": "242.86",
+      "cash_benefit_inr": "90000",
+      "cash_net_annual_benefit_inr": "-20000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-14.29",
+      "cash_breakeven_adoption_pct": "122.22",
+      "overall_readiness_pct": "58.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN097",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "140000",
+      "stated_payback_months": "14.57",
+      "stated_roi_pct": "82.35",
+      "cash_benefit_inr": "42000",
+      "cash_net_annual_benefit_inr": "-28000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-16.47",
+      "cash_breakeven_adoption_pct": "166.67",
+      "overall_readiness_pct": "75",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN098",
+      "decision": "REVISE",
+      "primary_reason": "LOW_ADOPTION",
+      "reason_codes": [
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "160000",
+      "stated_payback_months": "20.25",
+      "stated_roi_pct": "59.26",
+      "cash_benefit_inr": "250000",
+      "cash_net_annual_benefit_inr": "160000",
+      "cash_payback_months": "20.25",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "59.26",
+      "cash_breakeven_adoption_pct": "36",
+      "overall_readiness_pct": "73.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN099",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "210000",
+      "stated_payback_months": "22.86",
+      "stated_roi_pct": "52.5",
+      "cash_benefit_inr": "200137",
+      "cash_net_annual_benefit_inr": "100137",
+      "cash_payback_months": "47.93",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "25.03",
+      "cash_breakeven_adoption_pct": "49.97",
+      "overall_readiness_pct": "71.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN100",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "120000",
+      "stated_payback_months": "24",
+      "stated_roi_pct": "50",
+      "cash_benefit_inr": "133995",
+      "cash_net_annual_benefit_inr": "93995",
+      "cash_payback_months": "30.64",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "39.16",
+      "cash_breakeven_adoption_pct": "29.85",
+      "overall_readiness_pct": "73",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN101",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "80000",
+      "stated_payback_months": "60",
+      "stated_roi_pct": "20",
+      "cash_benefit_inr": "21000",
+      "cash_net_annual_benefit_inr": "-109000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-27.25",
+      "cash_breakeven_adoption_pct": "619.05",
+      "overall_readiness_pct": "59.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN102",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "285000",
+      "stated_payback_months": "10.95",
+      "stated_roi_pct": "109.62",
+      "cash_benefit_inr": "340000",
+      "cash_net_annual_benefit_inr": "285000",
+      "cash_payback_months": "10.95",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "109.62",
+      "cash_breakeven_adoption_pct": "16.18",
+      "overall_readiness_pct": "65.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN103",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "280000",
+      "stated_payback_months": "10.29",
+      "stated_roi_pct": "116.67",
+      "cash_benefit_inr": "133500",
+      "cash_net_annual_benefit_inr": "-31500",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-13.13",
+      "cash_breakeven_adoption_pct": "123.6",
+      "overall_readiness_pct": "68.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN104",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "350000",
+      "stated_payback_months": "5.14",
+      "stated_roi_pct": "233.33",
+      "cash_benefit_inr": "475000",
+      "cash_net_annual_benefit_inr": "350000",
+      "cash_payback_months": "5.14",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "233.33",
+      "cash_breakeven_adoption_pct": "26.32",
+      "overall_readiness_pct": "80.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN105",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "360000",
+      "stated_payback_months": "8",
+      "stated_roi_pct": "150",
+      "cash_benefit_inr": "86000",
+      "cash_net_annual_benefit_inr": "16000",
+      "cash_payback_months": "180",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "6.67",
+      "cash_breakeven_adoption_pct": "81.4",
+      "overall_readiness_pct": "72",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN106",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "175000",
+      "stated_payback_months": "6.17",
+      "stated_roi_pct": "194.44",
+      "cash_benefit_inr": "44000",
+      "cash_net_annual_benefit_inr": "-1000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-1.11",
+      "cash_breakeven_adoption_pct": "102.27",
+      "overall_readiness_pct": "74",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN107",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "110000",
+      "stated_payback_months": "19.64",
+      "stated_roi_pct": "61.11",
+      "cash_benefit_inr": "140073",
+      "cash_net_annual_benefit_inr": "25073",
+      "cash_payback_months": "86.15",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "13.93",
+      "cash_breakeven_adoption_pct": "82.1",
+      "overall_readiness_pct": "69.67",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN108",
+      "decision": "STOP",
+      "primary_reason": "QUALITY_THRESHOLD_FAILED",
+      "reason_codes": [
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "285000",
+      "stated_payback_months": "7.16",
+      "stated_roi_pct": "167.65",
+      "cash_benefit_inr": "70000",
+      "cash_net_annual_benefit_inr": "5000",
+      "cash_payback_months": "408",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "2.94",
+      "cash_breakeven_adoption_pct": "92.86",
+      "overall_readiness_pct": "62",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN109",
+      "decision": "STOP",
+      "primary_reason": "ADOPTION_BELOW_BREAKEVEN",
+      "reason_codes": [
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "160000",
+      "stated_payback_months": "6",
+      "stated_roi_pct": "200",
+      "cash_benefit_inr": "165988",
+      "cash_net_annual_benefit_inr": "45988",
+      "cash_payback_months": "20.88",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "57.49",
+      "cash_breakeven_adoption_pct": "72.29",
+      "overall_readiness_pct": "79",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN110",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "280000",
+      "stated_payback_months": "9",
+      "stated_roi_pct": "133.33",
+      "cash_benefit_inr": "400000",
+      "cash_net_annual_benefit_inr": "280000",
+      "cash_payback_months": "9",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "133.33",
+      "cash_breakeven_adoption_pct": "30",
+      "overall_readiness_pct": "77.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN111",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "425000",
+      "stated_payback_months": "7.06",
+      "stated_roi_pct": "170",
+      "cash_benefit_inr": "48000",
+      "cash_net_annual_benefit_inr": "-7000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-2.8",
+      "cash_breakeven_adoption_pct": "114.58",
+      "overall_readiness_pct": "56.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN112",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "400000",
+      "stated_payback_months": "4.5",
+      "stated_roi_pct": "266.67",
+      "cash_benefit_inr": "48000",
+      "cash_net_annual_benefit_inr": "-32000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-21.33",
+      "cash_breakeven_adoption_pct": "166.67",
+      "overall_readiness_pct": "79.67",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN113",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "50000",
+      "stated_payback_months": "72",
+      "stated_roi_pct": "16.67",
+      "cash_benefit_inr": "21000",
+      "cash_net_annual_benefit_inr": "-139000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-46.33",
+      "cash_breakeven_adoption_pct": "761.9",
+      "overall_readiness_pct": "65",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN114",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "375000",
+      "stated_payback_months": "11.84",
+      "stated_roi_pct": "101.35",
+      "cash_benefit_inr": "410000",
+      "cash_net_annual_benefit_inr": "375000",
+      "cash_payback_months": "11.84",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "101.35",
+      "cash_breakeven_adoption_pct": "8.54",
+      "overall_readiness_pct": "76",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN115",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "285000",
+      "stated_payback_months": "17.26",
+      "stated_roi_pct": "69.51",
+      "cash_benefit_inr": "360000",
+      "cash_net_annual_benefit_inr": "285000",
+      "cash_payback_months": "17.26",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "69.51",
+      "cash_breakeven_adoption_pct": "20.83",
+      "overall_readiness_pct": "66.33",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN116",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN",
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "310000",
+      "stated_payback_months": "8.13",
+      "stated_roi_pct": "147.62",
+      "cash_benefit_inr": "46000",
+      "cash_net_annual_benefit_inr": "-104000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-49.52",
+      "cash_breakeven_adoption_pct": "326.09",
+      "overall_readiness_pct": "61",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN117",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "QUALITY_THRESHOLD_FAILED",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "360000",
+      "stated_payback_months": "8.33",
+      "stated_roi_pct": "144",
+      "cash_benefit_inr": "49500",
+      "cash_net_annual_benefit_inr": "-85500",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-34.2",
+      "cash_breakeven_adoption_pct": "272.73",
+      "overall_readiness_pct": "84",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN118",
+      "decision": "REVISE",
+      "primary_reason": "LOW_ADOPTION",
+      "reason_codes": [
+        "LOW_ADOPTION"
+      ],
+      "canonical_benefit_type": "cashable",
+      "stated_net_annual_benefit_inr": "205000",
+      "stated_payback_months": "7.61",
+      "stated_roi_pct": "157.69",
+      "cash_benefit_inr": "270000",
+      "cash_net_annual_benefit_inr": "205000",
+      "cash_payback_months": "7.61",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "157.69",
+      "cash_breakeven_adoption_pct": "24.07",
+      "overall_readiness_pct": "79.33",
+      "readiness_level": "high"
+    },
+    {
+      "record_id": "SYN119",
+      "decision": "PROCEED",
+      "primary_reason": "ALL_RULES_PASSED",
+      "reason_codes": [],
+      "canonical_benefit_type": "other",
+      "stated_net_annual_benefit_inr": "410000",
+      "stated_payback_months": "7.32",
+      "stated_roi_pct": "164",
+      "cash_benefit_inr": "244983",
+      "cash_net_annual_benefit_inr": "184983",
+      "cash_payback_months": "16.22",
+      "cash_payback_status": "CALCULABLE",
+      "cash_roi_pct": "73.99",
+      "cash_breakeven_adoption_pct": "24.49",
+      "overall_readiness_pct": "72",
+      "readiness_level": "medium"
+    },
+    {
+      "record_id": "SYN120",
+      "decision": "STOP",
+      "primary_reason": "NEVER_PAYS_BACK",
+      "reason_codes": [
+        "NEVER_PAYS_BACK",
+        "ADOPTION_BELOW_BREAKEVEN"
+      ],
+      "canonical_benefit_type": "time_freed",
+      "stated_net_annual_benefit_inr": "100000",
+      "stated_payback_months": "30",
+      "stated_roi_pct": "40",
+      "cash_benefit_inr": "17000",
+      "cash_net_annual_benefit_inr": "-53000",
+      "cash_payback_months": null,
+      "cash_payback_status": "NEVER_PAYS_BACK",
+      "cash_roi_pct": "-21.2",
+      "cash_breakeven_adoption_pct": "411.76",
+      "overall_readiness_pct": "77.67",
+      "readiness_level": "high"
+    }
+  ],
+  "thresholds": {
+    "default_minimum_adoption_pct": 60,
+    "default_minimum_quality_pct": 80,
+    "low_readiness_below_pct": 50,
+    "high_readiness_from_pct": 75,
+    "scenario_assumed_run_cost_pct_of_setup": 20
+  }
+}

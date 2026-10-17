@@ -1,0 +1,121 @@
+record_id,expected_adoption_pct,actual_adoption_pct,minimum_adoption_pct,breakeven_adoption_pct_stated,breakeven_adoption_pct_cash,actual_minus_expected_pp,adoption_state,rule_expectation,recalculated_decision,stored_decision,rule_consistent
+SYN001,50,43,60,69.57,69.57,-7,Below economic break-even,STOP,STOP,STOP,True
+SYN002,80,79,50,4.76,15.87,-1,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN003,55,59,55,36.23,120.77,4,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN004,70,87,60,68,98.25,17,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN005,85,79,45,56.1,56.1,-6,Above target,no adoption rule fires,STOP,STOP,True
+SYN006,90,92,55,42.31,211.54,2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN007,65,74,40,45.95,153.15,9,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN008,65,55,60,6,60,-10,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),STOP,STOP,True
+SYN009,80,86,45,15.56,155.56,6,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN010,80,80,45,56.86,284.31,0,Above target,no adoption rule fires,STOP,STOP,True
+SYN011,90,80,60,50.94,71.57,-10,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN012,70,68,50,26.15,87.18,-2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN013,70,62,45,34.78,34.78,-8,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN014,55,53,50,6.94,9.73,-2,Above target,no adoption rule fires,STOP,STOP,True
+SYN015,50,54,40,48.94,163.12,4,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN016,60,44,50,63.64,212.12,-16,Below economic break-even,STOP,STOP,STOP,True
+SYN017,90,78,65,39.62,63.64,-12,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN018,75,70,55,19.57,31.14,-5,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN019,80,50,50,40.91,40.91,-30,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN020,50,37,55,46.15,153.85,-13,Below economic break-even,STOP,STOP,STOP,True
+SYN021,85,83,60,29.17,29.17,-2,Above target,no adoption rule fires,STOP,STOP,True
+SYN022,75,67,50,46.15,153.85,-8,Above target,no adoption rule fires,STOP,STOP,True
+SYN023,55,80,65,16.67,16.67,25,Above target,no adoption rule fires,STOP,STOP,True
+SYN024,65,65,65,85.71,428.57,0,Below economic break-even,STOP,STOP,STOP,True
+SYN025,80,73,40,77.78,77.78,-7,Below economic break-even,STOP,STOP,STOP,True
+SYN026,50,36,45,13.27,13.27,-14,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),REVISE,REVISE,True
+SYN027,90,72,65,54.72,547.17,-18,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN028,90,70,55,13.04,130.43,-20,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN029,55,52,45,58.33,291.67,-3,Below economic break-even,STOP,STOP,STOP,True
+SYN030,70,77,40,36.11,36.11,7,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN031,60,68,40,8.06,26.88,8,Above target,no adoption rule fires,STOP,STOP,True
+SYN032,70,75,55,38.1,57.04,5,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN033,70,80,45,64.1,320.51,10,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN034,85,88,65,48.84,48.84,3,Above target,no adoption rule fires,STOP,STOP,True
+SYN035,60,67,40,23.08,28.11,7,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN036,90,78,40,44.44,88.06,-12,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN037,90,83,45,46.67,46.67,-7,Above target,no adoption rule fires,STOP,STOP,True
+SYN038,80,100,55,42.22,42.22,20,Above target,no adoption rule fires,PROCEED,REVISE,True
+SYN039,65,81,45,48.39,48.39,16,Above target,no adoption rule fires,STOP,STOP,True
+SYN040,75,97,40,9.52,47.62,22,Above target,no adoption rule fires,STOP,STOP,True
+SYN041,65,70,40,26.92,26.92,5,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN042,90,100,60,6.67,22.22,10,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN043,85,100,50,54.39,54.39,15,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN044,65,71,60,31.71,31.71,6,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN045,50,50,50,38.46,192.31,0,Above target,no adoption rule fires,REVISE,REVISE,True
+SYN046,85,79,45,13.64,136.36,-6,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN047,90,89,55,20.83,20.83,-1,Above target,no adoption rule fires,STOP,STOP,True
+SYN048,50,43,50,31.82,31.82,-7,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),REVISE,REVISE,True
+SYN049,90,92,40,39.29,196.43,2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN050,55,63,50,42.42,141.41,8,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN051,80,85,50,29.87,29.87,5,Above target,no adoption rule fires,STOP,STOP,True
+SYN052,60,68,55,34.83,59.08,8,Above target,no adoption rule fires,STOP,STOP,True
+SYN053,75,73,55,11.11,11.11,-2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN054,55,61,45,32.14,160.71,6,Above target,no adoption rule fires,STOP,STOP,True
+SYN055,85,80,55,15.28,50.93,-5,Above target,no adoption rule fires,STOP,STOP,True
+SYN056,70,86,65,60.87,304.35,16,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN057,60,63,45,41.03,410.26,3,Above target,no adoption rule fires,STOP,STOP,True
+SYN058,85,77,65,22.22,222.22,-8,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN059,55,44,55,30.43,30.43,-11,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),REVISE,REVISE,True
+SYN060,75,72,60,32.43,49.36,-3,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN061,80,85,40,36.96,36.96,5,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN062,75,81,50,22.89,22.89,6,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN063,90,72,50,42.37,211.86,-18,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN064,50,52,45,18.42,184.21,2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN065,65,53,55,10.34,51.72,-12,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),STOP,STOP,True
+SYN066,50,56,60,44.19,55.03,6,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),REVISE,REVISE,True
+SYN067,80,84,55,17.89,17.89,4,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN068,70,74,50,18.37,183.67,4,Above target,no adoption rule fires,STOP,STOP,True
+SYN069,75,84,60,15,150,9,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN070,85,61,45,9.26,9.26,-24,Above target,no adoption rule fires,STOP,STOP,True
+SYN071,50,50,60,75,75,0,Below economic break-even,STOP,STOP,STOP,True
+SYN072,60,65,60,10.64,35.46,5,Above target,no adoption rule fires,STOP,STOP,True
+SYN073,65,71,40,5,25,6,Above target,no adoption rule fires,STOP,STOP,True
+SYN074,60,44,60,44.83,62.49,-16,Below economic break-even,STOP,STOP,STOP,True
+SYN075,55,50,65,53.57,267.86,-5,Below economic break-even,STOP,STOP,STOP,True
+SYN076,80,78,40,57.69,57.69,-2,Above target,no adoption rule fires,STOP,STOP,True
+SYN077,85,74,45,23.68,30.82,-11,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN078,85,83,65,27.66,27.66,-2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN079,85,83,60,25.77,25.77,-2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN080,60,52,40,20.83,104.17,-8,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN081,90,74,50,14.52,21.35,-16,Above target,no adoption rule fires,STOP,STOP,True
+SYN082,75,65,60,26.76,32.84,-10,Above target,no adoption rule fires,STOP,STOP,True
+SYN083,50,70,55,21.15,105.77,20,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN084,85,88,40,41.94,209.68,3,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN085,50,46,60,30.16,150.79,-4,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),REVISE,REVISE,True
+SYN086,90,82,60,31.91,319.15,-8,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN087,50,53,45,29.17,39.39,3,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN088,75,73,50,65.52,129.48,-2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN089,90,89,60,23.29,37.21,-1,Above target,no adoption rule fires,STOP,STOP,True
+SYN090,85,73,50,25.71,128.57,-12,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN091,55,83,60,54.55,272.73,28,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN092,50,46,40,51.52,97.56,-4,Below economic break-even,STOP,STOP,STOP,True
+SYN093,65,51,50,21.74,36.91,-14,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN094,90,90,60,26.15,32.64,0,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN095,75,73,40,40.54,135.14,-2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN096,70,69,50,24.44,122.22,-1,Above target,no adoption rule fires,PROCEED,REVISE,True
+SYN097,75,60,45,33.33,166.67,-15,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN098,60,55,60,36,36,-5,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),REVISE,REVISE,True
+SYN099,85,88,55,32.26,49.97,3,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN100,80,73,40,25,29.85,-7,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN101,85,83,55,61.9,619.05,-2,Above target,no adoption rule fires,STOP,STOP,True
+SYN102,90,73,55,16.18,16.18,-17,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN103,60,73,50,37.08,123.6,13,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN104,85,87,55,26.32,26.32,2,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN105,50,63,45,16.28,81.4,13,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN106,60,79,60,20.45,102.27,19,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN107,60,55,65,51.11,82.1,-5,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),STOP,STOP,True
+SYN108,70,75,55,18.57,92.86,5,Above target,no adoption rule fires,STOP,STOP,True
+SYN109,85,64,45,42.86,72.29,-21,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN110,75,74,60,30,30,-1,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN111,80,55,55,11.46,114.58,-25,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN112,65,70,55,16.67,166.67,5,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN113,55,38,55,76.19,761.9,-17,Below economic break-even,STOP,STOP,STOP,True
+SYN114,80,88,55,8.54,8.54,8,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN115,85,71,50,20.83,20.83,-14,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN116,50,37,40,32.61,326.09,-13,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),REVISE,REVISE,True
+SYN117,80,70,40,27.27,272.73,-10,Above target,no adoption rule fires,STOP,STOP,True
+SYN118,60,56,60,24.07,24.07,-4,Below target but above break-even,REVISE or STOP (STOP only if another STOP rule fires),REVISE,REVISE,True
+SYN119,55,76,50,12.77,24.49,21,Above target,no adoption rule fires,PROCEED,PROCEED,True
+SYN120,85,82,50,41.18,411.76,-3,Above target,no adoption rule fires,PROCEED,PROCEED,True

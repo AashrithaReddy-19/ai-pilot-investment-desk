@@ -1,0 +1,4 @@
+stored_decision,pilots,avg_setup_cost_inr,avg_annual_running_cost_inr,avg_annual_benefit_inr,avg_roi_pct,avg_payback_months,avg_actual_adoption_pct,avg_adoption_minus_minimum_pp,avg_actual_quality_pct,avg_quality_minus_minimum_pp,avg_overall_readiness_pct,share_quality_failed_pct
+PROCEED,67,257761.19,92089.55,317537.31,106.21,17.97,74.67,23.25,89.57,13.9,73.65,0.0
+REVISE,11,234545.45,94545.45,318181.82,117.14,15.28,53.82,0.64,90.18,17.0,70.21,0.0
+STOP,42,241904.76,92023.81,285952.38,100.02,27.82,67.02,15.0,77.86,-2.74,73.29,81.0

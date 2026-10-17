@@ -1,0 +1,961 @@
+budget_inr,mode,pilot_id,status,code,reason
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN061,SELECTED,PROCEED,PROCEED; recognised net INR 290000/yr for setup INR 80000 (the only funded pilot in group 'hr'); part of the highest-net set that fits the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN062,SELECTED,PROCEED,PROCEED; recognised net INR 320000/yr for setup INR 100000 (the only funded pilot in group 'it'); part of the highest-net set that fits the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN001,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN002,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 340000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN003,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN004,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN005,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN006,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN007,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN008,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN009,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN010,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN011,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN012,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN013,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN014,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN015,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN016,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN017,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 310000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN018,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN019,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 260000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN020,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN021,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN022,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN023,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN024,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN025,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN026,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN027,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN028,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN029,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN030,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN031,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN032,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 400000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN033,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN034,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN035,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN036,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN037,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN038,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN039,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN040,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN041,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN042,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN043,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 400000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN044,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 320000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN045,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN046,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN047,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN048,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN049,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN050,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN051,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN052,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN053,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN054,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN055,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN056,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN057,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN058,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN059,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN060,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 390000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN063,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN064,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN065,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN066,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN067,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 380000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN068,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN069,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN070,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN071,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN072,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN073,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN074,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN075,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN076,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN077,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN078,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN079,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 260000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN080,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN081,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN082,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN083,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN084,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN085,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN086,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN087,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 390000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN088,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN089,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN090,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN091,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN092,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN093,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN094,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN095,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN096,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN097,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN098,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN099,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 400000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN100,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 240000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN101,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN102,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN103,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN104,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN105,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN106,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN107,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN108,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN109,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN110,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN111,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN112,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN113,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN114,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 370000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN115,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 410000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN116,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN117,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN118,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN119,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 250000 alone exceeds the budget.
+200000,"production (cash basis, c23-rules-v1 decisions)",SYN120,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+200000,label-consistent (stated basis + stated decisions),SYN061,SELECTED,PROCEED,PROCEED; recognised net INR 290000/yr for setup INR 80000 (the only funded pilot in group 'hr'); part of the highest-net set that fits the budget.
+200000,label-consistent (stated basis + stated decisions),SYN062,SELECTED,PROCEED,PROCEED; recognised net INR 320000/yr for setup INR 100000 (the only funded pilot in group 'it'); part of the highest-net set that fits the budget.
+200000,label-consistent (stated basis + stated decisions),SYN001,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,label-consistent (stated basis + stated decisions),SYN002,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 340000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN003,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 260000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN004,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN005,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN006,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN007,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 370000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN008,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN009,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN010,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN011,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN012,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 280000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN013,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN014,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN015,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN016,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,label-consistent (stated basis + stated decisions),SYN017,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 310000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN018,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN019,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 260000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN020,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,label-consistent (stated basis + stated decisions),SYN021,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN022,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN023,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN024,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,label-consistent (stated basis + stated decisions),SYN025,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN026,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,label-consistent (stated basis + stated decisions),SYN027,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN028,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 300000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN029,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,label-consistent (stated basis + stated decisions),SYN030,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN031,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN032,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 400000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN033,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 340000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN034,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN035,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN036,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 330000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN037,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN038,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN039,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN040,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN041,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN042,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN043,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 400000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN044,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 320000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN045,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_READINESS).
+200000,label-consistent (stated basis + stated decisions),SYN046,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN047,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN048,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,label-consistent (stated basis + stated decisions),SYN049,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN050,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 270000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN051,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN052,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN053,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN054,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN055,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN056,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN057,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN058,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN059,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,label-consistent (stated basis + stated decisions),SYN060,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 390000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN063,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 230000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN064,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 280000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN065,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN066,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,label-consistent (stated basis + stated decisions),SYN067,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 380000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN068,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN069,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN070,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN071,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,label-consistent (stated basis + stated decisions),SYN072,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN073,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN074,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,label-consistent (stated basis + stated decisions),SYN075,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN076,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN077,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN078,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN079,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 260000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN080,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 400000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN081,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN082,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN083,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 340000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN084,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN085,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,label-consistent (stated basis + stated decisions),SYN086,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN087,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 390000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN088,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN089,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN090,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 400000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN091,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 380000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN092,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+200000,label-consistent (stated basis + stated decisions),SYN093,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN094,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN095,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN096,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN097,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN098,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,label-consistent (stated basis + stated decisions),SYN099,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 400000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN100,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 240000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN101,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN102,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN103,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 240000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN104,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN105,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 240000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN106,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN107,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN108,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN109,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN110,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+200000,label-consistent (stated basis + stated decisions),SYN111,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 250000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN112,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+200000,label-consistent (stated basis + stated decisions),SYN113,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN114,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 370000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN115,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 410000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN116,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,label-consistent (stated basis + stated decisions),SYN117,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+200000,label-consistent (stated basis + stated decisions),SYN118,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+200000,label-consistent (stated basis + stated decisions),SYN119,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 250000 alone exceeds the budget.
+200000,label-consistent (stated basis + stated decisions),SYN120,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 250000 alone exceeds the budget.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN061,SELECTED,PROCEED,PROCEED; recognised net INR 290000/yr for setup INR 80000 (the only funded pilot in group 'hr'); part of the highest-net set that fits the budget.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN062,SELECTED,PROCEED,PROCEED; recognised net INR 320000/yr for setup INR 100000 (the only funded pilot in group 'it'); part of the highest-net set that fits the budget.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN104,SELECTED,PROCEED,PROCEED; recognised net INR 350000/yr for setup INR 150000 (the only funded pilot in group 'procurement'); part of the highest-net set that fits the budget.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN001,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN002,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN003,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN004,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN005,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN006,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN007,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN008,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN009,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN010,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN011,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN012,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN013,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN014,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN015,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN016,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN017,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN018,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN019,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN020,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN021,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN022,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN023,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN024,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN025,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN026,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN027,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN028,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN029,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN030,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN031,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN032,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN104; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN033,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN034,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN035,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN036,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN037,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN038,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN039,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN040,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN041,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN042,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN043,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN044,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN045,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN046,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN047,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN048,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN049,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN050,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN051,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN052,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN053,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN054,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN055,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN056,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN057,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN058,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN059,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN060,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN063,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN064,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN065,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN066,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN067,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN068,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN069,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN070,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN071,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN072,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN073,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN074,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN075,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN076,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN077,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN078,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN079,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN080,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN081,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN082,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN083,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN084,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN085,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN086,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN087,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN088,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN089,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN090,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN091,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN092,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN093,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN094,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN095,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN096,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN097,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN098,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN099,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN100,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN101,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN102,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN103,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN105,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN106,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN107,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN108,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN109,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN110,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN111,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN112,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN113,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN114,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN115,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 410000 alone exceeds the budget.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN116,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN117,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN118,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN119,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,"production (cash basis, c23-rules-v1 decisions)",SYN120,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+400000,label-consistent (stated basis + stated decisions),SYN009,SELECTED,PROCEED,PROCEED; recognised net INR 380000/yr for setup INR 160000 (the only funded pilot in group 'finance'); part of the highest-net set that fits the budget.
+400000,label-consistent (stated basis + stated decisions),SYN061,SELECTED,PROCEED,PROCEED; recognised net INR 290000/yr for setup INR 80000 (the only funded pilot in group 'hr'); part of the highest-net set that fits the budget.
+400000,label-consistent (stated basis + stated decisions),SYN112,SELECTED,PROCEED,PROCEED; recognised net INR 400000/yr for setup INR 150000 (the only funded pilot in group 'procurement'); part of the highest-net set that fits the budget.
+400000,label-consistent (stated basis + stated decisions),SYN001,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,label-consistent (stated basis + stated decisions),SYN002,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN003,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN004,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN005,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN006,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN007,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN008,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN010,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN011,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+400000,label-consistent (stated basis + stated decisions),SYN012,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN013,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN014,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN015,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN016,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,label-consistent (stated basis + stated decisions),SYN017,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN018,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+400000,label-consistent (stated basis + stated decisions),SYN019,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN020,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,label-consistent (stated basis + stated decisions),SYN021,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN022,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN023,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN024,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,label-consistent (stated basis + stated decisions),SYN025,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN026,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,label-consistent (stated basis + stated decisions),SYN027,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN028,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN029,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,label-consistent (stated basis + stated decisions),SYN030,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN031,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN032,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN033,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN034,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN035,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN036,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN037,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN038,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 410000 alone exceeds the budget.
+400000,label-consistent (stated basis + stated decisions),SYN039,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN040,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN041,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN042,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN043,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN044,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN045,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_READINESS).
+400000,label-consistent (stated basis + stated decisions),SYN046,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 420000 alone exceeds the budget.
+400000,label-consistent (stated basis + stated decisions),SYN047,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN048,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,label-consistent (stated basis + stated decisions),SYN049,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN050,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN051,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN052,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN053,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN054,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN055,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN056,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN057,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN058,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN059,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,label-consistent (stated basis + stated decisions),SYN060,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN062,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN063,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN064,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN065,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN066,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,label-consistent (stated basis + stated decisions),SYN067,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN068,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN069,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN070,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN071,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,label-consistent (stated basis + stated decisions),SYN072,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN073,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN074,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,label-consistent (stated basis + stated decisions),SYN075,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN076,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN077,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN078,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN079,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN080,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN081,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN082,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN083,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN084,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN085,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,label-consistent (stated basis + stated decisions),SYN086,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN087,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN088,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN089,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN090,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN091,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN092,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+400000,label-consistent (stated basis + stated decisions),SYN093,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN094,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN095,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN096,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN097,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN098,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,label-consistent (stated basis + stated decisions),SYN099,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN100,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN101,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN102,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN103,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN104,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN105,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN106,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN107,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN108,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN109,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+400000,label-consistent (stated basis + stated decisions),SYN110,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN111,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN113,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN114,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN115,NOT_SELECTED,BUDGET_EXCEEDED,Setup INR 410000 alone exceeds the budget.
+400000,label-consistent (stated basis + stated decisions),SYN116,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,label-consistent (stated basis + stated decisions),SYN117,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+400000,label-consistent (stated basis + stated decisions),SYN118,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+400000,label-consistent (stated basis + stated decisions),SYN119,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+400000,label-consistent (stated basis + stated decisions),SYN120,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN061,SELECTED,PROCEED,PROCEED; recognised net INR 290000/yr for setup INR 80000 (the only funded pilot in group 'hr'); part of the highest-net set that fits the budget.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN062,SELECTED,PROCEED,PROCEED; recognised net INR 320000/yr for setup INR 100000 (the only funded pilot in group 'it'); part of the highest-net set that fits the budget.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN079,SELECTED,PROCEED,PROCEED; recognised net INR 360000/yr for setup INR 260000 (the only funded pilot in group 'sales'); part of the highest-net set that fits the budget.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN104,SELECTED,PROCEED,PROCEED; recognised net INR 350000/yr for setup INR 150000 (the only funded pilot in group 'procurement'); part of the highest-net set that fits the budget.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN001,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN002,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN003,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN004,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN005,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN006,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN007,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN008,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN009,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN010,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN011,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN012,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN013,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN014,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN015,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN016,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN017,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN018,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN019,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN020,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN021,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN022,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN023,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN024,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN025,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN026,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN027,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN028,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN029,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN030,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN031,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN032,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN104; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN033,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN034,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN035,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN036,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN037,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN038,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN039,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN040,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN041,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN042,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN043,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN044,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN045,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN046,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN047,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN048,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN049,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN050,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN051,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN052,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN053,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN054,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN055,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN056,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN057,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN058,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN059,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN060,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN063,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN064,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN065,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN066,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN067,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN068,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN069,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN070,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN071,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN072,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN073,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN074,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN075,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN076,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN077,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN078,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN080,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN081,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN082,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN083,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN084,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN085,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN086,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN087,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'sales' with selected SYN079; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN088,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN089,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN090,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN091,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN092,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN093,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN094,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN095,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN096,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN097,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN098,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN099,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN100,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN101,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN102,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN103,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN105,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN106,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN107,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN108,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN109,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN110,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN111,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN112,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN113,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN114,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN115,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN116,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN117,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN118,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN119,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'sales' with selected SYN079; the benefit is counted once.
+600000,"production (cash basis, c23-rules-v1 decisions)",SYN120,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+600000,label-consistent (stated basis + stated decisions),SYN009,SELECTED,PROCEED,PROCEED; recognised net INR 380000/yr for setup INR 160000 (the only funded pilot in group 'finance'); part of the highest-net set that fits the budget.
+600000,label-consistent (stated basis + stated decisions),SYN061,SELECTED,PROCEED,PROCEED; recognised net INR 290000/yr for setup INR 80000 (the only funded pilot in group 'hr'); part of the highest-net set that fits the budget.
+600000,label-consistent (stated basis + stated decisions),SYN062,SELECTED,PROCEED,PROCEED; recognised net INR 320000/yr for setup INR 100000 (the only funded pilot in group 'it'); part of the highest-net set that fits the budget.
+600000,label-consistent (stated basis + stated decisions),SYN106,SELECTED,PROCEED,PROCEED; recognised net INR 175000/yr for setup INR 90000 (the only funded pilot in group 'ops'); part of the highest-net set that fits the budget.
+600000,label-consistent (stated basis + stated decisions),SYN112,SELECTED,PROCEED,PROCEED; recognised net INR 400000/yr for setup INR 150000 (the only funded pilot in group 'procurement'); part of the highest-net set that fits the budget.
+600000,label-consistent (stated basis + stated decisions),SYN001,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,label-consistent (stated basis + stated decisions),SYN002,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN106; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN003,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN004,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN005,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN006,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN007,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN008,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN010,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN011,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN012,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN013,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN014,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN015,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN016,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,label-consistent (stated basis + stated decisions),SYN017,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN018,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN106; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN019,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN020,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,label-consistent (stated basis + stated decisions),SYN021,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN022,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN023,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN024,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,label-consistent (stated basis + stated decisions),SYN025,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN026,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,label-consistent (stated basis + stated decisions),SYN027,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN028,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN029,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,label-consistent (stated basis + stated decisions),SYN030,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN031,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN032,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN033,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN034,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN035,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN036,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN037,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN038,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN039,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN040,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN041,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN042,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN106; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN043,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN044,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN045,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_READINESS).
+600000,label-consistent (stated basis + stated decisions),SYN046,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN047,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN048,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,label-consistent (stated basis + stated decisions),SYN049,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN050,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN106; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN051,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN052,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN053,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN054,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN055,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN056,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN057,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN058,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN106; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN059,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,label-consistent (stated basis + stated decisions),SYN060,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN063,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN064,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN065,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN066,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,label-consistent (stated basis + stated decisions),SYN067,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN068,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN069,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN070,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN071,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,label-consistent (stated basis + stated decisions),SYN072,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN073,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN074,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,label-consistent (stated basis + stated decisions),SYN075,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN076,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN077,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN078,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN079,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN080,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN081,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN082,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN083,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN084,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN085,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,label-consistent (stated basis + stated decisions),SYN086,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN087,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN088,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN089,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN090,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN106; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN091,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN092,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+600000,label-consistent (stated basis + stated decisions),SYN093,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN094,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN095,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN096,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN097,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN098,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,label-consistent (stated basis + stated decisions),SYN099,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN100,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN101,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN102,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN103,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN104,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN105,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN107,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN108,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN109,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN110,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN111,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN113,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN114,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN106; the benefit is counted once.
+600000,label-consistent (stated basis + stated decisions),SYN115,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN116,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,label-consistent (stated basis + stated decisions),SYN117,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+600000,label-consistent (stated basis + stated decisions),SYN118,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+600000,label-consistent (stated basis + stated decisions),SYN119,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+600000,label-consistent (stated basis + stated decisions),SYN120,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN041,SELECTED,PROCEED,PROCEED; recognised net INR 95000/yr for setup INR 80000 (the only funded pilot in group 'finance'); part of the highest-net set that fits the budget.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN061,SELECTED,PROCEED,PROCEED; recognised net INR 290000/yr for setup INR 80000 (the only funded pilot in group 'hr'); part of the highest-net set that fits the budget.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN062,SELECTED,PROCEED,PROCEED; recognised net INR 320000/yr for setup INR 100000 (the only funded pilot in group 'it'); part of the highest-net set that fits the budget.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN067,SELECTED,PROCEED,PROCEED; recognised net INR 390000/yr for setup INR 380000 (the only funded pilot in group 'catalog'); part of the highest-net set that fits the budget.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN104,SELECTED,PROCEED,PROCEED; recognised net INR 350000/yr for setup INR 150000 (the only funded pilot in group 'procurement'); part of the highest-net set that fits the budget.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN001,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN002,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN003,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN004,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN005,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN006,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN007,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN008,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN009,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN010,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN011,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'catalog' with selected SYN067; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN012,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN013,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN014,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN015,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN016,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN017,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN041; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN018,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN019,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'catalog' with selected SYN067; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN020,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN021,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN022,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN023,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN024,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN025,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN026,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN027,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN028,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN029,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN030,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN031,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN032,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN104; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN033,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN034,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN035,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'catalog' with selected SYN067; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN036,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN037,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN038,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN039,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN040,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN042,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN043,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'catalog' with selected SYN067; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN044,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN045,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN046,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN047,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN048,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN049,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN050,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN051,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN052,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN053,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN054,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN055,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN056,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN057,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN058,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN059,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN060,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN063,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN064,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN065,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN066,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN068,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN069,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN070,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN071,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN072,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN073,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN074,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN075,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN076,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN077,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN078,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN079,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN080,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN081,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN082,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN083,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN084,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN085,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN086,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN087,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN088,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN089,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN090,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN091,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN092,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN093,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN094,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN095,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN096,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN097,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN098,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN099,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'catalog' with selected SYN067; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN100,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN101,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN102,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN103,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN105,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN106,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN107,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN108,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN109,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN110,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN111,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN112,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN113,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN114,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN115,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'catalog' with selected SYN067; the benefit is counted once.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN116,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN117,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN118,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN119,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,"production (cash basis, c23-rules-v1 decisions)",SYN120,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (NEVER_PAYS_BACK).
+800000,label-consistent (stated basis + stated decisions),SYN009,SELECTED,PROCEED,PROCEED; recognised net INR 380000/yr for setup INR 160000 (the only funded pilot in group 'finance'); part of the highest-net set that fits the budget.
+800000,label-consistent (stated basis + stated decisions),SYN058,SELECTED,PROCEED,PROCEED; recognised net INR 350000/yr for setup INR 150000 (the only funded pilot in group 'ops'); part of the highest-net set that fits the budget.
+800000,label-consistent (stated basis + stated decisions),SYN061,SELECTED,PROCEED,PROCEED; recognised net INR 290000/yr for setup INR 80000 (the only funded pilot in group 'hr'); part of the highest-net set that fits the budget.
+800000,label-consistent (stated basis + stated decisions),SYN062,SELECTED,PROCEED,PROCEED; recognised net INR 320000/yr for setup INR 100000 (the only funded pilot in group 'it'); part of the highest-net set that fits the budget.
+800000,label-consistent (stated basis + stated decisions),SYN084,SELECTED,PROCEED,PROCEED; recognised net INR 180000/yr for setup INR 150000 (the only funded pilot in group 'support'); part of the highest-net set that fits the budget.
+800000,label-consistent (stated basis + stated decisions),SYN112,SELECTED,PROCEED,PROCEED; recognised net INR 400000/yr for setup INR 150000 (the only funded pilot in group 'procurement'); part of the highest-net set that fits the budget.
+800000,label-consistent (stated basis + stated decisions),SYN001,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,label-consistent (stated basis + stated decisions),SYN002,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN058; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN003,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN004,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'support' with selected SYN084; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN005,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN006,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN007,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN008,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN010,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN011,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN012,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'support' with selected SYN084; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN013,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN014,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN015,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN016,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,label-consistent (stated basis + stated decisions),SYN017,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN018,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN058; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN019,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN020,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,label-consistent (stated basis + stated decisions),SYN021,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN022,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN023,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN024,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,label-consistent (stated basis + stated decisions),SYN025,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN026,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,label-consistent (stated basis + stated decisions),SYN027,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN028,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'support' with selected SYN084; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN029,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,label-consistent (stated basis + stated decisions),SYN030,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN031,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN032,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN033,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN034,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN035,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN036,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'support' with selected SYN084; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN037,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN038,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN039,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN040,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN041,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN042,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN058; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN043,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN044,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'support' with selected SYN084; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN045,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_READINESS).
+800000,label-consistent (stated basis + stated decisions),SYN046,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN047,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN048,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,label-consistent (stated basis + stated decisions),SYN049,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN050,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN058; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN051,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN052,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN053,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN054,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN055,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN056,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN057,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN059,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,label-consistent (stated basis + stated decisions),SYN060,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'support' with selected SYN084; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN063,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN064,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN065,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN066,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,label-consistent (stated basis + stated decisions),SYN067,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN068,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN069,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN070,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN071,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,label-consistent (stated basis + stated decisions),SYN072,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN073,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN074,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,label-consistent (stated basis + stated decisions),SYN075,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN076,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN077,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN078,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN079,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN080,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN081,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN082,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN083,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN085,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,label-consistent (stated basis + stated decisions),SYN086,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN087,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN088,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN089,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN090,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN058; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN091,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN092,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (ADOPTION_BELOW_BREAKEVEN).
+800000,label-consistent (stated basis + stated decisions),SYN093,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN094,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN095,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN096,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN097,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN098,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,label-consistent (stated basis + stated decisions),SYN099,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN100,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'support' with selected SYN084; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN101,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN102,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN103,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN104,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN105,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'finance' with selected SYN009; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN106,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN058; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN107,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN108,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN109,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'hr' with selected SYN061; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN110,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'it' with selected SYN062; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN111,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN113,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN114,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'ops' with selected SYN058; the benefit is counted once.
+800000,label-consistent (stated basis + stated decisions),SYN115,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN116,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,label-consistent (stated basis + stated decisions),SYN117,NOT_SELECTED,STOP_PILOT_SELECTED,Mandatory STOP decision (QUALITY_THRESHOLD_FAILED).
+800000,label-consistent (stated basis + stated decisions),SYN118,NOT_SELECTED,PILOT_NEEDS_REVISION,Must be revised before funding (LOW_ADOPTION).
+800000,label-consistent (stated basis + stated decisions),SYN119,NOT_SELECTED,NOT_FUNDED,Not funded: the budget is better used by the selected pilots.
+800000,label-consistent (stated basis + stated decisions),SYN120,NOT_SELECTED,DOUBLE_COUNT_RISK,Shares benefit group 'procurement' with selected SYN112; the benefit is counted once.

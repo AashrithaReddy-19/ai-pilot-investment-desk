@@ -1,0 +1,4 @@
+evidence_status,pilots,share_pct,stored_PROCEED,stored_REVISE,stored_STOP,production_PROCEED,production_REVISE,production_STOP,meaning
+ASSUMPTION,43,35.8,30,3,10,14,1,28,decision rests on assumed inputs; validate before scaling
+MIXED,41,34.2,22,5,14,12,3,26,"partly measured, partly assumed"
+OBSERVED,36,30.0,15,3,18,7,2,27,inputs reported as measured
