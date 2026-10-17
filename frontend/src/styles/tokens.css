@@ -1,0 +1,91 @@
+/* Semantic design tokens. Components read these, never raw colours, so both themes stay consistent.
+   Light is the base. Dark applies for an explicit data-theme="dark" (set by the theme toggle) and, before any
+   choice is made, for a dark system preference. */
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-sunken: #f0f0ee;
+  --surface-raised: #ffffff;
+  --text: #202124;
+  --text-2: #5f6368;
+  --text-3: #6f737a;
+  --line: #e3e4e2;
+  --line-strong: #cfd1ce;
+
+  --accent: #2457c5;
+  --accent-hover: #1c47a6;
+  --accent-wash: #eaf0fc;
+  --on-accent: #ffffff;
+  --focus: #2457c5;
+
+  --ok: #1d7a4b;
+  --ok-wash: #e7f4ec;
+  --warn: #85560a;
+  --warn-wash: #fbf1dc;
+  --bad: #b3261e;
+  --bad-wash: #fbe9e7;
+  --info-wash: var(--accent-wash);
+
+  --scrim: rgba(20, 21, 23, 0.42);
+  --shadow-1: 0 1px 2px rgba(20, 21, 23, 0.06);
+  --shadow-2: 0 1px 2px rgba(20, 21, 23, 0.06), 0 10px 28px -8px rgba(20, 21, 23, 0.18);
+
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI Variable Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  --t-xs: 12px;
+  --t-sm: 13px;
+  --t-md: 14.5px;
+  --t-lg: 17px;
+  --t-xl: 22px;
+  --t-2xl: clamp(26px, 3.2vw, 34px);
+
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 72px;
+  --r1: 4px; --r2: 8px; --r-pill: 999px;
+  --rail: 244px; --rail-collapsed: 68px; --page: 1200px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #151617;
+  --surface: #1d1f21;
+  --surface-sunken: #181a1b;
+  --surface-raised: #25272a;
+  --text: #f2f3f4;
+  --text-2: #a6a9af;
+  --text-3: #8e9298;
+  --line: #36393d;
+  --line-strong: #4a4e53;
+
+  --accent: #7da5ff;
+  --accent-hover: #9dbbff;
+  --accent-wash: #1c2740;
+  --on-accent: #0d1526;
+  --focus: #9dbbff;
+
+  --ok: #6fd09b;
+  --ok-wash: #16281f;
+  --warn: #e3b05a;
+  --warn-wash: #2c2412;
+  --bad: #ff8a80;
+  --bad-wash: #301a18;
+
+  --scrim: rgba(0, 0, 0, 0.6);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px -8px rgba(0, 0, 0, 0.7);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #151617; --surface: #1d1f21; --surface-sunken: #181a1b; --surface-raised: #25272a;
+    --text: #f2f3f4; --text-2: #a6a9af; --text-3: #8e9298; --line: #36393d; --line-strong: #4a4e53;
+    --accent: #7da5ff; --accent-hover: #9dbbff; --accent-wash: #1c2740; --on-accent: #0d1526; --focus: #9dbbff;
+    --ok: #6fd09b; --ok-wash: #16281f; --warn: #e3b05a; --warn-wash: #2c2412; --bad: #ff8a80; --bad-wash: #301a18;
+    --scrim: rgba(0, 0, 0, 0.6);
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-2: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 32px -8px rgba(0, 0, 0, 0.7);
+    color-scheme: dark;
+  }
+}
