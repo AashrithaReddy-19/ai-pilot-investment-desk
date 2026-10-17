@@ -1,0 +1,129 @@
+[
+  {
+    "label": "redis ON, AI online",
+    "workload": "evaluate",
+    "requests": 100,
+    "concurrency": 100,
+    "p50_ms": 192.747,
+    "p95_ms": 211.832,
+    "p99_ms": 231.475,
+    "max_ms": 237.394,
+    "error_rate": 0,
+    "ai_status": {
+      "ok": 100
+    },
+    "cache": {
+      "HIT": 80,
+      "MISS": 20
+    }
+  },
+  {
+    "label": "redis ON, AI online",
+    "workload": "portfolio",
+    "requests": 100,
+    "concurrency": 100,
+    "p50_ms": 37.754,
+    "p95_ms": 44.373,
+    "p99_ms": 44.88,
+    "max_ms": 44.88,
+    "error_rate": 0,
+    "cache": {
+      "HIT": 11,
+      "MISS": 89
+    }
+  },
+  {
+    "label": "redis OFF, AI online",
+    "workload": "evaluate",
+    "requests": 100,
+    "concurrency": 100,
+    "p50_ms": 122.147,
+    "p95_ms": 197.203,
+    "p99_ms": 201.673,
+    "max_ms": 202.199,
+    "error_rate": 0,
+    "ai_status": {
+      "ok": 100
+    },
+    "cache": {
+      "MISS": 100
+    }
+  },
+  {
+    "label": "redis OFF, AI online",
+    "workload": "portfolio",
+    "requests": 100,
+    "concurrency": 100,
+    "p50_ms": 31.075,
+    "p95_ms": 36.451,
+    "p99_ms": 37.015,
+    "max_ms": 37.061,
+    "error_rate": 0,
+    "cache": {
+      "MISS": 100
+    }
+  },
+  {
+    "label": "redis ON, AI unavailable",
+    "workload": "evaluate",
+    "requests": 100,
+    "concurrency": 100,
+    "p50_ms": 23.938,
+    "p95_ms": 39.021,
+    "p99_ms": 42.091,
+    "max_ms": 42.091,
+    "error_rate": 0,
+    "ai_status": {
+      "degraded": 100
+    },
+    "cache": {
+      "MISS": 100
+    }
+  },
+  {
+    "label": "redis ON, AI unavailable",
+    "workload": "portfolio",
+    "requests": 100,
+    "concurrency": 100,
+    "p50_ms": 24.319,
+    "p95_ms": 29.978,
+    "p99_ms": 30.017,
+    "max_ms": 30.539,
+    "error_rate": 0,
+    "cache": {
+      "HIT": 43,
+      "MISS": 57
+    }
+  },
+  {
+    "label": "redis OFF, AI unavailable",
+    "workload": "evaluate",
+    "requests": 100,
+    "concurrency": 100,
+    "p50_ms": 28.773,
+    "p95_ms": 39.113,
+    "p99_ms": 44.764,
+    "max_ms": 47.036,
+    "error_rate": 0,
+    "ai_status": {
+      "degraded": 100
+    },
+    "cache": {
+      "MISS": 100
+    }
+  },
+  {
+    "label": "redis OFF, AI unavailable",
+    "workload": "portfolio",
+    "requests": 100,
+    "concurrency": 100,
+    "p50_ms": 28.359,
+    "p95_ms": 34.977,
+    "p99_ms": 36.05,
+    "max_ms": 36.605,
+    "error_rate": 0,
+    "cache": {
+      "MISS": 100
+    }
+  }
+]

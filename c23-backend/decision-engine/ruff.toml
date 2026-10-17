@@ -1,0 +1,11 @@
+line-length = 160
+target-version = "py312"
+
+[lint]
+select = ["E", "F", "W"]
+# E401/E701/E702: the repository's established compact style (one-line imports/statements in the legacy core).
+ignore = ["E401", "E501", "E701", "E702", "E731", "E741"]
+
+[lint.per-file-ignores]
+# Legacy v0 test suite uses `from app.core import *`; kept unchanged on purpose.
+"tests/test_core.py" = ["F403", "F405"]

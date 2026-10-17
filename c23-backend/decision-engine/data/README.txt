@@ -1,0 +1,2 @@
+35 separate synthetic starter fixtures
+Start in your case ID folder. These are small public fixtures, not market evidence or full benchmark datasets. You may add clearly labelled synthetic rows in the same schema. Preserve reference inputs and add your own negative test. Model calls are optional; a declared manual/mock fallback is acceptable. The PNGs are original synthetic illustrations, not real product photography.

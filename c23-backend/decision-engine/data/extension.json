@@ -1,0 +1,17 @@
+{
+  "_label": "TEAM-AUTHORED ASSUMPTIONS. Not part of the C23 fixture. Synthetic, illustrative, unproven.",
+  "pilot_budget_inr": 600000,
+  "defaults": {
+    "target_adoption_pct": 60,
+    "quality_threshold_pct": 80,
+    "assumed_run_cost_pct_of_setup": 20,
+    "assumed_adoption_pct": 50
+  },
+  "pilots": [
+    {"id":"AI1","description":"Extract invoice fields into the finance ledger instead of manual typing.","adoption_pct":70,"readiness":"high","observed_adoption_pct":null,"observed_quality_pct":null},
+    {"id":"AI2","description":"Flag and route exceptional orders to the right owner.","adoption_pct":60,"readiness":"medium","observed_adoption_pct":null,"observed_quality_pct":null},
+    {"id":"AI3","description":"Draft the weekly catalogue quality review.","adoption_pct":50,"readiness":"medium","observed_adoption_pct":null,"observed_quality_pct":null},
+    {"id":"AI4","description":"Draft first replies for support agents to edit.","adoption_pct":65,"readiness":"high","observed_adoption_pct":null,"observed_quality_pct":null},
+    {"id":"AI5","description":"Auto-tag incoming support tickets by topic.","adoption_pct":40,"readiness":"low","observed_adoption_pct":null,"observed_quality_pct":null}
+  ]
+}

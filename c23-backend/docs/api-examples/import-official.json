@@ -1,0 +1,15 @@
+{
+    "request":  {
+                    "method":  "POST",
+                    "path":  "/api/v1/import/official",
+                    "body":  null
+                },
+    "status":  409,
+    "response":  {
+                     "error":  {
+                                   "code":  "CONFLICT",
+                                   "message":  "one or more pilots already exists",
+                                   "request_id":  "b02cd7ceb70cbd2d"
+                               }
+                 }
+}

@@ -1,0 +1,11 @@
+Case,Item,Base,Rider shock,Unit,Treatment
+C26 fictional,Basket,400,400,INR/order,Not platform revenue
+C26 fictional,Merchant rate,15,15,percent,Basket multiplied by percent / 100
+C26 fictional,Merchant fee,60,60,INR/order,400 * 15 / 100
+C26 fictional,Customer fee,30,30,INR/order,Classroom assumption
+C26 fictional,Business revenue,90,90,INR/order,Merchant fee + customer fee
+C26 fictional,Rider cost,55,85,INR/order,Classroom assumption
+C26 fictional,Support,8,8,INR/order,Classroom assumption
+C26 fictional,Payment,5,5,INR/order,Classroom assumption
+C26 fictional,Contribution,22,-8,INR/order,Business revenue - rider - support - payment
+C26 fictional,Other costs,,,Excluded,Acquisition fixed costs refunds taxes; add before a real pilot

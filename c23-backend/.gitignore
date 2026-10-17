@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Runtime output (saved portfolios are generated, not source)
+saved/
+
+# Coverage / build artifacts (evidence .md/.json reports are committed)
+backend/reports/*.out
+backend/reports/go_coverage_func.txt
+backend/reports/go_coverage
+backend/reports/go_core_coverage*
+decision-engine/reports/python_coverage.xml
+backend/api
+backend/*.exe
+
+# Local runtime / temp files
+*.log
+tmp/
+.tmp/
+
+# Generic build output and JS tooling (if any future client is added)
+node_modules/
+dist/
+build/
+
+# Env files and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Archives
+*.tar.gz
+*.zip

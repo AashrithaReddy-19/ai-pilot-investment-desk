@@ -1,0 +1,111 @@
+{
+    "request":  {
+                    "method":  "POST",
+                    "path":  "/api/v1/portfolios",
+                    "body":  {
+                                 "name":  "smoke plan 1792246071943",
+                                 "pilot_ids":  [
+                                                   "AI1",
+                                                   "AI2",
+                                                   "AI4"
+                                               ],
+                                 "budget_inr":  600000
+                             }
+                },
+    "status":  201,
+    "response":  {
+                     "id":  "5eba48fc-e420-449d-a59e-d0b41a183f71",
+                     "name":  "smoke plan 1792246071943",
+                     "budget_inr":  600000,
+                     "basis":  "cash",
+                     "status":  "VALID",
+                     "rules_version":  "c23-rules-v1",
+                     "pilot_ids":  [
+                                       "AI1",
+                                       "AI2",
+                                       "AI4"
+                                   ],
+                     "overlap_resolutions":  [
+
+                                             ],
+                     "assessment":  {
+                                        "rules_version":  "c23-rules-v1",
+                                        "basis":  "cash",
+                                        "status":  "VALID",
+                                        "approval_allowed":  true,
+                                        "budget_inr":  600000,
+                                        "pilot_ids":  [
+                                                          "AI1",
+                                                          "AI2",
+                                                          "AI4"
+                                                      ],
+                                        "total_setup_cost_inr":  600000,
+                                        "total_annual_running_cost_inr":  180000,
+                                        "total_claimed_benefit_inr":  540000,
+                                        "total_recognized_benefit_inr":  540000,
+                                        "net_annual_benefit_inr":  360000,
+                                        "monthly_net_benefit_inr":  30000,
+                                        "payback":  {
+                                                        "payback_months":  20,
+                                                        "payback_status":  "CALCULABLE"
+                                                    },
+                                        "budget_remaining_inr":  0,
+                                        "benefit_ledger":  [
+                                                               {
+                                                                   "pilot_id":  "AI1",
+                                                                   "benefit_group":  "finance",
+                                                                   "claimed_benefit_inr":  180000,
+                                                                   "basis_benefit_inr":  180000,
+                                                                   "recognized_benefit_inr":  180000,
+                                                                   "annual_running_cost_inr":  60000,
+                                                                   "source":  "OFFICIAL_FIXTURE",
+                                                                   "resolution":  "NONE",
+                                                                   "review_status":  "AUTO",
+                                                                   "review_note":  "cashable: annual_benefit_inr counted as cash (fixture labels this an assumption)"
+                                                               },
+                                                               {
+                                                                   "pilot_id":  "AI2",
+                                                                   "benefit_group":  "ops",
+                                                                   "claimed_benefit_inr":  180000,
+                                                                   "basis_benefit_inr":  180000,
+                                                                   "recognized_benefit_inr":  180000,
+                                                                   "annual_running_cost_inr":  60000,
+                                                                   "source":  "OFFICIAL_FIXTURE",
+                                                                   "resolution":  "NONE",
+                                                                   "review_status":  "AUTO",
+                                                                   "review_note":  "cashable: annual_benefit_inr counted as cash (fixture labels this an assumption)"
+                                                               },
+                                                               {
+                                                                   "pilot_id":  "AI4",
+                                                                   "benefit_group":  "support",
+                                                                   "claimed_benefit_inr":  180000,
+                                                                   "basis_benefit_inr":  180000,
+                                                                   "recognized_benefit_inr":  180000,
+                                                                   "annual_running_cost_inr":  60000,
+                                                                   "source":  "OFFICIAL_FIXTURE",
+                                                                   "resolution":  "NONE",
+                                                                   "review_status":  "AUTO",
+                                                                   "review_note":  "cashable: annual_benefit_inr counted as cash (fixture labels this an assumption)"
+                                                               }
+                                                           ],
+                                        "overlaps":  [
+
+                                                     ],
+                                        "blockers":  [
+
+                                                     ],
+                                        "warnings":  [
+
+                                                     ],
+                                        "pilot_decisions":  {
+                                                                "AI1":  "REVIEW",
+                                                                "AI2":  "REVIEW",
+                                                                "AI4":  "REVIEW"
+                                                            }
+                                    },
+                     "version":  1,
+                     "created_at":  "2026-10-17T14:07:52.872571Z",
+                     "updated_at":  "2026-10-17T14:07:52.872571Z",
+                     "approval_stale":  false
+                 }
+}

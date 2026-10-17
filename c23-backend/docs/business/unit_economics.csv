@@ -1,0 +1,15 @@
+Item,Unit,Base assumption,Downside assumption,Source or status,Formula or treatment
+Product offer,-,Paid AI-pilot portfolio review (one department; 5-8 pilots; decision report + 30-day re-check),same,HYPOTHESIS (case bank: paid pilot review or portfolio subscription),Not validated: no customer has paid
+Price,INR per review,25000,15000,HYPOTHESIS - to be tested in growth week 3,Willingness-to-pay experiment decides
+Analyst time,hours per review,6,10,HYPOTHESIS - time 3 interviews + data entry + review call,Measure on the first 3 free reviews
+Analyst cost,INR per hour,1500,1500,HYPOTHESIS,Team assumption
+Analyst cost per review,INR per review,9000,15000,CALCULATED,Analyst time x analyst cost per hour
+Hosting and tooling,INR per review,500,800,HYPOTHESIS - small VM + Postgres share,Excludes any LLM API (none used)
+Variable cost per review,INR per review,9500,15800,CALCULATED,Analyst cost per review + hosting and tooling
+Gross contribution per review,INR per review,15500,-800,CALCULATED,Price - variable cost per review
+Contribution margin,percent,62,-5.3,CALCULATED,Gross contribution / price x 100
+Break-even analyst hours at base price,hours,16.3,-,CALCULATED,(25000 - 500) / 1500
+Portfolio subscription (alternative),INR per month,8000,5000,HYPOTHESIS,Only if reviews repeat monthly; not modelled until evidence
+Acquisition / sales cost,INR per customer,,,EXCLUDED - unknown,Unknown is not zero: add before any real pilot
+Other costs (taxes refunds fixed costs),-,,,EXCLUDED - unknown,Add before a real pilot
+Note,-,These are PRODUCT economics (selling the Decision Desk); AI-pilot economics live in the fixture and the engine,-,LABEL,Never mixed

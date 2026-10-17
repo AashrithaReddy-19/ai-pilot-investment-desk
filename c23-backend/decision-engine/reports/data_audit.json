@@ -1,0 +1,428 @@
+{
+  "audit_version": "1.0.0",
+  "inputs": [
+    {
+      "role": "fixture",
+      "file": "official_fixture.json",
+      "format": "json",
+      "sha256": "83a42f1c0f4a607fe5bc649158dafbbea174057dc59284ebf57581a473b7faf4"
+    },
+    {
+      "role": "extension",
+      "file": "extension.json",
+      "format": "json",
+      "sha256": "f4df7f76430855bda74e87e49bd26a0fb9365aa96680704167644b948e490b2d"
+    }
+  ],
+  "dataset_meta": {
+    "case_id": "C23",
+    "synthetic": true,
+    "data_version": "v3.2",
+    "currency": "INR unless explicitly stated",
+    "missing_values": "null means unknown, never zero",
+    "limit": "Small teaching fixture for a bounded prototype. Market demand, willingness to pay and production performance remain unproven."
+  },
+  "extension_meta": {
+    "_label": "TEAM-AUTHORED ASSUMPTIONS. Not part of the C23 fixture. Synthetic, illustrative, unproven.",
+    "pilot_budget_inr": 600000,
+    "defaults": {
+      "target_adoption_pct": 60,
+      "quality_threshold_pct": 80,
+      "assumed_run_cost_pct_of_setup": 20,
+      "assumed_adoption_pct": 50
+    }
+  },
+  "tables": {
+    "fixture_pilots": {
+      "row_count": 5,
+      "non_object_rows": 0,
+      "columns": [
+        "id",
+        "task",
+        "setup_cost_inr",
+        "annual_running_cost_inr",
+        "annual_benefit_inr",
+        "benefit_type",
+        "overlap_group"
+      ],
+      "schema_columns_missing_everywhere": [
+        "description",
+        "expected_adoption_pct",
+        "actual_adoption_pct",
+        "minimum_adoption_pct",
+        "expected_quality_pct",
+        "actual_quality_pct",
+        "minimum_quality_pct",
+        "data_readiness_pct",
+        "technical_readiness_pct",
+        "process_readiness_pct",
+        "capacity_value_inr",
+        "realized_cash_saving_inr"
+      ],
+      "unknown_columns": [],
+      "column_profiles": {
+        "id": {
+          "in_schema": true,
+          "kind": "id",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "str": 5
+          },
+          "distribution": {
+            "AI1": 1,
+            "AI2": 1,
+            "AI3": 1,
+            "AI4": 1,
+            "AI5": 1
+          }
+        },
+        "task": {
+          "in_schema": true,
+          "kind": "text",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "str": 5
+          },
+          "distribution": {
+            "Invoice field extraction": 1,
+            "Order exception triage": 1,
+            "Support reply drafting": 1,
+            "Ticket tagging": 1,
+            "Weekly catalogue review": 1
+          }
+        },
+        "setup_cost_inr": {
+          "in_schema": true,
+          "kind": "money",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "int": 5
+          },
+          "numeric": {
+            "count": 5,
+            "min": 200000,
+            "max": 200000,
+            "mean": 200000.0,
+            "median": 200000,
+            "distinct": 1
+          }
+        },
+        "annual_running_cost_inr": {
+          "in_schema": true,
+          "kind": "money",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "int": 5
+          },
+          "numeric": {
+            "count": 5,
+            "min": 60000,
+            "max": 60000,
+            "mean": 60000.0,
+            "median": 60000,
+            "distinct": 1
+          }
+        },
+        "annual_benefit_inr": {
+          "in_schema": true,
+          "kind": "money",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "int": 5
+          },
+          "numeric": {
+            "count": 5,
+            "min": 180000,
+            "max": 180000,
+            "mean": 180000.0,
+            "median": 180000,
+            "distinct": 1
+          }
+        },
+        "benefit_type": {
+          "in_schema": true,
+          "kind": "label",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "str": 5
+          },
+          "distribution": {
+            "cashable assumption": 5
+          }
+        },
+        "overlap_group": {
+          "in_schema": true,
+          "kind": "label",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "str": 5
+          },
+          "distribution": {
+            "catalog": 1,
+            "finance": 1,
+            "ops": 1,
+            "support": 2
+          }
+        }
+      },
+      "duplicate_rows": 0,
+      "duplicate_ids": [],
+      "rows_missing_id": 0
+    },
+    "extension_pilots": {
+      "row_count": 5,
+      "non_object_rows": 0,
+      "columns": [
+        "id",
+        "description",
+        "adoption_pct",
+        "readiness",
+        "observed_adoption_pct",
+        "observed_quality_pct"
+      ],
+      "schema_columns_missing_everywhere": [
+        "expected_adoption_pct",
+        "actual_adoption_pct",
+        "minimum_adoption_pct",
+        "expected_quality_pct",
+        "actual_quality_pct",
+        "minimum_quality_pct",
+        "data_readiness_pct",
+        "technical_readiness_pct",
+        "process_readiness_pct",
+        "capacity_value_inr",
+        "realized_cash_saving_inr"
+      ],
+      "unknown_columns": [],
+      "column_profiles": {
+        "id": {
+          "in_schema": true,
+          "kind": "id",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "str": 5
+          },
+          "distribution": {
+            "AI1": 1,
+            "AI2": 1,
+            "AI3": 1,
+            "AI4": 1,
+            "AI5": 1
+          }
+        },
+        "description": {
+          "in_schema": true,
+          "kind": "text",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "str": 5
+          },
+          "distribution": {
+            "Auto-tag incoming support tickets by topic.": 1,
+            "Draft first replies for support agents to edit.": 1,
+            "Draft the weekly catalogue quality review.": 1,
+            "Extract invoice fields into the finance ledger instead of manual typing.": 1,
+            "Flag and route exceptional orders to the right owner.": 1
+          }
+        },
+        "adoption_pct": {
+          "in_schema": true,
+          "kind": "pct",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "int": 5
+          },
+          "numeric": {
+            "count": 5,
+            "min": 40,
+            "max": 70,
+            "mean": 57.0,
+            "median": 60,
+            "distinct": 5
+          }
+        },
+        "readiness": {
+          "in_schema": true,
+          "kind": "readiness",
+          "present": 5,
+          "absent": 0,
+          "null": 0,
+          "missing_pct": 0.0,
+          "types": {
+            "str": 5
+          },
+          "distribution": {
+            "high": 2,
+            "low": 1,
+            "medium": 2
+          }
+        },
+        "observed_adoption_pct": {
+          "in_schema": true,
+          "kind": "pct",
+          "present": 5,
+          "absent": 0,
+          "null": 5,
+          "missing_pct": 100.0,
+          "types": {
+            "null": 5
+          }
+        },
+        "observed_quality_pct": {
+          "in_schema": true,
+          "kind": "pct",
+          "present": 5,
+          "absent": 0,
+          "null": 5,
+          "missing_pct": 100.0,
+          "types": {
+            "null": 5
+          }
+        }
+      },
+      "duplicate_rows": 0,
+      "duplicate_ids": [],
+      "rows_missing_id": 0
+    }
+  },
+  "rule_checks": {
+    "negative_values": [],
+    "pct_out_of_range": [],
+    "non_numeric_in_numeric_field": [],
+    "non_finite": []
+  },
+  "overlap_groups": {
+    "catalog": [
+      "AI3"
+    ],
+    "finance": [
+      "AI1"
+    ],
+    "ops": [
+      "AI2"
+    ],
+    "support": [
+      "AI4",
+      "AI5"
+    ]
+  },
+  "shared_overlap_groups": {
+    "support": [
+      "AI4",
+      "AI5"
+    ]
+  },
+  "id_cross_check": {
+    "extension_ids_without_pilot": [],
+    "pilot_ids_without_extension": []
+  },
+  "target_class_distribution": null,
+  "validation_preview": {
+    "strict": {
+      "mode": "strict",
+      "valid": 5,
+      "rejected": 0,
+      "complete": 5,
+      "incomplete": 0,
+      "issue_codes": {},
+      "rejected_ids": [],
+      "flags": {
+        "AI1": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ],
+        "AI2": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ],
+        "AI3": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ],
+        "AI4": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ],
+        "AI5": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ]
+      },
+      "budget_issue": null
+    },
+    "scenario": {
+      "mode": "scenario",
+      "valid": 5,
+      "rejected": 0,
+      "complete": 5,
+      "incomplete": 0,
+      "issue_codes": {},
+      "rejected_ids": [],
+      "flags": {
+        "AI1": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ],
+        "AI2": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ],
+        "AI3": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ],
+        "AI4": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ],
+        "AI5": [
+          "ADOPTION_NOT_MEASURED",
+          "QUALITY_NOT_MEASURED"
+        ]
+      },
+      "budget_issue": null
+    }
+  },
+  "observations": [
+    "Dataset is declared synthetic: a teaching fixture, not a benchmark. No statistical claims are made from it.",
+    "5 pilot rows; ML training/CV on these rows would be meaningless.",
+    "setup_cost_inr is identical for all 5 pilots (200000): official economics do not differentiate pilots; ranking depends on team assumptions and the documented tie-break.",
+    "annual_running_cost_inr is identical for all 5 pilots (60000): official economics do not differentiate pilots; ranking depends on team assumptions and the documented tie-break.",
+    "annual_benefit_inr is identical for all 5 pilots (180000): official economics do not differentiate pilots; ranking depends on team assumptions and the documented tie-break.",
+    "Overlap group 'support' is shared by AI4, AI5: DOUBLE_COUNT_RISK; benefit may be counted only once.",
+    "benefit_type 'cashable assumption' (5 rows): cashability is itself an assumption, not proven cash removal.",
+    "No training labels (adoption_success / quality_success) present: no target class distribution.",
+    "observed_adoption_pct is null for every pilot: NOT_MEASURED (unknown, not zero).",
+    "observed_quality_pct is null for every pilot: NOT_MEASURED (unknown, not zero)."
+  ]
+}

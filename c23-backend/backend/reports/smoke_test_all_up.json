@@ -1,0 +1,210 @@
+{
+    "base_url":  "http://127.0.0.1:8080",
+    "expect_ai":  "ok",
+    "expect_cache":  "ok",
+    "total":  40,
+    "passed":  40,
+    "failed":  0,
+    "checks":  [
+                   {
+                       "check":  "GET /health 200 + database ok",
+                       "pass":  true,
+                       "detail":  "{\"ai_service\":\"ok\",\"api\":\"ok\",\"database\":\"ok\",\"redis\":\"ok\"}"
+                   },
+                   {
+                       "check":  "AI service status = ok",
+                       "pass":  true,
+                       "detail":  "ok"
+                   },
+                   {
+                       "check":  "cache status = ok",
+                       "pass":  true,
+                       "detail":  "ok"
+                   },
+                   {
+                       "check":  "GET /ready 200",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "import official fixture (201, or 409 if already seeded)",
+                       "pass":  true,
+                       "detail":  "HTTP 409"
+                   },
+                   {
+                       "check":  "pilots persisted in PostgreSQL (\u003e= 5)",
+                       "pass":  true,
+                       "detail":  "count 5"
+                   },
+                   {
+                       "check":  "DEMO1 official reference: net 120000, monthly 10000, payback 20",
+                       "pass":  true,
+                       "detail":  "ai_status=ok"
+                   },
+                   {
+                       "check":  "evaluate ai_status = ok (deterministic result unaffected)",
+                       "pass":  true,
+                       "detail":  "ok"
+                   },
+                   {
+                       "check":  "DEMO2 running 120000: net 60000, monthly 5000, payback 40",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "scenario does not modify the official pilot",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "low adoption 20% (\u003c break-even 33.33%) -\u003e STOP",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "low adoption 45% (\u003c minimum 60%) -\u003e REVISE LOW_ADOPTION",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "failed quality 60% (\u003c 80%) -\u003e STOP even with 20-month payback",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "missing running cost -\u003e payback null (NOT_CALCULABLE), REVISE",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "negative economics (running 200000) -\u003e net -20000, NEVER_PAYS_BACK, STOP",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "time freed is not cash -\u003e REVIEW TIME_NOT_CASH, cash net unknown",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "budget 600000 vs setup 800000 -\u003e REJECTED BUDGET_EXCEEDED",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "AI4 + AI5 -\u003e DOUBLE_COUNT_RISK, recognised 180000 (not 360000), NEEDS_REVIEW",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "unresolved overlap blocks approval (409 APPROVAL_BLOCKED)",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "overlap report: deterministic overlap authoritative, AI advisory",
+                       "pass":  true,
+                       "detail":  "ai_status=ok, suggestions=1"
+                   },
+                   {
+                       "check":  "resolution AI4 120000 + AI5 60000 -\u003e recognised 180000, overlap RESOLVED",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "over-allocation (360000 \u003e pool 180000) rejected 422",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "unknown overlap group blocks approval",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "optimizer deterministic (repeat + reversed input) -\u003e AI1,AI2,AI4",
+                       "pass":  true,
+                       "detail":  "AI1,AI2,AI4 | AI1,AI2,AI4 | AI1,AI2,AI4"
+                   },
+                   {
+                       "check":  "budget reduced to 100000 -\u003e empty portfolio",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "save -\u003e approve -\u003e reload from PostgreSQL (APPROVED, recognised 540000)",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "scenario runs persisted and reloadable",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "decision history with rules version + input snapshot",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "audit history: create + approve recorded",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "export evidence carries the synthetic-data disclaimer",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "structured validation error (\"2 lakh\" -\u003e 422 NOT_NUMERIC)",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "malformed JSON -\u003e 400 MALFORMED_JSON",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "NaN literal -\u003e 400",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "percentage \u003e 100 -\u003e 422 OUT_OF_RANGE",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "duplicate id (case-insensitive) -\u003e 409 CONFLICT",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "duplicate JSON key -\u003e 422 DUPLICATE_KEY",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "budget null / negative, duplicate pilot, unknown pilot -\u003e 422",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "SQL-injection-shaped id -\u003e 400 INVALID_ID; unknown pilot -\u003e 404",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "oversized body (\u003e 1 MiB) -\u003e 413",
+                       "pass":  true,
+                       "detail":  ""
+                   },
+                   {
+                       "check":  "data intact after attacks",
+                       "pass":  true,
+                       "detail":  ""
+                   }
+               ]
+}

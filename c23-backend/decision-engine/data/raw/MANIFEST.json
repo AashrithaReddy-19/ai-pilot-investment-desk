@@ -1,0 +1,26 @@
+{
+  "_note": "Immutable as-supplied inputs. Never edit these files; derive new files under data/processed, data/training or data/evaluation. tests/test_raw_data.py fails if any hash changes.",
+  "files": [
+    {
+      "path": "official_fixture.json",
+      "sha256": "83a42f1c0f4a607fe5bc649158dafbbea174057dc59284ebf57581a473b7faf4",
+      "source": "OFFICIAL_FIXTURE",
+      "copied_from": "data/C23/fixture.json",
+      "description": "Official C23 synthetic teaching fixture v3.2 (5 pilots). Not a benchmark dataset."
+    },
+    {
+      "path": "starting_state.json",
+      "sha256": "83a42f1c0f4a607fe5bc649158dafbbea174057dc59284ebf57581a473b7faf4",
+      "source": "OFFICIAL_FIXTURE",
+      "copied_from": "data/starting_state.json",
+      "description": "Byte-identical to official_fixture.json; the file the legacy app loads."
+    },
+    {
+      "path": "extension.json",
+      "sha256": "f4df7f76430855bda74e87e49bd26a0fb9365aa96680704167644b948e490b2d",
+      "source": "TEAM_ASSUMPTION",
+      "copied_from": "data/extension.json",
+      "description": "Team-authored assumptions (budget, defaults, adoption, readiness labels, descriptions). NOT part of the fixture."
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "case_id": "C23",
+  "synthetic": true,
+  "data_version": "v3.2",
+  "currency": "INR unless explicitly stated",
+  "missing_values": "null means unknown, never zero",
+  "records": {
+    "pilots": [
+      {
+        "id": "AI1",
+        "task": "Invoice field extraction",
+        "setup_cost_inr": 200000,
+        "annual_running_cost_inr": 60000,
+        "annual_benefit_inr": 180000,
+        "benefit_type": "cashable assumption",
+        "overlap_group": "finance"
+      },
+      {
+        "id": "AI2",
+        "task": "Order exception triage",
+        "setup_cost_inr": 200000,
+        "annual_running_cost_inr": 60000,
+        "annual_benefit_inr": 180000,
+        "benefit_type": "cashable assumption",
+        "overlap_group": "ops"
+      },
+      {
+        "id": "AI3",
+        "task": "Weekly catalogue review",
+        "setup_cost_inr": 200000,
+        "annual_running_cost_inr": 60000,
+        "annual_benefit_inr": 180000,
+        "benefit_type": "cashable assumption",
+        "overlap_group": "catalog"
+      },
+      {
+        "id": "AI4",
+        "task": "Support reply drafting",
+        "setup_cost_inr": 200000,
+        "annual_running_cost_inr": 60000,
+        "annual_benefit_inr": 180000,
+        "benefit_type": "cashable assumption",
+        "overlap_group": "support"
+      },
+      {
+        "id": "AI5",
+        "task": "Ticket tagging",
+        "setup_cost_inr": 200000,
+        "annual_running_cost_inr": 60000,
+        "annual_benefit_inr": 180000,
+        "benefit_type": "cashable assumption",
+        "overlap_group": "support"
+      }
+    ],
+    "expected_first_pilot_payback_months": 20,
+    "notes": "Inputs are assumptions. Same benefit cannot be counted in two pilots."
+  },
+  "public_checks": [
+    "Pilot costing INR 2 lakh once plus INR 0.6 lakh/year with INR 1.8 lakh/year realized benefit has INR 1.2 lakh annual net benefit and 20-month simple payback, assuming steady benefit from day one.",
+    "Portfolio respects budget and prevents double-counting the same hours/revenue across pilots.",
+    "Low adoption or failed quality threshold causes an explicit revise/stop decision."
+  ],
+  "limit": "Small teaching fixture for a bounded prototype. Market demand, willingness to pay and production performance remain unproven."
+}

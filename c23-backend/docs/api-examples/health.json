@@ -1,0 +1,20 @@
+{
+    "request":  {
+                    "method":  "GET",
+                    "path":  "/health",
+                    "body":  null
+                },
+    "status":  200,
+    "response":  {
+                     "components":  {
+                                        "ai_service":  "ok",
+                                        "api":  "ok",
+                                        "database":  "ok",
+                                        "redis":  "ok"
+                                    },
+                     "note":  "redis and ai_service are optional; their failure never changes deterministic results",
+                     "rules_version":  "c23-rules-v1",
+                     "status":  "ok",
+                     "time":  "2026-10-17T14:07:52.0464096Z"
+                 }
+}

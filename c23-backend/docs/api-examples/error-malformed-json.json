@@ -1,0 +1,15 @@
+{
+    "request":  {
+                    "method":  "POST",
+                    "path":  "/api/v1/pilots",
+                    "body":  "RAW (invalid JSON on purpose): {\"id\":"
+                },
+    "status":  400,
+    "response":  {
+                     "error":  {
+                                   "code":  "MALFORMED_JSON",
+                                   "message":  "request body is not valid JSON (note: NaN and Infinity are not valid JSON)",
+                                   "request_id":  "3b59b7fc6d7c81de"
+                               }
+                 }
+}

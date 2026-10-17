@@ -1,0 +1,701 @@
+{
+  "label": "SYNTHETIC EVAL on small team-authored cases + Go engine outputs. Not real-world or enterprise performance.",
+  "engine_rules_version": "c23-rules-v1",
+  "gates": {
+    "holdout_precision_min": 0.8,
+    "holdout_recall_min": 0.7,
+    "grounding_pass_rate": 1.0,
+    "hallucination_rejection_rate": 1.0,
+    "control_acceptance_rate": 1.0,
+    "consistency": 1.0
+  },
+  "models": {
+    "semantic": "lexical-domain-overlap@1.1.0",
+    "explain": "template-explainer@1.0.0"
+  },
+  "suites": {
+    "semantic_overlap": {
+      "dev": {
+        "n": 20,
+        "precision": 1.0,
+        "recall": 0.833,
+        "f1": 0.909,
+        "accuracy": 0.9,
+        "confusion": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 2,
+          "tn": 8
+        },
+        "errors": [
+          {
+            "a": "Summarise payroll exceptions for HR.",
+            "b": "Answer employee leave policy questions.",
+            "label": true,
+            "similarity": 0.25
+          },
+          {
+            "a": "Create merchandising banners for product promotions.",
+            "b": "Plan marketing campaign budgets.",
+            "label": true,
+            "similarity": 0.25
+          }
+        ]
+      },
+      "holdout": {
+        "n": 20,
+        "precision": 1.0,
+        "recall": 0.727,
+        "f1": 0.842,
+        "accuracy": 0.85,
+        "confusion": {
+          "tp": 8,
+          "fp": 0,
+          "fn": 3,
+          "tn": 9
+        },
+        "errors": [
+          {
+            "a": "Forecast warehouse dispatch volumes.",
+            "b": "Explain order delivery delays to the operations lead.",
+            "label": true,
+            "similarity": 0.25
+          },
+          {
+            "a": "Draft job descriptions for open roles.",
+            "b": "Answer new employee onboarding questions.",
+            "label": true,
+            "similarity": 0.0
+          },
+          {
+            "a": "Personalise promotion emails for loyal customers.",
+            "b": "Score sales prospects by likelihood to buy.",
+            "label": true,
+            "similarity": 0.25
+          }
+        ]
+      },
+      "gate_pass": true
+    },
+    "semantic_properties": {
+      "checks": {
+        "official_flags_only_AI4_AI5": true,
+        "symmetric": true,
+        "bounded_0_1": true,
+        "deterministic_and_order_independent": true,
+        "fallback_to_overlap_group": true
+      },
+      "official_pairs_flagged": [
+        [
+          "AI4",
+          "AI5"
+        ]
+      ],
+      "gate_pass": true
+    },
+    "explanation_grounding": {
+      "n": 13,
+      "pass_rate": 1.0,
+      "rows": [
+        {
+          "case": "adoption_45",
+          "decision": "REVISE",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "case_a_running_120000",
+          "decision": "REVIEW",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "case_b_running_null",
+          "decision": "REVISE",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "case_e_adoption_20",
+          "decision": "STOP",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "case_f_quality_60",
+          "decision": "STOP",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "case_g_running_200000",
+          "decision": "STOP",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "official_AI1",
+          "decision": "REVIEW",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "official_AI2",
+          "decision": "REVIEW",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "official_AI3",
+          "decision": "REVIEW",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "official_AI4",
+          "decision": "REVIEW",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "official_AI5",
+          "decision": "REVISE",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "overlap_unknown",
+          "decision": "REVISE",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        },
+        {
+          "case": "time_freed",
+          "decision": "REVIEW",
+          "grounded": true,
+          "mentions_decision": true,
+          "failures": []
+        }
+      ],
+      "gate_pass": true
+    },
+    "hallucination": {
+      "adversarial_n": 130,
+      "rejection_rate": 1.0,
+      "by_attack": {
+        "wrong_number": {
+          "n": 13,
+          "rejected": 13
+        },
+        "invented_pilot": {
+          "n": 13,
+          "rejected": 13
+        },
+        "wrong_decision": {
+          "n": 13,
+          "rejected": 13
+        },
+        "extra_decision_word": {
+          "n": 13,
+          "rejected": 13
+        },
+        "roi_claim": {
+          "n": 13,
+          "rejected": 13
+        },
+        "guarantee": {
+          "n": 13,
+          "rejected": 13
+        },
+        "certainty": {
+          "n": 13,
+          "rejected": 13
+        },
+        "invented_code": {
+          "n": 13,
+          "rejected": 13
+        },
+        "invented_metric": {
+          "n": 13,
+          "rejected": 13
+        },
+        "market_claim": {
+          "n": 13,
+          "rejected": 13
+        }
+      },
+      "missed": [],
+      "controls_n": 37,
+      "control_acceptance_rate": 1.0,
+      "false_rejections": [],
+      "gate_pass": true
+    },
+    "required_cases": {
+      "n": 21,
+      "rows": [
+        {
+          "check": "semantic band: Support reply drafting vs Customer response copilot",
+          "expected": "likely",
+          "actual": "likely",
+          "pass": true
+        },
+        {
+          "check": "semantic band: Invoice extraction vs Employee onboarding",
+          "expected": "unlikely",
+          "actual": "unlikely",
+          "pass": true
+        },
+        {
+          "check": "semantic band: Ticket classification vs Support knowledge recommendation",
+          "expected": "possible",
+          "actual": "possible",
+          "pass": true
+        },
+        {
+          "check": "adoption_45: LOW_ADOPTION explanation mentions adoption and is grounded",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "adoption_45: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_a_running_120000: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_b_running_null: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_e_adoption_20: LOW_ADOPTION explanation mentions adoption and is grounded",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_e_adoption_20: STOP never explained as PROCEED",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_e_adoption_20: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_f_quality_60: STOP never explained as PROCEED",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_f_quality_60: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_g_running_200000: STOP never explained as PROCEED",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "case_g_running_200000: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "official_AI1: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "official_AI2: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "official_AI3: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "official_AI4: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "official_AI5: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "overlap_unknown: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        },
+        {
+          "check": "time_freed: no invented thresholds, costs or evidence",
+          "expected": true,
+          "actual": true,
+          "pass": true
+        }
+      ],
+      "gate_pass": true
+    },
+    "robustness": {
+      "n": 9,
+      "rows": [
+        {
+          "input": [
+            "",
+            "anything"
+          ],
+          "band": "unlikely",
+          "pass": true
+        },
+        {
+          "input": [
+            "xxxxxxxxxxxxxxxxxxxx",
+            "yyyyyyyyyyyyyyyyyyyy"
+          ],
+          "band": "unlikely",
+          "pass": true
+        },
+        {
+          "input": [
+            "🚀🚀🚀",
+            "📈"
+          ],
+          "band": "unlikely",
+          "pass": true
+        },
+        {
+          "input": [
+            "12345 67890",
+            "12345"
+          ],
+          "band": "unlikely",
+          "pass": true
+        },
+        {
+          "input": [
+            "सहायता टिकट",
+            "ग्राहक उत्तर"
+          ],
+          "band": "unlikely",
+          "pass": true
+        },
+        {
+          "input": [
+            "support",
+            "SUPPORT!!!"
+          ],
+          "band": "possible",
+          "pass": true
+        },
+        {
+          "input": [
+            "   ",
+            ""
+          ],
+          "band": "likely",
+          "pass": true
+        },
+        {
+          "input": [
+            "unknown words zzqx",
+            "qqq vvv"
+          ],
+          "band": "unlikely",
+          "pass": true
+        },
+        {
+          "input": "evaluation with unknown rule code and no metrics",
+          "band": "n/a",
+          "pass": true
+        }
+      ],
+      "gate_pass": true
+    },
+    "categories": {
+      "n": 7,
+      "rows": [
+        {
+          "category": "clear overlap",
+          "a": "Support reply drafting",
+          "b": "Customer response copilot",
+          "band": "likely",
+          "similarity": 0.5,
+          "acceptable_bands": [
+            "likely"
+          ],
+          "binary_outcome": "TP",
+          "pass": true
+        },
+        {
+          "category": "same benefit, different wording",
+          "a": "Answer customer emails",
+          "b": "Draft replies to helpdesk enquiries",
+          "band": "likely",
+          "similarity": 0.5,
+          "acceptable_bands": [
+            "likely",
+            "possible"
+          ],
+          "binary_outcome": "TP",
+          "pass": true
+        },
+        {
+          "category": "clear non-overlap",
+          "a": "Invoice extraction",
+          "b": "Employee onboarding",
+          "band": "unlikely",
+          "similarity": 0.0,
+          "acceptable_bands": [
+            "unlikely"
+          ],
+          "binary_outcome": "TN",
+          "pass": true
+        },
+        {
+          "category": "same department, different benefit",
+          "a": "Invoice data extraction",
+          "b": "Vendor payment fraud detection",
+          "band": "possible",
+          "similarity": 0.5,
+          "acceptable_bands": [
+            "possible",
+            "unlikely"
+          ],
+          "binary_outcome": "FP",
+          "pass": true
+        },
+        {
+          "category": "same department, different benefit",
+          "a": "Draft support replies",
+          "b": "Forecast support staffing levels",
+          "band": "possible",
+          "similarity": 0.6443,
+          "acceptable_bands": [
+            "possible",
+            "unlikely"
+          ],
+          "binary_outcome": "FP",
+          "pass": true
+        },
+        {
+          "category": "ambiguous",
+          "a": "Ticket classification",
+          "b": "Support knowledge recommendation",
+          "band": "possible",
+          "similarity": 0.5,
+          "acceptable_bands": [
+            "possible"
+          ],
+          "binary_outcome": null,
+          "pass": true
+        },
+        {
+          "category": "unknown wording",
+          "a": "Quantum flux harmonizer",
+          "b": "Blockchain synergy portal",
+          "band": "unlikely",
+          "similarity": 0.0,
+          "acceptable_bands": [
+            "unlikely"
+          ],
+          "binary_outcome": "TN",
+          "pass": true
+        }
+      ],
+      "gate_pass": true,
+      "binary_false_positives": [
+        {
+          "category": "same department, different benefit",
+          "a": "Invoice data extraction",
+          "b": "Vendor payment fraud detection",
+          "band": "possible",
+          "similarity": 0.5,
+          "acceptable_bands": [
+            "possible",
+            "unlikely"
+          ],
+          "binary_outcome": "FP",
+          "pass": true
+        },
+        {
+          "category": "same department, different benefit",
+          "a": "Draft support replies",
+          "b": "Forecast support staffing levels",
+          "band": "possible",
+          "similarity": 0.6443,
+          "acceptable_bands": [
+            "possible",
+            "unlikely"
+          ],
+          "binary_outcome": "FP",
+          "pass": true
+        }
+      ]
+    },
+    "consistency": {
+      "identical_outputs": true,
+      "gate_pass": true
+    }
+  },
+  "training_status": "Predictive training not used because the official fixture is too small and synthetic. AI value is delivered through advisory enrichment and deterministic decision support. No model artifacts exist in the repository.",
+  "model_metrics": {
+    "training": "NOT USED",
+    "predictive_model": "NOT USED",
+    "accuracy_f1_roc_auc_confusion_matrix": "NOT APPLICABLE",
+    "reason": "No trained classifier exists; the semantic method is an untrained lexical rule evaluated on labelled pairs."
+  },
+  "all_gates_pass": true,
+  "scorecard": {
+    "table": [
+      {
+        "category": "Semantic overlap (labelled pairs, binary)",
+        "passed": 35,
+        "total": 40,
+        "pass_rate_pct": 87.5
+      },
+      {
+        "category": "Semantic categories (no false certainty)",
+        "passed": 7,
+        "total": 7,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Ambiguous case handling",
+        "passed": 1,
+        "total": 1,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Grounding (generated explanations)",
+        "passed": 13,
+        "total": 13,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Decision consistency (explanation = engine decision)",
+        "passed": 13,
+        "total": 13,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Reason-code agreement",
+        "passed": 13,
+        "total": 13,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Financial number fidelity",
+        "passed": 13,
+        "total": 13,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Hallucination resistance (attacks rejected)",
+        "passed": 130,
+        "total": 130,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Faithful paraphrases accepted (controls)",
+        "passed": 37,
+        "total": 37,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Required brief cases",
+        "passed": 21,
+        "total": 21,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Fallback / robustness",
+        "passed": 10,
+        "total": 10,
+        "pass_rate_pct": 100.0
+      },
+      {
+        "category": "Consistency (identical repeated output)",
+        "passed": 1,
+        "total": 1,
+        "pass_rate_pct": 100.0
+      }
+    ],
+    "total_cases": 299,
+    "passed": 294,
+    "failed": 5,
+    "pass_rate_pct": 98.3,
+    "explanation_metrics": {
+      "n": 13,
+      "grounding_pct": 100.0,
+      "decision_agreement_pct": 100.0,
+      "reason_code_agreement_pct": 100.0,
+      "financial_number_agreement_pct": 100.0,
+      "unsupported_claim_rate_pct": 0.0,
+      "contradiction_rate_pct": 0.0
+    },
+    "hallucination_rate_pct": 0.0,
+    "semantic_threshold": 0.3,
+    "semantic_holdout": {
+      "precision": 1.0,
+      "recall": 0.727,
+      "f1": 0.842,
+      "accuracy": 0.85,
+      "confusion": {
+        "tp": 8,
+        "fp": 0,
+        "fn": 3,
+        "tn": 9
+      }
+    },
+    "semantic_dev": {
+      "precision": 1.0,
+      "recall": 0.833,
+      "f1": 0.909,
+      "accuracy": 0.9,
+      "confusion": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 2,
+        "tn": 8
+      }
+    }
+  }
+}

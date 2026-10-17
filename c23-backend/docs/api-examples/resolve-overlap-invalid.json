@@ -1,0 +1,29 @@
+{
+    "request":  {
+                    "method":  "POST",
+                    "path":  "/api/v1/portfolios/ffc5aed7-ac13-43e7-9a70-d3e2ab7cbda6/overlaps/support/resolve",
+                    "body":  {
+                                 "resolution_type":  "CUSTOM_ALLOCATION",
+                                 "allocations_inr":  {
+                                                         "AI4":  180000,
+                                                         "AI5":  180000
+                                                     },
+                                 "version":  2
+                             }
+                },
+    "status":  422,
+    "response":  {
+                     "error":  {
+                                   "code":  "VALIDATION_FAILED",
+                                   "message":  "input failed validation",
+                                   "fields":  [
+                                                  {
+                                                      "field":  "resolution",
+                                                      "code":  "INVALID_RESOLUTION",
+                                                      "message":  "allocations total INR 360000 exceeds the shared pool INR 180000 (benefit cannot be counted twice)"
+                                                  }
+                                              ],
+                                   "request_id":  "52325809ef187836"
+                               }
+                 }
+}

@@ -1,0 +1,250 @@
+{
+    "request":  {
+                    "method":  "POST",
+                    "path":  "/api/v1/pilots/AI1/scenarios",
+                    "body":  {
+                                 "name":  "smoke",
+                                 "overrides":  {
+                                                   "annual_running_cost_inr":  120000
+                                               }
+                             }
+                },
+    "status":  201,
+    "response":  {
+                     "result":  {
+                                    "name":  "smoke",
+                                    "base_pilot_id":  "AI1",
+                                    "rules_version":  "c23-rules-v1",
+                                    "changes":  [
+                                                    {
+                                                        "field":  "annual_running_cost_inr",
+                                                        "before":  60000,
+                                                        "after":  120000
+                                                    }
+                                                ],
+                                    "assumptions":  [
+
+                                                    ],
+                                    "baseline":  {
+                                                     "pilot_id":  "AI1",
+                                                     "rules_version":  "c23-rules-v1",
+                                                     "decision":  "REVIEW",
+                                                     "primary_reason":  "INSUFFICIENT_EVIDENCE",
+                                                     "reason_codes":  [
+                                                                          "INSUFFICIENT_EVIDENCE"
+                                                                      ],
+                                                     "warnings":  [
+
+                                                                  ],
+                                                     "failed_rules":  [
+                                                                          {
+                                                                              "rule":  "R9",
+                                                                              "code":  "INSUFFICIENT_EVIDENCE",
+                                                                              "forces_decision":  "REVIEW",
+                                                                              "metric":  "actual_adoption_pct/actual_quality_pct",
+                                                                              "threshold":  "measured",
+                                                                              "actual":  "NOT_MEASURED",
+                                                                              "message":  "Actual adoption and/or quality not measured yet: fund only as a small time-boxed pilot and measure before wider investment."
+                                                                          }
+                                                                      ],
+                                                     "calculated_metrics":  {
+                                                                                "stated_basis":  {
+                                                                                                     "annual_benefit_inr":  180000,
+                                                                                                     "net_annual_benefit_inr":  120000,
+                                                                                                     "monthly_net_benefit_inr":  10000,
+                                                                                                     "payback_months":  20,
+                                                                                                     "payback_status":  "CALCULABLE",
+                                                                                                     "roi_pct":  60
+                                                                                                 },
+                                                                                "cash_basis":  {
+                                                                                                   "annual_benefit_inr":  180000,
+                                                                                                   "net_annual_benefit_inr":  120000,
+                                                                                                   "monthly_net_benefit_inr":  10000,
+                                                                                                   "payback_months":  20,
+                                                                                                   "payback_status":  "CALCULABLE",
+                                                                                                   "roi_pct":  60
+                                                                                               },
+                                                                                "cash_basis_rule":  "cashable: annual_benefit_inr counted as cash (fixture labels this an assumption)",
+                                                                                "breakeven_adoption_pct":  33.33,
+                                                                                "overall_readiness_pct":  null,
+                                                                                "readiness_level":  "high",
+                                                                                "readiness_basis":  "readiness_label (TEAM_ASSUMPTION)",
+                                                                                "adoption_status":  "NOT_MEASURED",
+                                                                                "quality_status":  "NOT_MEASURED",
+                                                                                "stage":  "PRE_PILOT",
+                                                                                "minimum_adoption":  {
+                                                                                                         "value":  60,
+                                                                                                         "source":  "TEAM_ASSUMPTION (rules default)"
+                                                                                                     },
+                                                                                "minimum_quality":  {
+                                                                                                        "value":  80,
+                                                                                                        "source":  "TEAM_ASSUMPTION (rules default)"
+                                                                                                    },
+                                                                                "low_readiness_below_pct":  50
+                                                                            },
+                                                     "input_snapshot":  {
+                                                                            "id":  "AI1",
+                                                                            "task":  "Invoice field extraction",
+                                                                            "description":  "Extract invoice fields into the finance ledger instead of manual typing.",
+                                                                            "setup_cost_inr":  200000,
+                                                                            "annual_running_cost_inr":  60000,
+                                                                            "annual_benefit_inr":  180000,
+                                                                            "capacity_value_inr":  null,
+                                                                            "realized_cash_saving_inr":  null,
+                                                                            "benefit_type":  "cashable",
+                                                                            "benefit_type_raw":  "cashable assumption",
+                                                                            "overlap_group":  "finance",
+                                                                            "overlap_group_raw":  "finance",
+                                                                            "expected_adoption_pct":  70,
+                                                                            "actual_adoption_pct":  null,
+                                                                            "minimum_adoption_pct":  null,
+                                                                            "expected_quality_pct":  null,
+                                                                            "actual_quality_pct":  null,
+                                                                            "minimum_quality_pct":  null,
+                                                                            "data_readiness_pct":  null,
+                                                                            "technical_readiness_pct":  null,
+                                                                            "process_readiness_pct":  null,
+                                                                            "readiness_label":  "high",
+                                                                            "field_sources":  {
+                                                                                                  "actual_adoption_pct":  "UNKNOWN",
+                                                                                                  "actual_quality_pct":  "UNKNOWN",
+                                                                                                  "annual_benefit_inr":  "OFFICIAL_FIXTURE",
+                                                                                                  "annual_running_cost_inr":  "OFFICIAL_FIXTURE",
+                                                                                                  "benefit_type":  "OFFICIAL_FIXTURE",
+                                                                                                  "capacity_value_inr":  "UNKNOWN",
+                                                                                                  "data_readiness_pct":  "UNKNOWN",
+                                                                                                  "description":  "TEAM_ASSUMPTION",
+                                                                                                  "expected_adoption_pct":  "TEAM_ASSUMPTION",
+                                                                                                  "expected_quality_pct":  "UNKNOWN",
+                                                                                                  "id":  "OFFICIAL_FIXTURE",
+                                                                                                  "minimum_adoption_pct":  "UNKNOWN",
+                                                                                                  "minimum_quality_pct":  "UNKNOWN",
+                                                                                                  "overlap_group":  "OFFICIAL_FIXTURE",
+                                                                                                  "process_readiness_pct":  "UNKNOWN",
+                                                                                                  "readiness_label":  "TEAM_ASSUMPTION",
+                                                                                                  "realized_cash_saving_inr":  "UNKNOWN",
+                                                                                                  "setup_cost_inr":  "OFFICIAL_FIXTURE",
+                                                                                                  "task":  "OFFICIAL_FIXTURE",
+                                                                                                  "technical_readiness_pct":  "UNKNOWN"
+                                                                                              },
+                                                                            "assumptions":  null,
+                                                                            "version":  1,
+                                                                            "created_at":  "2026-10-17T14:07:51.168064Z",
+                                                                            "updated_at":  "2026-10-17T14:07:51.168064Z"
+                                                                        },
+                                                     "explanation":  "AI1: REVIEW (INSUFFICIENT_EVIDENCE). Stated basis: net INR 120000/yr, INR 10000/month, payback 20 months. [INSUFFICIENT_EVIDENCE] Actual adoption and/or quality not measured yet: fund only as a small time-boxed pilot and measure before wider investment."
+                                                 },
+                                    "scenario":  {
+                                                     "pilot_id":  "AI1",
+                                                     "rules_version":  "c23-rules-v1",
+                                                     "decision":  "REVIEW",
+                                                     "primary_reason":  "INSUFFICIENT_EVIDENCE",
+                                                     "reason_codes":  [
+                                                                          "INSUFFICIENT_EVIDENCE"
+                                                                      ],
+                                                     "warnings":  [
+
+                                                                  ],
+                                                     "failed_rules":  [
+                                                                          {
+                                                                              "rule":  "R9",
+                                                                              "code":  "INSUFFICIENT_EVIDENCE",
+                                                                              "forces_decision":  "REVIEW",
+                                                                              "metric":  "actual_adoption_pct/actual_quality_pct",
+                                                                              "threshold":  "measured",
+                                                                              "actual":  "NOT_MEASURED",
+                                                                              "message":  "Actual adoption and/or quality not measured yet: fund only as a small time-boxed pilot and measure before wider investment."
+                                                                          }
+                                                                      ],
+                                                     "calculated_metrics":  {
+                                                                                "stated_basis":  {
+                                                                                                     "annual_benefit_inr":  180000,
+                                                                                                     "net_annual_benefit_inr":  60000,
+                                                                                                     "monthly_net_benefit_inr":  5000,
+                                                                                                     "payback_months":  40,
+                                                                                                     "payback_status":  "CALCULABLE",
+                                                                                                     "roi_pct":  30
+                                                                                                 },
+                                                                                "cash_basis":  {
+                                                                                                   "annual_benefit_inr":  180000,
+                                                                                                   "net_annual_benefit_inr":  60000,
+                                                                                                   "monthly_net_benefit_inr":  5000,
+                                                                                                   "payback_months":  40,
+                                                                                                   "payback_status":  "CALCULABLE",
+                                                                                                   "roi_pct":  30
+                                                                                               },
+                                                                                "cash_basis_rule":  "cashable: annual_benefit_inr counted as cash (fixture labels this an assumption)",
+                                                                                "breakeven_adoption_pct":  66.67,
+                                                                                "overall_readiness_pct":  null,
+                                                                                "readiness_level":  "high",
+                                                                                "readiness_basis":  "readiness_label (TEAM_ASSUMPTION)",
+                                                                                "adoption_status":  "NOT_MEASURED",
+                                                                                "quality_status":  "NOT_MEASURED",
+                                                                                "stage":  "PRE_PILOT",
+                                                                                "minimum_adoption":  {
+                                                                                                         "value":  60,
+                                                                                                         "source":  "TEAM_ASSUMPTION (rules default)"
+                                                                                                     },
+                                                                                "minimum_quality":  {
+                                                                                                        "value":  80,
+                                                                                                        "source":  "TEAM_ASSUMPTION (rules default)"
+                                                                                                    },
+                                                                                "low_readiness_below_pct":  50
+                                                                            },
+                                                     "input_snapshot":  {
+                                                                            "id":  "AI1",
+                                                                            "task":  "Invoice field extraction",
+                                                                            "description":  "Extract invoice fields into the finance ledger instead of manual typing.",
+                                                                            "setup_cost_inr":  200000,
+                                                                            "annual_running_cost_inr":  120000,
+                                                                            "annual_benefit_inr":  180000,
+                                                                            "capacity_value_inr":  null,
+                                                                            "realized_cash_saving_inr":  null,
+                                                                            "benefit_type":  "cashable",
+                                                                            "benefit_type_raw":  "cashable assumption",
+                                                                            "overlap_group":  "finance",
+                                                                            "overlap_group_raw":  "finance",
+                                                                            "expected_adoption_pct":  70,
+                                                                            "actual_adoption_pct":  null,
+                                                                            "minimum_adoption_pct":  null,
+                                                                            "expected_quality_pct":  null,
+                                                                            "actual_quality_pct":  null,
+                                                                            "minimum_quality_pct":  null,
+                                                                            "data_readiness_pct":  null,
+                                                                            "technical_readiness_pct":  null,
+                                                                            "process_readiness_pct":  null,
+                                                                            "readiness_label":  "high",
+                                                                            "field_sources":  {
+                                                                                                  "actual_adoption_pct":  "UNKNOWN",
+                                                                                                  "actual_quality_pct":  "UNKNOWN",
+                                                                                                  "annual_benefit_inr":  "OFFICIAL_FIXTURE",
+                                                                                                  "annual_running_cost_inr":  "TEAM_ASSUMPTION",
+                                                                                                  "benefit_type":  "OFFICIAL_FIXTURE",
+                                                                                                  "capacity_value_inr":  "UNKNOWN",
+                                                                                                  "data_readiness_pct":  "UNKNOWN",
+                                                                                                  "description":  "TEAM_ASSUMPTION",
+                                                                                                  "expected_adoption_pct":  "TEAM_ASSUMPTION",
+                                                                                                  "expected_quality_pct":  "UNKNOWN",
+                                                                                                  "id":  "OFFICIAL_FIXTURE",
+                                                                                                  "minimum_adoption_pct":  "UNKNOWN",
+                                                                                                  "minimum_quality_pct":  "UNKNOWN",
+                                                                                                  "overlap_group":  "OFFICIAL_FIXTURE",
+                                                                                                  "process_readiness_pct":  "UNKNOWN",
+                                                                                                  "readiness_label":  "TEAM_ASSUMPTION",
+                                                                                                  "realized_cash_saving_inr":  "UNKNOWN",
+                                                                                                  "setup_cost_inr":  "OFFICIAL_FIXTURE",
+                                                                                                  "task":  "OFFICIAL_FIXTURE",
+                                                                                                  "technical_readiness_pct":  "UNKNOWN"
+                                                                                              },
+                                                                            "assumptions":  null,
+                                                                            "version":  1,
+                                                                            "created_at":  "2026-10-17T14:07:51.168064Z",
+                                                                            "updated_at":  "2026-10-17T14:07:51.168064Z"
+                                                                        },
+                                                     "explanation":  "AI1: REVIEW (INSUFFICIENT_EVIDENCE). Stated basis: net INR 60000/yr, INR 5000/month, payback 40 months. [INSUFFICIENT_EVIDENCE] Actual adoption and/or quality not measured yet: fund only as a small time-boxed pilot and measure before wider investment."
+                                                 },
+                                    "label":  "SCENARIO (team assumption, not official data)"
+                                },
+                     "scenario_id":  1
+                 }
+}

@@ -1,0 +1,127 @@
+{
+    "request":  {
+                    "method":  "POST",
+                    "path":  "/api/v1/preview/optimize",
+                    "body":  {
+                                 "budget_inr":  600000
+                             }
+                },
+    "status":  200,
+    "response":  {
+                     "optimization":  {
+                                          "rules_version":  "c23-rules-v1",
+                                          "method":  "exhaustive subset search",
+                                          "basis":  "cash",
+                                          "budget_inr":  600000,
+                                          "selected":  [
+                                                           "AI1",
+                                                           "AI2",
+                                                           "AI4"
+                                                       ],
+                                          "excluded":  [
+                                                           {
+                                                               "pilot_id":  "AI3",
+                                                               "code":  "NOT_FUNDED",
+                                                               "reason":  "Not funded: the budget is better used by the selected pilots (see tie-break order)."
+                                                           },
+                                                           {
+                                                               "pilot_id":  "AI5",
+                                                               "code":  "PILOT_NEEDS_REVISION",
+                                                               "reason":  "Must be revised before funding (LOW_READINESS); an optimal portfolio must be approvable."
+                                                           },
+                                                           {
+                                                               "pilot_id":  "SMOKE1792246071943",
+                                                               "code":  "OVERLAP_UNKNOWN",
+                                                               "reason":  "Overlap group unknown; cannot prove its benefit is not double counted."
+                                                           }
+                                                       ],
+                                          "candidates_considered":  4,
+                                          "combinations_evaluated":  16,
+                                          "tie_break_order":  [
+                                                                  "higher recognised annual net benefit",
+                                                                  "faster portfolio payback",
+                                                                  "higher total readiness",
+                                                                  "higher total adoption",
+                                                                  "lower total setup cost",
+                                                                  "stable ID order"
+                                                              ],
+                                          "message":  "Selected 3 pilot(s) using INR 600000 of INR 600000.",
+                                          "assessment":  {
+                                                             "rules_version":  "c23-rules-v1",
+                                                             "basis":  "cash",
+                                                             "status":  "VALID",
+                                                             "approval_allowed":  true,
+                                                             "budget_inr":  600000,
+                                                             "pilot_ids":  [
+                                                                               "AI1",
+                                                                               "AI2",
+                                                                               "AI4"
+                                                                           ],
+                                                             "total_setup_cost_inr":  600000,
+                                                             "total_annual_running_cost_inr":  180000,
+                                                             "total_claimed_benefit_inr":  540000,
+                                                             "total_recognized_benefit_inr":  540000,
+                                                             "net_annual_benefit_inr":  360000,
+                                                             "monthly_net_benefit_inr":  30000,
+                                                             "payback":  {
+                                                                             "payback_months":  20,
+                                                                             "payback_status":  "CALCULABLE"
+                                                                         },
+                                                             "budget_remaining_inr":  0,
+                                                             "benefit_ledger":  [
+                                                                                    {
+                                                                                        "pilot_id":  "AI1",
+                                                                                        "benefit_group":  "finance",
+                                                                                        "claimed_benefit_inr":  180000,
+                                                                                        "basis_benefit_inr":  180000,
+                                                                                        "recognized_benefit_inr":  180000,
+                                                                                        "annual_running_cost_inr":  60000,
+                                                                                        "source":  "OFFICIAL_FIXTURE",
+                                                                                        "resolution":  "NONE",
+                                                                                        "review_status":  "AUTO",
+                                                                                        "review_note":  "cashable: annual_benefit_inr counted as cash (fixture labels this an assumption)"
+                                                                                    },
+                                                                                    {
+                                                                                        "pilot_id":  "AI2",
+                                                                                        "benefit_group":  "ops",
+                                                                                        "claimed_benefit_inr":  180000,
+                                                                                        "basis_benefit_inr":  180000,
+                                                                                        "recognized_benefit_inr":  180000,
+                                                                                        "annual_running_cost_inr":  60000,
+                                                                                        "source":  "OFFICIAL_FIXTURE",
+                                                                                        "resolution":  "NONE",
+                                                                                        "review_status":  "AUTO",
+                                                                                        "review_note":  "cashable: annual_benefit_inr counted as cash (fixture labels this an assumption)"
+                                                                                    },
+                                                                                    {
+                                                                                        "pilot_id":  "AI4",
+                                                                                        "benefit_group":  "support",
+                                                                                        "claimed_benefit_inr":  180000,
+                                                                                        "basis_benefit_inr":  180000,
+                                                                                        "recognized_benefit_inr":  180000,
+                                                                                        "annual_running_cost_inr":  60000,
+                                                                                        "source":  "OFFICIAL_FIXTURE",
+                                                                                        "resolution":  "NONE",
+                                                                                        "review_status":  "AUTO",
+                                                                                        "review_note":  "cashable: annual_benefit_inr counted as cash (fixture labels this an assumption)"
+                                                                                    }
+                                                                                ],
+                                                             "overlaps":  [
+
+                                                                          ],
+                                                             "blockers":  [
+
+                                                                          ],
+                                                             "warnings":  [
+
+                                                                          ],
+                                                             "pilot_decisions":  {
+                                                                                     "AI1":  "REVIEW",
+                                                                                     "AI2":  "REVIEW",
+                                                                                     "AI4":  "REVIEW"
+                                                                                 }
+                                                         }
+                                      },
+                     "persisted":  false
+                 }
+}

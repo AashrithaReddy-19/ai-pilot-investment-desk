@@ -1,0 +1,15 @@
+{
+    "request":  {
+                    "method":  "GET",
+                    "path":  "/api/v1/pilots/AI99",
+                    "body":  null
+                },
+    "status":  404,
+    "response":  {
+                     "error":  {
+                                   "code":  "NOT_FOUND",
+                                   "message":  "pilot AI99 not found",
+                                   "request_id":  "f3664028ceeb08a4"
+                               }
+                 }
+}

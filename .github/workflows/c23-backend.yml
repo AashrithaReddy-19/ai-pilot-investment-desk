@@ -1,0 +1,113 @@
+name: c23-backend
+
+# CI for the c23-backend/ tree (deterministic Go engine + advisory FastAPI service).
+# Runs alongside the team's existing ci.yml; it only builds and tests files under c23-backend/.
+on:
+  push:
+    branches: [main, backend-complete-aashritha]
+    paths: ["c23-backend/**", ".github/workflows/c23-backend.yml"]
+  pull_request:
+    paths: ["c23-backend/**", ".github/workflows/c23-backend.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: c23
+          POSTGRES_USER: c23
+          POSTGRES_PASSWORD: c23ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U c23 -d c23" --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://c23:c23ci@localhost:5432/c23?sslmode=disable
+    defaults:
+      run:
+        working-directory: c23-backend/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: c23-backend/backend/go.mod
+          cache-dependency-path: c23-backend/backend/go.sum
+      - name: gofmt
+        run: test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)
+      - name: go vet
+        run: go vet ./...
+      - name: "migration check (apply twice; must be idempotent)"
+        run: go test ./internal/store/ -run TestMigrateIdempotent -count=1
+      - name: "tests + coverage (-p 1, packages share one CI database)"
+        run: go test ./... -p 1 -count=1 -coverpkg=./internal/... -coverprofile=coverage.out
+      - name: coverage report
+        run: go tool cover -func=coverage.out | tail -1
+      - name: "judge evidence (fails if any judge check fails)"
+        run: go run ./cmd/evidence
+      - name: build
+        run: go build -trimpath -o /tmp/api ./cmd/api
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go-evidence
+          path: |
+            c23-backend/backend/coverage.out
+            c23-backend/backend/reports/judge_evidence.md
+
+  python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: c23-backend/decision-engine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: c23-backend/decision-engine/requirements.txt
+      - run: pip install -r requirements.txt
+      - name: lint
+        run: ruff check .
+      - name: tests + coverage
+        run: pytest -q --cov=app --cov=scripts --cov=evals --cov-report=term --cov-fail-under=80
+      - name: AI evals (gates)
+        run: python -m evals.run_evals
+      - name: data audit + preprocessing reproducible
+        run: |
+          python -m scripts.audit_data
+          python -m scripts.preprocess_data
+          git diff --exit-code -- reports/data_audit.json data/processed/
+      - name: FastAPI import/startup validation
+        run: python -c "from app.ai_service import app; from fastapi.testclient import TestClient; assert TestClient(app).get('/health').status_code == 200"
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [go, python]
+    defaults:
+      run:
+        working-directory: c23-backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: compose config
+        run: docker compose config -q
+      - name: build images
+        run: docker compose build
+      - name: start stack and smoke test (no deploy)
+        run: |
+          docker compose up -d
+          for i in $(seq 1 60); do curl -fsS localhost:8080/ready && break; sleep 2; done
+          curl -fsS -X POST localhost:8080/api/v1/pilots/AI1/evaluate | grep -q '"payback_months":20'
+          curl -fsS localhost:8080/api/v1/dashboard | grep -q '"pilot_count":5'
+          BASE_URL=http://localhost:8080 bash scripts/smoke_test.sh
+          docker compose stop ai redis
+          curl -fsS -X POST localhost:8080/api/v1/pilots/AI1/evaluate | grep -q '"ai_status":"degraded"'
+          curl -fsS -X POST localhost:8080/api/v1/pilots/AI1/evaluate | grep -q '"payback_months":20'
+          docker compose start ai redis
+          for i in $(seq 1 30); do curl -fsS -X POST localhost:8080/api/v1/pilots/AI2/evaluate | grep -q '"ai_status":"ok"' && break; sleep 2; done
+      - if: always()
+        run: docker compose down -v

@@ -1,0 +1,31 @@
+{
+    "request":  {
+                    "method":  "POST",
+                    "path":  "/api/v1/portfolios/ffc5aed7-ac13-43e7-9a70-d3e2ab7cbda6/approve",
+                    "body":  {
+                                 "version":  1
+                             }
+                },
+    "status":  409,
+    "response":  {
+                     "error":  {
+                                   "code":  "APPROVAL_BLOCKED",
+                                   "message":  "portfolio status is NEEDS_REVIEW; approval requires VALID",
+                                   "details":  {
+                                                   "blockers":  [
+                                                                    {
+                                                                        "code":  "PILOT_NEEDS_REVISION",
+                                                                        "pilot_id":  "AI5",
+                                                                        "message":  "AI5 must be revised before funding (LOW_READINESS)."
+                                                                    },
+                                                                    {
+                                                                        "code":  "OVERLAP_UNRESOLVED",
+                                                                        "message":  "DOUBLE_COUNT_RISK: [AI4 AI5] share benefit group \"support\" (claimed INR 360000, pool INR 180000). Resolve before approval."
+                                                                    }
+                                                                ],
+                                                   "status":  "NEEDS_REVIEW"
+                                               },
+                                   "request_id":  "24d8cfe0a5a0e080"
+                               }
+                 }
+}

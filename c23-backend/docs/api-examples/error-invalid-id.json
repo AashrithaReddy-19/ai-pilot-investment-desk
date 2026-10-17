@@ -1,0 +1,15 @@
+{
+    "request":  {
+                    "method":  "GET",
+                    "path":  "/api/v1/pilots/x\u0027%20OR%20\u00271\u0027=\u00271",
+                    "body":  null
+                },
+    "status":  400,
+    "response":  {
+                     "error":  {
+                                   "code":  "INVALID_ID",
+                                   "message":  "pilot id must be 1-64 characters: letters, digits, _ or -",
+                                   "request_id":  "c9f8552d6defa02b"
+                               }
+                 }
+}

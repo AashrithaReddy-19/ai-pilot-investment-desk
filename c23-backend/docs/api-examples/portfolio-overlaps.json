@@ -1,0 +1,50 @@
+{
+    "request":  {
+                    "method":  "GET",
+                    "path":  "/api/v1/portfolios/ffc5aed7-ac13-43e7-9a70-d3e2ab7cbda6/overlaps",
+                    "body":  null
+                },
+    "status":  200,
+    "response":  {
+                     "portfolio_id":  "ffc5aed7-ac13-43e7-9a70-d3e2ab7cbda6",
+                     "overlaps":  [
+                                      {
+                                          "id":  "support",
+                                          "overlap_group":  "support",
+                                          "pilot_ids":  [
+                                                            "AI4",
+                                                            "AI5"
+                                                        ],
+                                          "code":  "DOUBLE_COUNT_RISK",
+                                          "status":  "UNRESOLVED",
+                                          "resolution":  null,
+                                          "claimed_total_inr":  360000,
+                                          "benefit_pool_inr":  180000,
+                                          "recognized_total_inr":  180000
+                                      }
+                                  ],
+                     "pilots_with_unknown_overlap_group":  [
+
+                                                           ],
+                     "resolution_types":  [
+                                              "REMOVE_ONE",
+                                              "EXCLUDE_SECOND",
+                                              "SPLIT_BENEFIT",
+                                              "CUSTOM_ALLOCATION"
+                                          ],
+                     "ai_status":  "ok",
+                     "ai_suggestions":  [
+                                            {
+                                                "pilot_a":  "AI4",
+                                                "pilot_b":  "AI5",
+                                                "semantic_similarity":  0.5845,
+                                                "possible_overlap":  true,
+                                                "band":  "possible",
+                                                "reason":  "shared concepts: support; shared terms: support; different or unclear kind of work: needs human review (official overlap_group also matches)",
+                                                "method":  "lexical-domain-v1"
+                                            }
+                                        ],
+                     "ai_model":  "lexical-domain-overlap@1.1.0",
+                     "authoritative":  "overlap_group rules decide accounting and approval; ai_suggestions are advisory only"
+                 }
+}

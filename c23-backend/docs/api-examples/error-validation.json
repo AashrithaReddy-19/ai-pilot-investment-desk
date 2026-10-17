@@ -1,0 +1,26 @@
+{
+    "request":  {
+                    "method":  "POST",
+                    "path":  "/api/v1/pilots",
+                    "body":  {
+                                 "id":  "BAD1",
+                                 "task":  "t",
+                                 "setup_cost_inr":  "2 lakh"
+                             }
+                },
+    "status":  422,
+    "response":  {
+                     "error":  {
+                                   "code":  "VALIDATION_FAILED",
+                                   "message":  "input failed validation",
+                                   "fields":  [
+                                                  {
+                                                      "field":  "setup_cost_inr",
+                                                      "code":  "NOT_NUMERIC",
+                                                      "message":  "setup_cost_inr must be a JSON number in INR (strings such as \"2 lakh\" are rejected)"
+                                                  }
+                                              ],
+                                   "request_id":  "72abd5968da54bb4"
+                               }
+                 }
+}

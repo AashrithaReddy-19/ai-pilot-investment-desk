@@ -1,0 +1,96 @@
+{
+    "request":  {
+                    "method":  "GET",
+                    "path":  "/api/v1/audit/portfolio/5eba48fc-e420-449d-a59e-d0b41a183f71",
+                    "body":  null
+                },
+    "status":  200,
+    "response":  {
+                     "entity_id":  "5eba48fc-e420-449d-a59e-d0b41a183f71",
+                     "entity_type":  "portfolio",
+                     "entries":  [
+                                     {
+                                         "id":  10,
+                                         "entity_type":  "portfolio",
+                                         "entity_id":  "5eba48fc-e420-449d-a59e-d0b41a183f71",
+                                         "action":  "create",
+                                         "actor":  "smoke-test",
+                                         "request_id":  "feee02909c0a2134",
+                                         "before_state":  null,
+                                         "after_state":  {
+                                                             "id":  "5eba48fc-e420-449d-a59e-d0b41a183f71",
+                                                             "name":  "smoke plan 1792246071943",
+                                                             "basis":  "cash",
+                                                             "status":  "VALID",
+                                                             "version":  1,
+                                                             "blockers":  [
+
+                                                                          ],
+                                                             "pilot_ids":  [
+                                                                               "AI1",
+                                                                               "AI2",
+                                                                               "AI4"
+                                                                           ],
+                                                             "budget_inr":  600000,
+                                                             "overlap_resolutions":  [
+
+                                                                                     ],
+                                                             "total_setup_cost_inr":  600000,
+                                                             "total_recognized_benefit_inr":  540000
+                                                         },
+                                         "created_at":  "2026-10-17T19:37:52.872805+05:30"
+                                     },
+                                     {
+                                         "id":  11,
+                                         "entity_type":  "portfolio",
+                                         "entity_id":  "5eba48fc-e420-449d-a59e-d0b41a183f71",
+                                         "action":  "approve",
+                                         "actor":  "smoke-test",
+                                         "request_id":  "c8442fb9258e24f7",
+                                         "before_state":  {
+                                                              "id":  "5eba48fc-e420-449d-a59e-d0b41a183f71",
+                                                              "name":  "smoke plan 1792246071943",
+                                                              "basis":  "cash",
+                                                              "status":  "VALID",
+                                                              "version":  1,
+                                                              "blockers":  [
+
+                                                                           ],
+                                                              "pilot_ids":  [
+                                                                                "AI1",
+                                                                                "AI2",
+                                                                                "AI4"
+                                                                            ],
+                                                              "budget_inr":  600000,
+                                                              "overlap_resolutions":  [
+
+                                                                                      ],
+                                                              "total_setup_cost_inr":  600000,
+                                                              "total_recognized_benefit_inr":  540000
+                                                          },
+                                         "after_state":  {
+                                                             "id":  "5eba48fc-e420-449d-a59e-d0b41a183f71",
+                                                             "name":  "smoke plan 1792246071943",
+                                                             "basis":  "cash",
+                                                             "status":  "APPROVED",
+                                                             "version":  2,
+                                                             "blockers":  [
+
+                                                                          ],
+                                                             "pilot_ids":  [
+                                                                               "AI1",
+                                                                               "AI2",
+                                                                               "AI4"
+                                                                           ],
+                                                             "budget_inr":  600000,
+                                                             "overlap_resolutions":  [
+
+                                                                                     ],
+                                                             "total_setup_cost_inr":  600000,
+                                                             "total_recognized_benefit_inr":  540000
+                                                         },
+                                         "created_at":  "2026-10-17T19:37:52.894161+05:30"
+                                     }
+                                 ]
+                 }
+}

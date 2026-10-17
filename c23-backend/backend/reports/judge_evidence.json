@@ -1,0 +1,175 @@
+{
+  "all_pass": true,
+  "checks": [
+    {
+      "id": "DEMO1",
+      "title": "Official reference (20-month payback)",
+      "input": "AI1 setup 200000, running 60000, benefit 180000",
+      "expected": "net 120000, monthly 10000, payback 20",
+      "actual": "net 120000, monthly 10000, payback 20",
+      "pass": true
+    },
+    {
+      "id": "DEMO2/CASE_A",
+      "title": "Changed running cost",
+      "input": "running 60000 -\u003e 120000",
+      "expected": "net 60000, monthly 5000, payback 40",
+      "actual": "net 60000, monthly 5000, payback 40",
+      "pass": true
+    },
+    {
+      "id": "DEMO6/CASE_B",
+      "title": "Unknown running cost",
+      "input": "running = null",
+      "expected": "payback null (NOT_CALCULABLE), REVISE",
+      "actual": "payback null (NOT_CALCULABLE), REVISE MISSING_RUNNING_COST",
+      "pass": true
+    },
+    {
+      "id": "CASE_C",
+      "title": "Budget exceeded",
+      "input": "budget 600000, selected setup 800000",
+      "expected": "REJECTED with BUDGET_EXCEEDED",
+      "actual": "REJECTED BUDGET_EXCEEDED",
+      "pass": true
+    },
+    {
+      "id": "DEMO3/CASE_D",
+      "title": "AI4 + AI5 overlap",
+      "input": "select AI4 and AI5 (both overlap_group=support)",
+      "expected": "DOUBLE_COUNT_RISK, recognised 180000 not 360000, NEEDS_REVIEW",
+      "actual": "DOUBLE_COUNT_RISK, recognised 180000 (claimed 360000), NEEDS_REVIEW",
+      "pass": true
+    },
+    {
+      "id": "OVERLAP_RESOLVED",
+      "title": "Custom allocation AI4 120000 + AI5 60000",
+      "input": "CUSTOM_ALLOCATION",
+      "expected": "recognised 180000; still NEEDS_REVIEW because AI5 is REVISE (low readiness)",
+      "actual": "recognised 180000, NEEDS_REVIEW PILOT_NEEDS_REVISION",
+      "pass": true
+    },
+    {
+      "id": "OVERLAP_RESOLVED_AND_REVISED",
+      "title": "Same, after AI5 readiness revised to medium",
+      "input": "CUSTOM_ALLOCATION + AI5 readiness medium",
+      "expected": "recognised 180000, VALID (approvable)",
+      "actual": "recognised 180000, VALID",
+      "pass": true
+    },
+    {
+      "id": "DEMO4/CASE_E",
+      "title": "Adoption 70 -\u003e 20 (break-even 33.33%)",
+      "input": "actual adoption 20, quality 90",
+      "expected": "STOP (ADOPTION_BELOW_BREAKEVEN)",
+      "actual": "STOP ADOPTION_BELOW_BREAKEVEN,LOW_ADOPTION",
+      "pass": true
+    },
+    {
+      "id": "ADOPTION_REVISE",
+      "title": "Adoption above break-even, below minimum 60",
+      "input": "actual adoption 45",
+      "expected": "REVISE (LOW_ADOPTION)",
+      "actual": "REVISE LOW_ADOPTION",
+      "pass": true
+    },
+    {
+      "id": "DEMO5/CASE_F",
+      "title": "Quality 90 -\u003e 60 (minimum 80)",
+      "input": "actual quality 60",
+      "expected": "STOP (QUALITY_THRESHOLD_FAILED) despite 20-month payback",
+      "actual": "STOP QUALITY_THRESHOLD_FAILED, payback still 20",
+      "pass": true
+    },
+    {
+      "id": "CASE_G",
+      "title": "Running 200000 \u003e benefit 180000",
+      "input": "running 200000",
+      "expected": "net -20000, NEVER_PAYS_BACK, STOP",
+      "actual": "net -20000, NEVER_PAYS_BACK, STOP",
+      "pass": true
+    },
+    {
+      "id": "TIME_NOT_CASH",
+      "title": "Time freed is not cash",
+      "input": "benefit_type = time freed",
+      "expected": "REVIEW (TIME_NOT_CASH), cash basis unknown",
+      "actual": "REVIEW TIME_NOT_CASH, cash net null",
+      "pass": true
+    },
+    {
+      "id": "OVERLAP_UNKNOWN",
+      "title": "Unknown overlap group",
+      "input": "AI5 overlap_group = null",
+      "expected": "OVERLAP_UNKNOWN (not 'no overlap')",
+      "actual": "LOW_READINESS,OVERLAP_UNKNOWN,INSUFFICIENT_EVIDENCE",
+      "pass": true
+    },
+    {
+      "id": "OPTIMIZER",
+      "title": "Optimal portfolio, budget 600000",
+      "input": "all 5 official pilots",
+      "expected": "AI1, AI2, AI4; AI5 excluded (REVISE: low readiness), AI3 not funded",
+      "actual": "AI1,AI2,AI4; AI5 PILOT_NEEDS_REVISION, AI3 NOT_FUNDED; status VALID",
+      "pass": true
+    },
+    {
+      "id": "LOW_BUDGET",
+      "title": "Budget 600000 -\u003e 100000",
+      "input": "budget 100000",
+      "expected": "empty portfolio",
+      "actual": "[] Empty portfolio: no eligible pilot fits budget INR 100000.",
+      "pass": true
+    }
+  ],
+  "data": "official C23 synthetic fixture (SHA-256 verified) + team extension",
+  "disclaimer": "Synthetic teaching data. Calculations on stated assumptions, not proven ROI.",
+  "official_pilot_decisions": {
+    "AI1": {
+      "decision": "REVIEW",
+      "primary_reason": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "warnings": []
+    },
+    "AI2": {
+      "decision": "REVIEW",
+      "primary_reason": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "warnings": []
+    },
+    "AI3": {
+      "decision": "REVIEW",
+      "primary_reason": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "warnings": []
+    },
+    "AI4": {
+      "decision": "REVIEW",
+      "primary_reason": "INSUFFICIENT_EVIDENCE",
+      "reason_codes": [
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "warnings": [
+        "DOUBLE_COUNT_RISK: shares benefit group 'support' with AI5"
+      ]
+    },
+    "AI5": {
+      "decision": "REVISE",
+      "primary_reason": "LOW_READINESS",
+      "reason_codes": [
+        "LOW_READINESS",
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "warnings": [
+        "DOUBLE_COUNT_RISK: shares benefit group 'support' with AI4"
+      ]
+    }
+  },
+  "rules_version": "c23-rules-v1"
+}
