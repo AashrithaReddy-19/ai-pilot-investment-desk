@@ -49,3 +49,19 @@ Thumbs.db
 
 # Runtime output: stored pilot proposals
 records/
+
+# OpenTofu / Terraform
+.terraform/
+.tofu/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!tofu.tfvars.example
+!terraform.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl

@@ -21,6 +21,7 @@
   - [Startup Scripts (`start.sh` & `start.ps1`)](#startup-scripts-startsh--startps1)
   - [Integration Test Scripts (`test.sh` & `test.ps1`)](#integration-test-scripts-testsh--testps1)
 - [Running Unit & Integration Tests](#running-unit--integration-tests)
+- [AWS Deployment with OpenTofu](#aws-deployment-with-opentofu)
 - [API Reference](#api-reference)
   - [Health & Readiness](#health--readiness)
   - [Evaluation & Analytics](#evaluation--analytics)
@@ -133,6 +134,9 @@ flowchart TD
 
 ```text
 fynd/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                      # GitHub Actions CI pipeline (DE, Backend & E2E tests)
 ├── backend/
 │   ├── cmd/
 │   │   └── api/
@@ -148,7 +152,9 @@ fynd/
 │   │   ├── rules/                      # HTTP client talking to Decision Engine
 │   │   └── store/                      # PostgreSQL pgx store & migration runners
 │   ├── .env.example                    # Backend environment template
+│   ├── .golangci.yml                   # Go linter configuration
 │   ├── go.mod                          # Go module dependencies
+│   ├── go.sum                          # Go module checksums
 │   ├── start.sh                        # Backend Linux/macOS startup script
 │   └── start.ps1                       # Backend Windows PowerShell startup script
 │
@@ -163,10 +169,17 @@ fynd/
 │   ├── tests/
 │   │   └── test_core.py                # 19 comprehensive unit tests
 │   ├── .env.example                    # Decision engine environment template
+│   ├── pytest.ini                      # Pytest discovery and pythonpath configuration
 │   ├── requirements.txt                # Python dependencies (fastapi, uvicorn, etc.)
 │   ├── start.sh                        # Decision Engine Linux/macOS startup script
 │   └── start.ps1                       # Decision Engine Windows PowerShell startup script
 │
+├── main.tf                             # OpenTofu root configuration (AWS EC2 & automated deploy)
+├── variables.tf                        # OpenTofu input variables definition
+├── outputs.tf                          # OpenTofu output endpoints (IP, API URLs, SSH)
+├── tofu.tfvars.example                 # OpenTofu variables configuration template
+├── .gitignore                          # Git ignore rules
+├── LICENSE                             # License file
 ├── test.sh                             # Automated API integration tests (Bash)
 ├── test.ps1                            # Automated API integration tests (PowerShell)
 └── README.md                           # Documentation
@@ -367,6 +380,71 @@ go test -v ./internal/...
 ```bash
 ./test.sh
 ```
+
+### 4. Continuous Integration (GitHub Actions)
+Automated testing is orchestrated via [`.github/workflows/ci.yml`](file:///home/aarush/Projects/fynd/.github/workflows/ci.yml) on push, pull requests, and manual dispatch:
+- **`test-decision-engine`**: Installs dependencies and executes all 19 Pytest tests for the Python decision engine (`python -m pytest -v`).
+- **`test-backend`**: Starts PostgreSQL 16 and Redis 7 service containers and runs all Go unit tests and store integration tests with race detection (`go test -v -race ./internal/...`).
+- **`test-integration`**: Boots live PostgreSQL and Redis services, executes database migrations (`go run ./cmd/api migrate up`), starts both the Decision Engine and Gin API Gateway in the background, runs [`test.sh`](file:///home/aarush/Projects/fynd/test.sh), and verifies guaranteed cleanup.
+
+---
+
+## AWS Deployment with OpenTofu
+
+The repository includes complete OpenTofu Infrastructure-as-Code to provision an AWS EC2 instance and automatically deploy the full C23 platform (Go Gin Backend, Python Decision Engine, PostgreSQL, and Redis).
+
+### Architecture Overview
+
+OpenTofu provisions:
+- **Compute**: An EC2 instance (Ubuntu 24.04 LTS, `t3.small` with 20 GB gp3 storage).
+- **Networking & Security**: A dedicated security group opening port `22` (SSH), port `8080` (Go Gin API Gateway), and port `8000` (FastAPI Decision Engine).
+- **Automated Cloud-Init (`user_data`)**:
+  - Automatically installs Go, Python 3, PostgreSQL, and Redis on boot.
+  - Configures PostgreSQL role `c23` and databases `c23` & `c23_test`.
+  - Clones the repository to `/opt/c23`.
+  - Sets up the Python virtual environment and enables systemd service `c23-decision-engine.service`.
+  - Compiles the Go binary, applies Goose database migrations, and enables `c23-backend.service`.
+  - Restarts and monitors all services with systemd.
+
+### Deployment Steps
+
+1. **Configure Variables**:
+   Copy the example variables file:
+   ```bash
+   cp tofu.tfvars.example tofu.tfvars
+   ```
+   Optionally configure your SSH public key, preferred AWS region, or database password.
+
+2. **Provide AWS Credentials**:
+   Export your AWS credentials via environment variables or configure via AWS CLI:
+   ```bash
+   export AWS_ACCESS_KEY_ID="your-access-key-id"
+   export AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+   export AWS_REGION="us-east-1"
+   ```
+
+3. **Initialize and Deploy**:
+   ```bash
+   tofu init
+   tofu plan
+   tofu apply
+   ```
+
+4. **Access the Application**:
+   When deployment completes, OpenTofu outputs your live endpoints:
+   ```bash
+   tofu output
+   ```
+   - **Backend API**: `http://<PUBLIC_IP>:8080/health`
+   - **Readiness Check**: `http://<PUBLIC_IP>:8080/ready`
+   - **Decision Engine API Docs**: `http://<PUBLIC_IP>:8000/docs`
+   - **SSH Access**: `ssh ubuntu@<PUBLIC_IP>`
+
+5. **Teardown**:
+   To destroy all provisioned AWS resources and stop charges:
+   ```bash
+   tofu destroy
+   ```
 
 ---
 
