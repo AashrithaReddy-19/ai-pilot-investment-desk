@@ -77,6 +77,8 @@ if ($DatabaseUrl -and (Get-Command psql -ErrorAction SilentlyContinue)) {
 & $CurlCmd -s -X DELETE "$ApiBase/api/v1/portfolios/$PortfolioName" 2>$null | Out-Null
 
 try {
+    $FailedTests = 0
+
     # ------------------------------------------------------------------------------
     # Test 1: Readiness check (verifies Postgres, FastAPI, and Redis status)
     # ------------------------------------------------------------------------------
@@ -89,7 +91,8 @@ try {
     if ($ReadyRaw -like '*"ready":true*') {
         Write-Host "--> Test 1 Passed: System is READY" -ForegroundColor Green
     } else {
-        Write-Host "--> Test 1 Warning: System reported checks down (inspect above)" -ForegroundColor Yellow
+        Write-Host "--> Test 1 Failed: System reported checks down (inspect above)" -ForegroundColor Red
+        $FailedTests++
     }
 
     # ------------------------------------------------------------------------------
@@ -105,6 +108,7 @@ try {
         Write-Host "--> Test 2 Passed: Dual-mode evaluation computed successfully" -ForegroundColor Green
     } else {
         Write-Host "--> Test 2 Failed: Did not receive expected evaluation shape" -ForegroundColor Red
+        $FailedTests++
     }
 
     # ------------------------------------------------------------------------------
@@ -124,7 +128,21 @@ try {
         Write-Host "--> Test 3 Passed: Portfolio '$PortfolioName' saved to database" -ForegroundColor Green
     } else {
         Write-Host "--> Test 3 Failed: Portfolio save did not return expected name" -ForegroundColor Red
+        $FailedTests++
     }
+
+    if ($FailedTests -gt 0) {
+        Write-Host ""
+        Write-Host "=======================================================" -ForegroundColor Red
+        Write-Host "          INTEGRATION TESTS FAILED ($FailedTests FAILED)       " -ForegroundColor Red
+        Write-Host "=======================================================" -ForegroundColor Red
+        throw "$FailedTests integration test(s) failed."
+    }
+
+    Write-Host ""
+    Write-Host "=======================================================" -ForegroundColor Green
+    Write-Host "             ALL INTEGRATION TESTS PASSED              " -ForegroundColor Green
+    Write-Host "=======================================================" -ForegroundColor Green
 }
 finally {
     # ------------------------------------------------------------------------------

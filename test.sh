@@ -118,12 +118,15 @@ echo -e "${CYAN}curl -s http://localhost:8080/ready | jq${RESET}"
 READY_RESP=$(curl -s "$API_BASE/ready")
 echo "$READY_RESP" | $JSON_FORMATTER
 
+FAILED_TESTS=0
+
 # Check readiness status
 IS_READY=$(echo "$READY_RESP" | grep -o '"ready":true' || true)
 if [ -n "$IS_READY" ]; then
     echo -e "${GREEN}--> Test 1 Passed: System is READY${RESET}"
 else
-    echo -e "${YELLOW}--> Test 1 Warning: System reported checks down (inspect above)${RESET}"
+    echo -e "${RED}--> Test 1 Failed: System reported checks down (inspect above)${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
 fi
 
 # ------------------------------------------------------------------------------
@@ -139,6 +142,7 @@ if echo "$EVAL_RESP" | grep -q '"independent"' && echo "$EVAL_RESP" | grep -q '"
     echo -e "${GREEN}--> Test 2 Passed: Dual-mode evaluation computed successfully${RESET}"
 else
     echo -e "${RED}--> Test 2 Failed: Did not receive expected evaluation shape${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
 fi
 
 # ------------------------------------------------------------------------------
@@ -158,6 +162,20 @@ if echo "$SAVE_RESP" | grep -q "\"name\":\"$PORTFOLIO_NAME\""; then
     echo -e "${GREEN}--> Test 3 Passed: Portfolio '$PORTFOLIO_NAME' saved to database${RESET}"
 else
     echo -e "${RED}--> Test 3 Failed: Portfolio save did not return expected name${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
 fi
+
+if [ "$FAILED_TESTS" -gt 0 ]; then
+    echo ""
+    echo -e "${BOLD}${RED}=======================================================${RESET}"
+    echo -e "${BOLD}${RED}            INTEGRATION TESTS FAILED ($FAILED_TESTS FAILED)     ${RESET}"
+    echo -e "${BOLD}${RED}=======================================================${RESET}"
+    exit 1
+fi
+
+echo ""
+echo -e "${BOLD}${GREEN}=======================================================${RESET}"
+echo -e "${BOLD}${GREEN}             ALL INTEGRATION TESTS PASSED              ${RESET}"
+echo -e "${BOLD}${GREEN}=======================================================${RESET}"
 
 # (Cleanup runs automatically via trap cleanup EXIT)

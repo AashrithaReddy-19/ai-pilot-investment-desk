@@ -133,6 +133,9 @@ flowchart TD
 
 ```text
 fynd/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                      # GitHub Actions CI pipeline (DE, Backend & E2E tests)
 ├── backend/
 │   ├── cmd/
 │   │   └── api/
@@ -148,7 +151,9 @@ fynd/
 │   │   ├── rules/                      # HTTP client talking to Decision Engine
 │   │   └── store/                      # PostgreSQL pgx store & migration runners
 │   ├── .env.example                    # Backend environment template
+│   ├── .golangci.yml                   # Go linter configuration
 │   ├── go.mod                          # Go module dependencies
+│   ├── go.sum                          # Go module checksums
 │   ├── start.sh                        # Backend Linux/macOS startup script
 │   └── start.ps1                       # Backend Windows PowerShell startup script
 │
@@ -163,10 +168,13 @@ fynd/
 │   ├── tests/
 │   │   └── test_core.py                # 19 comprehensive unit tests
 │   ├── .env.example                    # Decision engine environment template
+│   ├── pytest.ini                      # Pytest discovery and pythonpath configuration
 │   ├── requirements.txt                # Python dependencies (fastapi, uvicorn, etc.)
 │   ├── start.sh                        # Decision Engine Linux/macOS startup script
 │   └── start.ps1                       # Decision Engine Windows PowerShell startup script
 │
+├── .gitignore                          # Git ignore rules
+├── LICENSE                             # License file
 ├── test.sh                             # Automated API integration tests (Bash)
 ├── test.ps1                            # Automated API integration tests (PowerShell)
 └── README.md                           # Documentation
@@ -367,6 +375,12 @@ go test -v ./internal/...
 ```bash
 ./test.sh
 ```
+
+### 4. Continuous Integration (GitHub Actions)
+Automated testing is orchestrated via [`.github/workflows/ci.yml`](file:///home/aarush/Projects/fynd/.github/workflows/ci.yml) on push, pull requests, and manual dispatch:
+- **`test-decision-engine`**: Installs dependencies and executes all 19 Pytest tests for the Python decision engine (`python -m pytest -v`).
+- **`test-backend`**: Starts PostgreSQL 16 and Redis 7 service containers and runs all Go unit tests and store integration tests with race detection (`go test -v -race ./internal/...`).
+- **`test-integration`**: Boots live PostgreSQL and Redis services, executes database migrations (`go run ./cmd/api migrate up`), starts both the Decision Engine and Gin API Gateway in the background, runs [`test.sh`](file:///home/aarush/Projects/fynd/test.sh), and verifies guaranteed cleanup.
 
 ---
 
