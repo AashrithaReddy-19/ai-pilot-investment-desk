@@ -40,3 +40,9 @@ Thumbs.db
 # Archives
 *.tar.gz
 *.zip
+
+/bin/
+/api
+.env
+*.test
+*.out

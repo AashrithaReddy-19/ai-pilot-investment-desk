@@ -31,6 +31,13 @@ def _ctx(s: Scenario):
 @app.get("/health")
 def health(): return {"ok": True}
 
+@app.get("/defaults")
+def defaults():
+    return {
+        "starting_state": json.loads((DATA / "starting_state.json").read_text()),
+        "extension": _defaults(),
+    }
+
 @app.post("/pilots")
 def pilots(s: Scenario = Scenario()):
     _, _, d, _, L = _ctx(s)
