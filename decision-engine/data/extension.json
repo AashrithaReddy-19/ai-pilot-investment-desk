@@ -5,7 +5,14 @@
     "target_adoption_pct": 60,
     "quality_threshold_pct": 80,
     "assumed_run_cost_pct_of_setup": 20,
-    "assumed_adoption_pct": 50
+    "assumed_adoption_pct": 50,
+    "horizon_months": 36,
+    "discount_rate": 0.10,
+    "annual_usage_growth_pct": 20,
+    "annual_price_drift_pct": -10,
+    "tokens_per_month": 50000000,
+    "price_per_1m_tokens": 250,
+    "ai_fixed_cost_inr_per_year": 20000
   },
   "pilots": [
     {"id":"AI1","description":"Extract invoice fields into the finance ledger instead of manual typing.","adoption_pct":70,"readiness":"high","observed_adoption_pct":null,"observed_quality_pct":null},

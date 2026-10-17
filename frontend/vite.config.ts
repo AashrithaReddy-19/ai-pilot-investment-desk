@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -11,5 +12,11 @@ export default defineConfig(({ mode }) => {
     '/health': { target, changeOrigin: true },
     '/ready': { target, changeOrigin: true },
   }
-  return { plugins: [react()], server: { port: 5173, proxy }, preview: { proxy } }
+  return {
+    plugins: [react()],
+    server: { port: 5173, proxy },
+    preview: { proxy },
+    // the e2e/ folder belongs to Playwright, not Vitest
+    test: { exclude: ['**/node_modules/**', 'e2e/**'] },
+  }
 })

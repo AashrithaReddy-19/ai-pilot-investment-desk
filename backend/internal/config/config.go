@@ -30,7 +30,7 @@ func Load() (Config, error) {
 		DatabaseURL:    os.Getenv("DATABASE_URL"),
 		RedisURL:       os.Getenv("REDIS_URL"),
 		RulesEngineURL: strings.TrimRight(env("RULES_ENGINE_URL", "http://localhost:8000"), "/"),
-		RulesVersion:   env("RULES_VERSION", "1"),
+		RulesVersion:   env("RULES_VERSION", "6"),
 		AllowedOrigins: splitCSV(env("ALLOWED_ORIGINS", "http://localhost:5173")),
 	}
 	var errs []error

@@ -5,6 +5,7 @@ const PATHS: Record<string, string> = {
   observe: 'M3 12h4l3-7 4 14 3-7h4',
   interviews: 'M5 5h14v10H9l-4 4zM9 9h6',
   checks: 'M5 12l4 4 10-10',
+  compare: 'M4 19h6V8H4zM14 19h6V5h-6z',
   about: 'M12 8v.01M11 12h1v5h1M12 3a9 9 0 100 18 9 9 0 000-18z',
   sun: 'M12 4V2m0 20v-2m8-8h2M2 12h2m13.7-5.7 1.4-1.4M4.9 19.1l1.4-1.4m0-11.4L4.9 4.9m14.2 14.2-1.4-1.4M12 8a4 4 0 100 8 4 4 0 000-8z',
   moon: 'M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z',

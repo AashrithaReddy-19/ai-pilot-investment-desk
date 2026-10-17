@@ -166,7 +166,7 @@ jobs:
           DATABASE_URL=postgres://c23:c23password@localhost:5432/c23?sslmode=disable
           REDIS_URL=redis://localhost:6379/0
           RULES_ENGINE_URL=http://localhost:8000
-          RULES_VERSION=1
+          RULES_VERSION=6
           ALLOWED_ORIGINS=http://localhost:5173
           REQUEST_TIMEOUT_SECONDS=5
           CACHE_TTL_SECONDS=1800
@@ -204,3 +204,165 @@ jobs:
           cat decision_engine.log || true
           echo "====================== Backend Logs ========================"
           cat backend.log || true
+
+  # ============================================================================
+  # 4. Frontend Build & Unit Tests (React / Vite / Vitest)
+  # ============================================================================
+  test-frontend:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Typecheck, build and run unit tests
+        run: |
+          cd frontend
+          npm run build
+          npm test
+
+  # ============================================================================
+  # 5. Browser End-to-End Checks (Playwright) — the operating screens in a real
+  #    browser against the full stack (Postgres, Redis, engine, gateway).
+  #    The run writes one evaluation and one 30-day plan row into a disposable
+  #    service-container database, so nothing leaks between jobs.
+  # ============================================================================
+  test-browser-e2e:
+    name: Browser E2E (Playwright)
+    needs: [test-frontend, test-integration]
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: c23
+          POSTGRES_PASSWORD: c23password
+          POSTGRES_DB: c23
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: 'decision-engine/requirements.txt'
+
+      - name: Install Decision Engine dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r decision-engine/requirements.txt
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'backend/go.mod'
+          cache-dependency-path: 'backend/go.sum'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Configure Backend environment
+        run: |
+          cat << 'EOF' > backend/.env
+          PORT=8080
+          DATABASE_URL=postgres://c23:c23password@localhost:5432/c23?sslmode=disable
+          REDIS_URL=redis://localhost:6379/0
+          RULES_ENGINE_URL=http://localhost:8000
+          RULES_VERSION=6
+          ALLOWED_ORIGINS=http://localhost:5173
+          REQUEST_TIMEOUT_SECONDS=5
+          CACHE_TTL_SECONDS=1800
+          MAX_BODY_BYTES=1048576
+          AUTO_MIGRATE=true
+          GIN_MODE=release
+          EOF
+
+      - name: Run database migrations
+        run: |
+          cd backend
+          go run ./cmd/api migrate up
+
+      - name: Install frontend dependencies and Playwright browser
+        run: |
+          cd frontend
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Build the frontend (production bundle)
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Start Decision Engine
+        run: |
+          nohup python -m uvicorn app.main:app --app-dir decision-engine --port 8000 > decision_engine.log 2>&1 &
+          timeout 15s bash -c 'until curl -s http://localhost:8000/docs >/dev/null; do sleep 0.5; done' || (echo "Decision Engine failed to start" && cat decision_engine.log && exit 1)
+
+      - name: Start Backend API Gateway
+        run: |
+          cd backend
+          nohup go run ./cmd/api > ../backend.log 2>&1 &
+          cd ..
+          timeout 20s bash -c 'until curl -s http://localhost:8080/ready | grep -q "\"ready\":true"; do sleep 0.5; done' || (echo "Backend failed to become ready" && cat backend.log && exit 1)
+
+      - name: Serve the built frontend (vite preview)
+        run: |
+          cd frontend
+          nohup npm run preview -- --port 5173 --strictPort > ../vite_preview.log 2>&1 &
+          cd ..
+          timeout 15s bash -c 'until curl -s http://localhost:5173 >/dev/null; do sleep 0.5; done' || (echo "Frontend preview failed to start" && cat vite_preview.log && exit 1)
+
+      - name: Run browser end-to-end checks
+        run: |
+          cd frontend
+          npx playwright test
+
+      - name: Dump logs and Playwright report on failure
+        if: failure()
+        run: |
+          echo "=================== Decision Engine Logs ==================="
+          cat decision_engine.log || true
+          echo "====================== Backend Logs ========================"
+          cat backend.log || true
+          echo "===================== Vite Preview Logs ====================="
+          cat vite_preview.log || true
+          echo "===================== Playwright output ====================="
+          ls -la frontend/test-results || true

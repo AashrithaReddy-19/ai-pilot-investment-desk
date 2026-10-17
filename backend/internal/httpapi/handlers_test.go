@@ -2,7 +2,9 @@ package httpapi
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -27,12 +29,20 @@ type fakeRules struct {
 	lastBody  string
 	lastReqID string
 	lastPath  string
+	lastCT    string
 }
 
 func (f *fakeRules) Do(_ context.Context, method, path string, body []byte, reqID string) (*model.Upstream, error) {
 	f.lastBody, f.lastReqID, f.lastPath = string(body), reqID, path
 	return f.do(method, path, body)
 }
+
+// DoUpload always posts with the caller's content-type; upstream errors flow through upstreamOK.
+func (f *fakeRules) DoUpload(_ context.Context, path string, body []byte, contentType, reqID string) (*model.Upstream, error) {
+	f.lastBody, f.lastReqID, f.lastPath, f.lastCT = string(body), reqID, path, contentType
+	return f.do(http.MethodPost, path, body)
+}
+
 func (f *fakeRules) Ping(context.Context) error { return f.pingErr }
 
 type fakeCache struct{}
@@ -58,6 +68,52 @@ func (f fakeStore) AddObservation(_ context.Context, o model.ObservationIn, d mo
 func ok200(body string) func(string, string, []byte) (*model.Upstream, error) {
 	return func(string, string, []byte) (*model.Upstream, error) {
 		return &model.Upstream{Status: 200, Body: []byte(body), ContentType: "application/json"}, nil
+	}
+}
+
+func TestUploadForwardPassesBodyAndContentTypeThrough(t *testing.T) {
+	f := &fakeRules{do: ok200(`{"ai_burn_to_date": 1550000}`)}
+	multipart := "--XX\r\nContent-Disposition: form-data; name=\"file\"; filename=\"bs.csv\"\r\n" +
+		"Content-Type: text/csv\r\n\r\nAccount,Amount\nAI software,12\r\n--XX--\r\n"
+	r := newRouter(f, fakeStore{})
+	w := do(r, "POST", "/api/v1/balance-sheet/parse", multipart,
+		"Content-Type", "multipart/form-data; boundary=XX")
+	if w.Code != 200 || w.Body.String() != `{"ai_burn_to_date": 1550000}` {
+		t.Fatalf("upload failed: %d %s", w.Code, w.Body.String())
+	}
+	if !strings.Contains(f.lastCT, "multipart/form-data") || f.lastPath != "/balance-sheet/parse" {
+		t.Fatalf("content-type/path lost: %q %q", f.lastCT, f.lastPath)
+	}
+	if !strings.Contains(f.lastBody, "AI software") {
+		t.Fatalf("upload body not forwarded:%q", f.lastBody)
+	}
+}
+
+func TestUploadOverLimitRejectedBeforeTheEngine(t *testing.T) {
+	called := false
+	f := &fakeRules{do: func(string, string, []byte) (*model.Upstream, error) {
+		called = true
+		return &model.Upstream{Status: 200, Body: []byte(`{}`), ContentType: "application/json"}, nil
+	}}
+	r := newRouter(f, fakeStore{})
+	w := do(r, "POST", "/api/v1/balance-sheet/parse", strings.Repeat("x", 5000),
+		"Content-Type", "text/csv")
+	if w.Code != 413 || !strings.Contains(w.Body.String(), "payload_too_large") {
+		t.Fatalf("expected 413, got %d %s", w.Code, w.Body.String())
+	}
+	if called {
+		t.Fatal("engine must not be called after the size limit rejects the upload")
+	}
+}
+
+func TestUploadBadEngineAnswerIsClean(t *testing.T) {
+	f := &fakeRules{do: func(string, string, []byte) (*model.Upstream, error) {
+		return &model.Upstream{Status: 422, Body: []byte(`{"detail":"No id column found"}`), ContentType: "application/json"}, nil
+	}}
+	r := newRouter(f, fakeStore{})
+	w := do(r, "POST", "/api/v1/pilots/import/confirm", "x", "Content-Type", "text/plain")
+	if w.Code != 422 || !strings.Contains(w.Body.String(), "rules_rejected") || !strings.Contains(w.Body.String(), "No id column") {
+		t.Fatalf("engine 422 must pass through cleanly: %d %s", w.Code, w.Body.String())
 	}
 }
 
@@ -238,7 +294,7 @@ func TestObservationStoresDecisionFromRulesEngine(t *testing.T) {
 
 func TestBuildRowsMapsSelectedRejectedAndAssumedRunCost(t *testing.T) {
 	pilots := `{"pilots":[
-	  {"id":"AI1","group":"finance","setup":200000,"run":60000,"flags":[],"independent":{"net":120000,"payback_months":20},"conservative":{"net":80000,"payback_months":30}},
+	  {"id":"AI1","group":"finance","setup":200000,"run":60000,"flags":[],"independent":{"net":120000,"payback_months":20,"multi_period":{"profit_inr":160000,"roi_pct":80,"breakeven_month":20}},"conservative":{"net":80000,"payback_months":30,"multi_period":{"profit_inr":80000,"roi_pct":40,"breakeven_month":30}}},
 	  {"id":"AI5","group":"support","setup":200000,"run":40000,"flags":[{"code":"RUN_COST_ASSUMED"}],"independent":{"net":140000,"payback_months":17.1},"conservative":{"net":-1,"payback_months":null}}
 	]}`
 	port := `{"budget":600000,"selected":["AI1"],"rejected":[{"id":"AI5","reason":"Overlap: shares benefit group \"support\" with AI4"}]}`
@@ -249,12 +305,36 @@ func TestBuildRowsMapsSelectedRejectedAndAssumedRunCost(t *testing.T) {
 	if !rows[0].Selected || rows[0].Reason != nil || *rows[0].PaybackMonths != 20 {
 		t.Errorf("AI1 row wrong: %+v", rows[0])
 	}
+	// multi-period outcomes ride along per mode (independent here)
+	if rows[0].ProfitINR == nil || *rows[0].ProfitINR != 160000 || rows[0].ROIPct == nil || *rows[0].ROIPct != 80 {
+		t.Errorf("AI1 multi-period wrong: %+v", rows[0])
+	}
 	if rows[1].Selected || !rows[1].RunAssumed || !strings.Contains(*rows[1].Reason, "Overlap") {
 		t.Errorf("AI5 row wrong: %+v", rows[1])
+	}
+	if rows[1].ProfitINR != nil || rows[1].ROIPct != nil {
+		t.Errorf("absent multi-period must stay NULL, got %+v", rows[1])
 	}
 	conservative, _, _ := buildRows([]byte(pilots), []byte(port), "conservative")
 	if conservative[1].PaybackMonths != nil || *conservative[1].NetINR != -1 {
 		t.Errorf("conservative mode must use the conservative view and keep 'never pays back' as nil: %+v", conservative[1])
+	}
+	if conservative[0].ProfitINR == nil || *conservative[0].ProfitINR != 80000 {
+		t.Errorf("conservative multi-period must come from the conservative view: %+v", conservative[0])
+	}
+}
+
+func TestExtConventions(t *testing.T) {
+	h, d := extConventions([]byte(`{"defaults":{"horizon_months":24,"discount_rate":0.12}}`))
+	if h == nil || *h != 24 || d == nil || *d != 0.12 {
+		t.Fatalf("conventions lost: %v %v", h, d)
+	}
+	// explicit nulls and a missing defaults block both stay NULL
+	if h, d := extConventions([]byte(`{"defaults":{"horizon_months":null}}`)); h != nil || d != nil {
+		t.Fatalf("null must stay NULL: %v %v", h, d)
+	}
+	if h, d := extConventions([]byte(`{}`)); h != nil || d != nil {
+		t.Fatalf("absent must stay NULL: %v %v", h, d)
 	}
 }
 
@@ -275,4 +355,33 @@ func TestUnknownRouteUsesErrorShape(t *testing.T) {
 	if w.Code != 404 || !strings.Contains(w.Body.String(), `"code":"not_found"`) {
 		t.Fatalf("got %d %s", w.Code, w.Body)
 	}
+}
+
+func TestHistoryUsesClampedLimitAndFineStore(t *testing.T) {
+	fake := fakeStore{}
+	// embed a stub for the new method via pointer receiver on a wrapper struct
+	hs := historyStub{fakeStore: fake, events: []model.HistoryEvent{{ID: 2, Kind: "evaluation"}, {ID: 1, Kind: "decision"}}}
+	w := do(newRouter(&fakeRules{do: ok200(`{}`)}, hs), "GET", "/api/v1/history?limit=999", "")
+	if w.Code != 200 {
+		t.Fatalf("history failed: %d %s", w.Code, w.Body.String())
+	}
+	var out struct {
+		Events []model.HistoryEvent `json:"events"`
+		Count  int                  `json:"count"`
+	}
+	if json.Unmarshal(w.Body.Bytes(), &out) != nil || out.Count != 2 || len(out.Events) != 2 {
+		t.Fatalf("unexpected history body: %s", w.Body.String())
+	}
+}
+
+type historyStub struct {
+	fakeStore
+	events []model.HistoryEvent
+}
+
+func (s historyStub) HistoryTimeline(_ context.Context, limit int) ([]model.HistoryEvent, error) {
+	if limit != 25 && limit != 50 && (limit < 1 || limit > 50) {
+		return nil, fmt.Errorf("limit %d left the gateway unclamped", limit)
+	}
+	return s.events, nil
 }

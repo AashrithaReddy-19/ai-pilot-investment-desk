@@ -38,6 +38,19 @@ func New(base string, timeout time.Duration) *Client {
 // Do sends a request and returns whatever the engine answered, including 4xx/5xx statuses.
 // An error means the engine could not be reached or read (network, timeout, oversize).
 func (c *Client) Do(ctx context.Context, method, path string, body []byte, reqID string) (*model.Upstream, error) {
+	ct := ""
+	if body != nil {
+		ct = "application/json"
+	}
+	return c.do(ctx, method, path, body, reqID, ct)
+}
+
+// DoUpload forwards a body with the caller's content-type (multipart uploads skip the cache).
+func (c *Client) DoUpload(ctx context.Context, path string, body []byte, contentType, reqID string) (*model.Upstream, error) {
+	return c.do(ctx, http.MethodPost, path, body, reqID, contentType)
+}
+
+func (c *Client) do(ctx context.Context, method, path string, body []byte, reqID, contentType string) (*model.Upstream, error) {
 	var rdr io.Reader
 	if body != nil {
 		rdr = bytes.NewReader(body)
@@ -46,8 +59,8 @@ func (c *Client) Do(ctx context.Context, method, path string, body []byte, reqID
 	if err != nil {
 		return nil, err
 	}
-	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
+	if body != nil && contentType != "" {
+		req.Header.Set("Content-Type", contentType)
 	}
 	req.Header.Set("Accept", "application/json, text/plain")
 	if reqID != "" {

@@ -15,7 +15,7 @@ env/
 
 # Runtime output (saved portfolios are generated, not source)
 saved/
-
+context-docs/
 # Node / React UI (when added)
 node_modules/
 dist/
@@ -73,3 +73,15 @@ graphify-out/.needs_update
 graphify-out/cost.json
 graphify-out/manifest.json
 
+# Playwright artifacts
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/
+frontend/.cache/
+
+# Test coverage output
+coverage/
+frontend/coverage/
+
+# TypeScript incremental build cache
+*.tsbuildinfo

@@ -67,9 +67,14 @@ if (Test-Path "backend\.env") {
 }
 
 $PrevEvalId = $null
+$PrevObservationId = $null
+$PrevDecisionId = $null
+$PlanPilot = "AI1"   # the pilot the Phase 6 tracker tests upsert (per-pilot plan row)
 if ($DatabaseUrl -and (Get-Command psql -ErrorAction SilentlyContinue)) {
     try {
         $PrevEvalId = & psql $DatabaseUrl -t -A -c "SELECT COALESCE(MAX(id), 0) FROM evaluations;" 2>$null
+        $PrevObservationId = & psql $DatabaseUrl -t -A -c "SELECT COALESCE(MAX(id), 0) FROM observations;" 2>$null
+        $PrevDecisionId = & psql $DatabaseUrl -t -A -c "SELECT COALESCE(MAX(id), 0) FROM decisions;" 2>$null
     } catch {}
 }
 
@@ -131,6 +136,113 @@ try {
         $FailedTests++
     }
 
+    # ------------------------------------------------------------------------------
+    # Test 4: 30-day plan (Phase 6): engine draft stored per pilot with a cost limit
+    # ------------------------------------------------------------------------------
+    Write-Host ""
+    Write-Host "# 4. Generate a 30-day plan for AI1" -ForegroundColor Blue
+    $PlanRaw = & $CurlCmd -s -X POST "$ApiBase/api/v1/plans" -H "Content-Type: application/json" -d '{"pilot_id":"AI1"}'
+    Format-JsonOutput $PlanRaw
+
+    if ($PlanRaw -like '*"status":"planned"*' -and $PlanRaw -like '*"pilot_id":"AI1"*') {
+        Write-Host "--> Test 4 Passed: Plan stored with status planned" -ForegroundColor Green
+    } else {
+        Write-Host "--> Test 4 Failed: Plan creation did not return a planned plan for AI1" -ForegroundColor Red
+        $FailedTests++
+    }
+
+    # ------------------------------------------------------------------------------
+    # Test 5: Record an observation (tracker actuals) — also auto-records a decision
+    # ------------------------------------------------------------------------------
+    Write-Host ""
+    Write-Host "# 5. Record observation for AI1 (adoption 72 / quality 85)" -ForegroundColor Blue
+    $ObsRaw = & $CurlCmd -s -X POST "$ApiBase/api/v1/pilots/AI1/observations" -H "Content-Type: application/json" -d '{"observed_adoption_pct":72,"observed_quality_pct":85}'
+    Format-JsonOutput $ObsRaw
+
+    if ($ObsRaw -like '*"observation"*') {
+        Write-Host "--> Test 5 Passed: Observation recorded with auto decision" -ForegroundColor Green
+    } else {
+        Write-Host "--> Test 5 Failed: Observation was not recorded" -ForegroundColor Red
+        $FailedTests++
+    }
+
+    # ------------------------------------------------------------------------------
+    # Test 6: Plan progress — expected vs actual gaps and the checkpoint verdict (extend)
+    # ------------------------------------------------------------------------------
+    Write-Host ""
+    Write-Host "# 6. Tracker progress for AI1" -ForegroundColor Blue
+    $ProgressRaw = & $CurlCmd -s "$ApiBase/api/v1/plans/AI1"
+    Format-JsonOutput $ProgressRaw
+
+    if ($ProgressRaw -like '*"adoption_gap_pct"*' -and $ProgressRaw -like '*"checkpoint":"extend"*') {
+        Write-Host "--> Test 6 Passed: Gaps computed (+12/+5) and verdict re-run (extend)" -ForegroundColor Green
+    } else {
+        Write-Host "--> Test 6 Failed: Progress did not carry gaps and an extend verdict" -ForegroundColor Red
+        $FailedTests++
+    }
+
+    # ------------------------------------------------------------------------------
+    # Test 7: Checkpoint preview — same outcome, stop rule carried beside it
+    # ------------------------------------------------------------------------------
+    Write-Host ""
+    Write-Host "# 7. Checkpoint preview for AI1" -ForegroundColor Blue
+    $CheckpointRaw = & $CurlCmd -s -X POST "$ApiBase/api/v1/checkpoint/AI1" -H "Content-Type: application/json" -d '{}'
+    Format-JsonOutput $CheckpointRaw
+
+    if ($CheckpointRaw -like '*"checkpoint":"extend"*' -and $CheckpointRaw -like '*"stop_rule"*') {
+        Write-Host "--> Test 7 Passed: Checkpoint answered with outcome and stop rule beside it" -ForegroundColor Green
+    } else {
+        Write-Host "--> Test 7 Failed: Checkpoint preview missing outcome or stop rule" -ForegroundColor Red
+        $FailedTests++
+    }
+
+    # ------------------------------------------------------------------------------
+    # Test 8: Plan status moves — revise arms the follow-up rule, stopped frees budget
+    # ------------------------------------------------------------------------------
+    Write-Host ""
+    Write-Host "# 8. Move plan status revise then stopped" -ForegroundColor Blue
+    $ReviseRaw = & $CurlCmd -s -X POST "$ApiBase/api/v1/plans/AI1/status" -H "Content-Type: application/json" -d '{"status":"revise"}'
+    $StoppedRaw = & $CurlCmd -s -X POST "$ApiBase/api/v1/plans/AI1/status" -H "Content-Type: application/json" -d '{"status":"stopped"}'
+    Format-JsonOutput $ReviseRaw
+    Format-JsonOutput $StoppedRaw
+
+    if ($ReviseRaw -like '*"status":"revise"*' -and $StoppedRaw -like '*"status":"stopped"*') {
+        Write-Host "--> Test 8 Passed: Status transitions revise then stopped accepted" -ForegroundColor Green
+    } else {
+        Write-Host "--> Test 8 Failed: Plan status transition rejected" -ForegroundColor Red
+        $FailedTests++
+    }
+
+    # ------------------------------------------------------------------------------
+    # Test 9: Reallocation — recommendation only, never auto-applied
+    # ------------------------------------------------------------------------------
+    Write-Host ""
+    Write-Host "# 9. Reallocation recommendation after stopping AI1" -ForegroundColor Blue
+    $ReallocRaw = & $CurlCmd -s -X POST "$ApiBase/api/v1/reallocation" -H "Content-Type: application/json" -d '{"pilot_id":"AI1"}'
+    Format-JsonOutput $ReallocRaw
+
+    if ($ReallocRaw -like '*"accepted":false*' -and $ReallocRaw -like '*"freed_budget_inr":200000*') {
+        Write-Host "--> Test 9 Passed: AI1 freed 200000 as a recommendation only" -ForegroundColor Green
+    } else {
+        Write-Host "--> Test 9 Failed: Reallocation did not free AI1's 200000 (or auto-accepted)" -ForegroundColor Red
+        $FailedTests++
+    }
+
+    # ------------------------------------------------------------------------------
+    # Test 10: Decision memo — one page markdown with plan and audit trail
+    # ------------------------------------------------------------------------------
+    Write-Host ""
+    Write-Host "# 10. Decision memo for AI1 (markdown)" -ForegroundColor Blue
+    $MemoRaw = & $CurlCmd -s -X POST "$ApiBase/api/v1/export/memo" -H "Content-Type: application/json" -d '{"pilot_id":"AI1"}'
+    Write-Host "$( $MemoRaw.Substring(0, [Math]::Min(120, $MemoRaw.Length)) )"
+
+    if ($MemoRaw -like "*Decision memo — AI1*" -and $MemoRaw -like "*## Audit trail*") {
+        Write-Host "--> Test 10 Passed: Memo rendered as one-page markdown with audit trail" -ForegroundColor Green
+    } else {
+        Write-Host "--> Test 10 Failed: Memo missing heading or audit trail" -ForegroundColor Red
+        $FailedTests++
+    }
+
     if ($FailedTests -gt 0) {
         Write-Host ""
         Write-Host "=======================================================" -ForegroundColor Red
@@ -169,11 +281,40 @@ finally {
     # 2. Delete test evaluation row from Postgres if psql was available
     if ($PrevEvalId -and $DatabaseUrl -and (Get-Command psql -ErrorAction SilentlyContinue)) {
         try {
-            $delEvals = & psql $DatabaseUrl -t -A -c "DELETE FROM evaluations WHERE id > $PrevEvalId RETURNING id;" 2>$null
+            $delEvals = & psql -q $DatabaseUrl -t -A -c "DELETE FROM evaluations WHERE id > $PrevEvalId RETURNING id;" 2>$null
             if ($delEvals) {
                 $count = ($delEvals | Measure-Object).Count
                 Write-Host "[CLEANUP PASS] " -ForegroundColor Green -NoNewline
                 Write-Host "Deleted $count evaluation history row(s) from Postgres"
+            }
+        } catch {}
+    }
+
+    # 2b. Delete the Phase 6 lifecycle rows the tracker tests created. The plan is a
+    # per-pilot upsert row (the test replaces any existing one for the same pilot),
+    # so deleting by pilot id removes exactly what the run added or replaced.
+    if ($DatabaseUrl -and (Get-Command psql -ErrorAction SilentlyContinue)) {
+        try {
+            $delPlan = & psql -q $DatabaseUrl -t -A -c "DELETE FROM pilot_plans WHERE pilot_id = '$PlanPilot' RETURNING pilot_id;" 2>$null
+            if ($delPlan) {
+                Write-Host "[CLEANUP PASS] " -ForegroundColor Green -NoNewline
+                Write-Host "Deleted pilot plan for $PlanPilot from Postgres"
+            }
+            if ($PrevObservationId) {
+                $delObs = & psql -q $DatabaseUrl -t -A -c "DELETE FROM observations WHERE id > $PrevObservationId RETURNING id;" 2>$null
+                if ($delObs) {
+                    $obsCount = ($delObs | Measure-Object).Count
+                    Write-Host "[CLEANUP PASS] " -ForegroundColor Green -NoNewline
+                    Write-Host "Deleted $obsCount observation row(s) from Postgres"
+                }
+            }
+            if ($PrevDecisionId) {
+                $delDecs = & psql -q $DatabaseUrl -t -A -c "DELETE FROM decisions WHERE id > $PrevDecisionId RETURNING id;" 2>$null
+                if ($delDecs) {
+                    $decCount = ($delDecs | Measure-Object).Count
+                    Write-Host "[CLEANUP PASS] " -ForegroundColor Green -NoNewline
+                    Write-Host "Deleted $decCount decision row(s) from Postgres"
+                }
             }
         } catch {}
     }

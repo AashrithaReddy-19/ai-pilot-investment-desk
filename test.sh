@@ -41,6 +41,15 @@ if [ -n "$DATABASE_URL" ] && command -v psql &>/dev/null; then
     PREV_EVAL_ID=$(psql "$DATABASE_URL" -t -A -c "SELECT COALESCE(MAX(id), 0) FROM evaluations;" 2>/dev/null || echo "")
 fi
 
+# Pre-record counts/ids of the Phase 6 lifecycle tables so tests delete only their own rows
+PLAN_PILOT="AI1"   # the plan the tracker tests upsert (per-pilot row)
+PREV_OBS_ID=""
+PREV_DEC_ID=""
+if [ -n "$DATABASE_URL" ] && command -v psql &>/dev/null; then
+    PREV_OBS_ID=$(psql "$DATABASE_URL" -t -A -c "SELECT COALESCE(MAX(id), 0) FROM observations;" 2>/dev/null || echo "")
+    PREV_DEC_ID=$(psql "$DATABASE_URL" -t -A -c "SELECT COALESCE(MAX(id), 0) FROM decisions;" 2>/dev/null || echo "")
+fi
+
 # Cleanup function registered on EXIT
 CLEANUP_DONE=false
 TESTS_STARTED=false
@@ -68,10 +77,27 @@ cleanup() {
 
     # 2. Delete evaluation history record if psql is available
     if [ -n "$PREV_EVAL_ID" ] && [ -n "$DATABASE_URL" ] && command -v psql &>/dev/null; then
-        DELETED_EVALS=$(psql "$DATABASE_URL" -t -A -c "DELETE FROM evaluations WHERE id > $PREV_EVAL_ID RETURNING id;" 2>/dev/null | grep -v '^$' | wc -l || echo "0")
+        DELETED_EVALS=$(psql -q "$DATABASE_URL" -t -A -c "DELETE FROM evaluations WHERE id > $PREV_EVAL_ID RETURNING id;" 2>/dev/null | grep -v '^$' | wc -l || echo "0")
         if [ "$DELETED_EVALS" -gt 0 ]; then
             echo -e "${GREEN}[CLEANUP PASS]${RESET} Deleted $DELETED_EVALS evaluation history row(s) from Postgres"
         fi
+    fi
+
+    # 2b. Delete the Phase 6 lifecycle rows the tracker tests created. The plan is a
+    # per-pilot upsert row (the test replaces any existing one for the same pilot),
+    # so deleting by pilot id removes exactly what the run added or replaced.
+    if [ -n "$DATABASE_URL" ] && command -v psql &>/dev/null; then
+        if psql "$DATABASE_URL" -t -A -c "DELETE FROM pilot_plans WHERE pilot_id = '$PLAN_PILOT' RETURNING pilot_id;" 2>/dev/null | grep -q "$PLAN_PILOT"; then
+            echo -e "${GREEN}[CLEANUP PASS]${RESET} Deleted pilot plan for $PLAN_PILOT from Postgres"
+        fi
+    fi
+    if [ -n "$PREV_OBS_ID" ] && [ -n "$DATABASE_URL" ] && command -v psql &>/dev/null; then
+        DELETED_OBS=$(psql -q "$DATABASE_URL" -t -A -c "DELETE FROM observations WHERE id > $PREV_OBS_ID RETURNING id;" 2>/dev/null | grep -v '^$' | wc -l || echo "0")
+        [ "$DELETED_OBS" -gt 0 ] && echo -e "${GREEN}[CLEANUP PASS]${RESET} Deleted $DELETED_OBS observation row(s) from Postgres"
+    fi
+    if [ -n "$PREV_DEC_ID" ] && [ -n "$DATABASE_URL" ] && command -v psql &>/dev/null; then
+        DELETED_DECS=$(psql -q "$DATABASE_URL" -t -A -c "DELETE FROM decisions WHERE id > $PREV_DEC_ID RETURNING id;" 2>/dev/null | grep -v '^$' | wc -l || echo "0")
+        [ "$DELETED_DECS" -gt 0 ] && echo -e "${GREEN}[CLEANUP PASS]${RESET} Deleted $DELETED_DECS decision row(s) from Postgres"
     fi
 
     # 3. Verify portfolio is deleted
@@ -162,6 +188,119 @@ if echo "$SAVE_RESP" | grep -q "\"name\":\"$PORTFOLIO_NAME\""; then
     echo -e "${GREEN}--> Test 3 Passed: Portfolio '$PORTFOLIO_NAME' saved to database${RESET}"
 else
     echo -e "${RED}--> Test 3 Failed: Portfolio save did not return expected name${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+
+# ------------------------------------------------------------------------------
+# Test 4: 30-day plan (Phase 6): engine draft stored per pilot with a cost limit
+# ------------------------------------------------------------------------------
+echo ""
+echo -e "${BOLD}${BLUE}# 4. Generate a 30-day plan for AI1${RESET}"
+echo -e "${CYAN}curl -s -X POST http://localhost:8080/api/v1/plans -d '{\"pilot_id\":\"AI1\"}' | jq${RESET}"
+PLAN_RESP=$(curl -s -X POST "$API_BASE/api/v1/plans" -H "Content-Type: application/json" -d '{"pilot_id":"AI1"}')
+echo "$PLAN_RESP" | $JSON_FORMATTER
+
+if echo "$PLAN_RESP" | grep -q '"status":"planned"' && echo "$PLAN_RESP" | grep -q '"pilot_id":"AI1"'; then
+    echo -e "${GREEN}--> Test 4 Passed: Plan stored with status planned${RESET}"
+else
+    echo -e "${RED}--> Test 4 Failed: Plan creation did not return a planned plan for AI1${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+
+# ------------------------------------------------------------------------------
+# Test 5: Record an observation (tracker actuals) — also auto-records a decision
+# ------------------------------------------------------------------------------
+echo ""
+echo -e "${BOLD}${BLUE}# 5. Record observation for AI1 (adoption 72 / quality 85)${RESET}"
+OBS_RESP=$(curl -s -X POST "$API_BASE/api/v1/pilots/AI1/observations" -H "Content-Type: application/json" -d '{"observed_adoption_pct":72,"observed_quality_pct":85}')
+echo "$OBS_RESP" | $JSON_FORMATTER
+
+if echo "$OBS_RESP" | grep -q '"observation"'; then
+    echo -e "${GREEN}--> Test 5 Passed: Observation recorded with auto decision${RESET}"
+else
+    echo -e "${RED}--> Test 5 Failed: Observation was not recorded${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+
+# ------------------------------------------------------------------------------
+# Test 6: Plan progress — expected vs actual gaps and the checkpoint verdict (extend)
+# ------------------------------------------------------------------------------
+echo ""
+echo -e "${BOLD}${BLUE}# 6. Tracker progress for AI1${RESET}"
+echo -e "${CYAN}curl -s http://localhost:8080/api/v1/plans/AI1 | jq${RESET}"
+PROGRESS_RESP=$(curl -s "$API_BASE/api/v1/plans/AI1")
+echo "$PROGRESS_RESP" | $JSON_FORMATTER
+
+if echo "$PROGRESS_RESP" | grep -q '"adoption_gap_pct"' && echo "$PROGRESS_RESP" | grep -q '"checkpoint":"extend"' && echo "$PROGRESS_RESP" | grep -q '"adoption_pct": *72'; then
+    echo -e "${GREEN}--> Test 6 Passed: Gaps computed (+12/+5) and verdict re-run (extend)${RESET}"
+else
+    echo -e "${RED}--> Test 6 Failed: Progress did not carry gaps and an extend verdict${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+
+# ------------------------------------------------------------------------------
+# Test 7: Checkpoint preview — same outcome, stop rule carried beside it
+# ------------------------------------------------------------------------------
+echo ""
+echo -e "${BOLD}${BLUE}# 7. Checkpoint preview for AI1${RESET}"
+echo -e "${CYAN}curl -s -X POST http://localhost:8080/api/v1/checkpoint/AI1 -d '{}' | jq${RESET}"
+CHECKPOINT_RESP=$(curl -s -X POST "$API_BASE/api/v1/checkpoint/AI1" -H "Content-Type: application/json" -d '{}')
+echo "$CHECKPOINT_RESP" | $JSON_FORMATTER
+
+if echo "$CHECKPOINT_RESP" | grep -q '"checkpoint":"extend"' && echo "$CHECKPOINT_RESP" | grep -q '"stop_rule"'; then
+    echo -e "${GREEN}--> Test 7 Passed: Checkpoint answered with outcome and stop rule beside it${RESET}"
+else
+    echo -e "${RED}--> Test 7 Failed: Checkpoint preview missing outcome or stop rule${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+
+# ------------------------------------------------------------------------------
+# Test 8: Plan status moves — revise arms the follow-up rule, stopped frees budget
+# ------------------------------------------------------------------------------
+echo ""
+echo -e "${BOLD}${BLUE}# 8. Move plan status revise then stopped${RESET}"
+REVISE_RESP=$(curl -s -X POST "$API_BASE/api/v1/plans/AI1/status" -H "Content-Type: application/json" -d '{"status":"revise"}')
+STOP_RESP=$(curl -s -X POST "$API_BASE/api/v1/plans/AI1/status" -H "Content-Type: application/json" -d '{"status":"stopped"}')
+echo "$REVISE_RESP" | $JSON_FORMATTER
+echo "$STOP_RESP" | $JSON_FORMATTER
+
+if echo "$REVISE_RESP" | grep -q '"status":"revise"' && echo "$STOP_RESP" | grep -q '"status":"stopped"'; then
+    echo -e "${GREEN}--> Test 8 Passed: Status transitions revise then stopped accepted${RESET}"
+else
+    echo -e "${RED}--> Test 8 Failed: Plan status transition rejected${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+
+# ------------------------------------------------------------------------------
+# Test 9: Reallocation — recommendation only, never auto-applied
+# ------------------------------------------------------------------------------
+echo ""
+echo -e "${BOLD}${BLUE}# 9. Reallocation recommendation after stopping AI1${RESET}"
+echo -e "${CYAN}curl -s -X POST http://localhost:8080/api/v1/reallocation -d '{\"pilot_id\":\"AI1\"}' | jq${RESET}"
+REALLOC_RESP=$(curl -s -X POST "$API_BASE/api/v1/reallocation" -H "Content-Type: application/json" -d '{"pilot_id":"AI1"}')
+echo "$REALLOC_RESP" | $JSON_FORMATTER
+
+if echo "$REALLOC_RESP" | grep -q '"accepted":false' && echo "$REALLOC_RESP" | grep -q '"freed_budget_inr":200000'; then
+    echo -e "${GREEN}--> Test 9 Passed: AI1 freed 200000 as a recommendation only${RESET}"
+else
+    echo -e "${RED}--> Test 9 Failed: Reallocation did not free AI1's 200000 (or auto-accepted)${RESET}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+
+# ------------------------------------------------------------------------------
+# Test 10: Decision memo — one page markdown with plan and audit trail
+# ------------------------------------------------------------------------------
+echo ""
+echo -e "${BOLD}${BLUE}# 10. Decision memo for AI1 (markdown)${RESET}"
+echo -e "${CYAN}curl -s -X POST http://localhost:8080/api/v1/export/memo -d '{\"pilot_id\":\"AI1\"}'${RESET}"
+MEMO_RESP=$(curl -s -X POST "$API_BASE/api/v1/export/memo" -H "Content-Type: application/json" -d '{"pilot_id":"AI1"}')
+
+echo "$MEMO_RESP" | head -12
+
+if echo "$MEMO_RESP" | grep -q "Decision memo — AI1" && echo "$MEMO_RESP" | grep -q "## Audit trail"; then
+    echo -e "${GREEN}--> Test 10 Passed: Memo rendered as one-page markdown with audit trail${RESET}"
+else
+    echo -e "${RED}--> Test 10 Failed: Memo missing heading or audit trail${RESET}"
     FAILED_TESTS=$((FAILED_TESTS + 1))
 fi
 

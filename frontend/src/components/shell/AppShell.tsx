@@ -10,9 +10,18 @@ const GROUPS: { label: string; items: Item[] }[] = [
   { label: 'Decide', items: [
     { to: '/', label: 'Decision workspace', icon: 'workspace', end: true, title: 'Decision workspace' },
     { to: '/optimize', label: 'Portfolio optimization', icon: 'optimize', title: 'Portfolio optimization' },
+    { to: '/compare', label: 'Compare proposals', icon: 'compare', title: 'Compare proposals' },
+    { to: '/balance-sheet', label: 'Balance sheet', icon: 'compare', title: 'Balance sheet' },
+    { to: '/what-if', label: 'What-if and sweep', icon: 'checks', title: 'What-if and sweep' },
+    { to: '/evidence', label: 'Evidence and decision', icon: 'about', title: 'Evidence and decision' },
+  ] },
+  { label: 'Lifecycle', items: [
+    { to: '/tracker', label: 'Pilot tracker', icon: 'observe', title: 'Pilot tracker' },
+    { to: '/memo', label: 'Decision memo', icon: 'checks', title: 'Decision memo' },
   ] },
   { label: 'Records', items: [
     { to: '/portfolios', label: 'Saved portfolios', icon: 'saved', title: 'Saved portfolios' },
+    { to: '/proposals', label: 'Proposals', icon: 'optimize', title: 'Proposals' },
     { to: '/observations', label: 'Observations and stop rules', icon: 'observe', title: 'Observations and stop rules' },
     { to: '/interviews', label: 'Interviews', icon: 'interviews', title: 'Interviews' },
   ] },
