@@ -11,6 +11,7 @@
 - [System Components](#system-components)
   - [Decision Engine (FastAPI)](#decision-engine-fastapi)
   - [Backend API Gateway (Go Gin)](#backend-api-gateway-go-gin)
+  - [Frontend Web Dashboard (React / Vite)](#frontend-web-dashboard-react--vite)
 - [Project Directory Structure](#project-directory-structure)
 - [Prerequisites](#prerequisites)
 - [Quick Start Guide](#quick-start-guide)
@@ -22,6 +23,7 @@
   - [Integration Test Scripts (`test.sh` & `test.ps1`)](#integration-test-scripts-testsh--testps1)
 - [Running Unit & Integration Tests](#running-unit--integration-tests)
 - [AWS Deployment with OpenTofu](#aws-deployment-with-opentofu)
+- [Knowledge Graph & Architecture Map](#knowledge-graph--architecture-map)
 - [API Reference](#api-reference)
   - [Health & Readiness](#health--readiness)
   - [Evaluation & Analytics](#evaluation--analytics)
@@ -128,6 +130,14 @@ flowchart TD
 - **Role**: Authentication/CORS, transaction management, persistence of portfolios, audit evaluations, qualitative interviews, and caching.
 - **Port**: `8080`
 
+### Frontend Web Dashboard (React / Vite)
+- **Directory**: [`frontend/`](file:///home/aarush/Projects/fynd/frontend)
+- **Runtime**: Node.js 18+
+- **Framework**: React 18, TypeScript, Vite, Zustand
+- **Role**: Single-page application for real-time pilot portfolio evaluation, budget constraints, qualitative interviews, health telemetry, and decision auditing.
+- **Port**: `5173`
+- **URL**: `http://localhost:5173`
+
 ---
 
 ## Project Directory Structure
@@ -173,6 +183,23 @@ fynd/
 │   ├── requirements.txt                # Python dependencies (fastapi, uvicorn, etc.)
 │   ├── start.sh                        # Decision Engine Linux/macOS startup script
 │   └── start.ps1                       # Decision Engine Windows PowerShell startup script
+│
+├── frontend/
+│   ├── src/
+│   │   ├── api/                        # Typed API client & queries (health, portfolios)
+│   │   ├── components/                 # UI components, layout shell, modals, fields
+│   │   ├── domain/                     # Quantitative calculation & currency formatters
+│   │   ├── features/                   # Portfolios, observations, interviews, workspace
+│   │   └── state/                      # Zustand workspace & theme state stores
+│   ├── index.html                      # Single page application entry HTML
+│   ├── package.json                    # NPM dependencies (React 18, Zustand, Vite)
+│   ├── tsconfig.json                   # TypeScript configuration
+│   └── vite.config.ts                  # Vite build and dev server configuration
+│
+├── graphify-out/
+│   ├── graph.html                      # Interactive 2D/3D knowledge graph visualizer
+│   ├── graph.json                      # GraphRAG dataset (642 nodes, 1,721 edges, 32 communities)
+│   └── GRAPH_REPORT.md                 # Knowledge graph report & community detection audit
 │
 ├── main.tf                             # OpenTofu root configuration (AWS EC2 & automated deploy)
 ├── variables.tf                        # OpenTofu input variables definition
@@ -445,6 +472,16 @@ OpenTofu provisions:
    ```bash
    tofu destroy
    ```
+
+---
+
+## Knowledge Graph & Architecture Map
+
+An automated, persistent knowledge graph of the entire repository is maintained in [`graphify-out/`](file:///home/aarush/Projects/fynd/graphify-out):
+
+- **Interactive Visualizer**: Open [`graphify-out/graph.html`](file:///home/aarush/Projects/fynd/graphify-out/graph.html) directly in any browser for an interactive visualization of all 32 communities, god nodes, cross-package bridges, and data flows.
+- **GraphRAG Dataset**: [`graphify-out/graph.json`](file:///home/aarush/Projects/fynd/graphify-out/graph.json) provides the complete knowledge graph (642 nodes, 1,721 edges) for GraphRAG indexing, network analytics, and automated queries.
+- **Audit & Cohesion Report**: [`graphify-out/GRAPH_REPORT.md`](file:///home/aarush/Projects/fynd/graphify-out/GRAPH_REPORT.md) details community cohesion scores, centrality measurements, knowledge gaps, and architectural insights.
 
 ---
 
