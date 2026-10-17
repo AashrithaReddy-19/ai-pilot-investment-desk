@@ -1,0 +1,722 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /views/dashboard",
+  "type": "object",
+  "properties": {
+    "header": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "rules_version": {
+          "type": "string"
+        },
+        "contract_version": {
+          "type": "number"
+        },
+        "formula_version": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "horizon_months": {
+          "type": "number"
+        },
+        "discount_rate": {
+          "type": "number"
+        },
+        "budget": {
+          "type": "number"
+        },
+        "proposal_count": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "budget",
+        "contract_version",
+        "discount_rate",
+        "formula_version",
+        "horizon_months",
+        "mode",
+        "proposal_count",
+        "rules_version",
+        "title"
+      ]
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "headline": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "read_more": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "headline",
+        "read_more",
+        "text"
+      ]
+    },
+    "kpis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "source",
+          "unit",
+          "value"
+        ]
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "properties": {
+        "outcome": {
+          "type": "string"
+        },
+        "best": {
+          "type": "string"
+        },
+        "contenders": {
+          "type": "array"
+        },
+        "funded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compare_text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "best",
+        "compare_text",
+        "contenders",
+        "funded",
+        "outcome",
+        "reasons"
+      ]
+    },
+    "best_proposal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "outcome": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number"
+        },
+        "rank": {
+          "type": "number"
+        },
+        "funding_rank": {
+          "type": "number"
+        },
+        "net_annual_inr": {
+          "type": "number"
+        },
+        "payback_months": {
+          "type": "number"
+        },
+        "roi_pct": {
+          "type": "number"
+        },
+        "npv_inr": {
+          "type": "number"
+        },
+        "breakeven_month": {
+          "type": "number"
+        },
+        "evidence_band": {
+          "type": "string"
+        },
+        "budget_status": {
+          "type": "string"
+        },
+        "competitiveness": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "breakeven_month",
+        "budget_status",
+        "competitiveness",
+        "evidence_band",
+        "funding_rank",
+        "id",
+        "net_annual_inr",
+        "npv_inr",
+        "outcome",
+        "payback_months",
+        "rank",
+        "reason",
+        "roi_pct",
+        "score",
+        "state"
+      ]
+    },
+    "proposals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "breakeven_month": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "budget_status": {
+            "type": "string"
+          },
+          "competitiveness": {
+            "type": "string"
+          },
+          "evidence_band": {
+            "type": "string"
+          },
+          "funding_rank": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "net_annual_inr": {
+            "type": "number"
+          },
+          "npv_inr": {
+            "type": "number"
+          },
+          "outcome": {
+            "type": "string"
+          },
+          "payback_months": {
+            "type": "number"
+          },
+          "rank": {
+            "type": "number"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "roi_pct": {
+            "type": "number"
+          },
+          "score": {
+            "type": "number"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "breakeven_month",
+          "budget_status",
+          "competitiveness",
+          "evidence_band",
+          "funding_rank",
+          "id",
+          "net_annual_inr",
+          "npv_inr",
+          "outcome",
+          "payback_months",
+          "rank",
+          "reason",
+          "roi_pct",
+          "score",
+          "state"
+        ]
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "ids",
+          "message",
+          "severity"
+        ]
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "expected_test": {
+            "type": "string"
+          },
+          "owner_hint": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "code",
+          "expected_test",
+          "owner_hint"
+        ]
+      }
+    },
+    "charts": {
+      "type": "object",
+      "properties": {
+        "series_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cumulative_cash_flow": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "x_label": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            },
+            "series": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "values"
+                ]
+              }
+            },
+            "portfolio": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": [
+            "portfolio",
+            "series",
+            "unit",
+            "x",
+            "x_label"
+          ]
+        },
+        "yearly_savings": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "x_label": {
+              "type": "string"
+            },
+            "unit": {
+              "type": "string"
+            },
+            "series": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "values"
+                ]
+              }
+            },
+            "portfolio": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": [
+            "portfolio",
+            "series",
+            "unit",
+            "x",
+            "x_label"
+          ]
+        },
+        "roi_breakeven": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "type": "object",
+              "properties": {
+                "roi_pct": {
+                  "type": "string"
+                },
+                "breakeven_month": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "breakeven_month",
+                "roi_pct"
+              ]
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "breakeven_month": {
+                    "type": [
+                      "null",
+                      "number"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "roi_pct": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "breakeven_month",
+                  "id",
+                  "roi_pct"
+                ]
+              }
+            }
+          },
+          "required": [
+            "rows",
+            "unit"
+          ]
+        },
+        "cash_vs_capacity": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "type": "string"
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "capacity_inr": {
+                    "type": "number"
+                  },
+                  "cashable_inr": {
+                    "type": "number"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "running_cost_inr": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "capacity_inr",
+                  "cashable_inr",
+                  "id",
+                  "running_cost_inr"
+                ]
+              }
+            }
+          },
+          "required": [
+            "rows",
+            "unit"
+          ]
+        }
+      },
+      "required": [
+        "cash_vs_capacity",
+        "cumulative_cash_flow",
+        "roi_breakeven",
+        "series_order",
+        "yearly_savings"
+      ]
+    },
+    "yearly_portfolio": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "benefit_inr": {
+            "type": "number"
+          },
+          "cashable_inr": {
+            "type": "number"
+          },
+          "cumulative_inr": {
+            "type": "number"
+          },
+          "net_inr": {
+            "type": "number"
+          },
+          "one_time_inr": {
+            "type": "number"
+          },
+          "running_cost_inr": {
+            "type": "number"
+          },
+          "year": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "benefit_inr",
+          "cashable_inr",
+          "cumulative_inr",
+          "net_inr",
+          "one_time_inr",
+          "running_cost_inr",
+          "year"
+        ]
+      }
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string"
+        },
+        "contingency_pct": {
+          "type": "number"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "budget_inr": {
+                "type": [
+                  "null",
+                  "number"
+                ]
+              },
+              "line": {
+                "type": "string"
+              },
+              "need_inr": {
+                "type": "number"
+              },
+              "note": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "budget_inr",
+              "line",
+              "need_inr",
+              "note",
+              "status"
+            ]
+          }
+        },
+        "total_with_contingency_inr": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "contingency_pct",
+        "ids",
+        "lines",
+        "status",
+        "total_with_contingency_inr"
+      ]
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "decision_report": {
+          "type": "string"
+        },
+        "yearly_csv": {
+          "type": "string"
+        },
+        "compare": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "yearly_savings": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "compare",
+        "decision",
+        "decision_report",
+        "yearly_csv",
+        "yearly_savings"
+      ]
+    },
+    "consistency": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "check": {
+            "type": "string"
+          },
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "check",
+          "ok"
+        ]
+      }
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      }
+    },
+    "warnings": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "best_proposal",
+    "budget",
+    "charts",
+    "consistency",
+    "flags",
+    "header",
+    "kpis",
+    "links",
+    "next_actions",
+    "proposals",
+    "recommendation",
+    "risks",
+    "summary",
+    "warnings",
+    "yearly_portfolio"
+  ]
+}

@@ -1,0 +1,3316 @@
+{
+  "pilots": [
+    {
+      "id": "AI1",
+      "task": "Invoice field extraction",
+      "description": "Extract invoice fields into the finance ledger instead of manual typing.",
+      "setup": 200000,
+      "run": 60000,
+      "benefit": 180000,
+      "benefit_type": "cashable assumption",
+      "group": "finance",
+      "adoption_pct": 70,
+      "readiness": "high",
+      "observed_adoption_pct": null,
+      "observed_quality_pct": null,
+      "flags": [],
+      "one_time_costs": null,
+      "recurring_costs": null,
+      "benefit_driver": null,
+      "ramp_months": 0,
+      "delay_months": 0,
+      "money_source": "fixture (synthetic)",
+      "independent": {
+        "id": "AI1",
+        "benefit": 180000,
+        "net": 120000,
+        "payback_months": 20.0,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": 160000,
+          "roi_pct": 80.0,
+          "npv_inr": 113447,
+          "breakeven_month": 20,
+          "breakeven_beyond_horizon": false,
+          "cumulative": [
+            -190000,
+            -180000,
+            -170000,
+            -160000,
+            -150000,
+            -140000,
+            -130000,
+            -120000,
+            -110000,
+            -100000,
+            -90000,
+            -80000,
+            -70000,
+            -60000,
+            -50000,
+            -40000,
+            -30000,
+            -20000,
+            -10000,
+            0,
+            10000,
+            20000,
+            30000,
+            40000,
+            50000,
+            60000,
+            70000,
+            80000,
+            90000,
+            100000,
+            110000,
+            120000,
+            130000,
+            140000,
+            150000,
+            160000
+          ],
+          "value_per_1m_tokens": 200.0,
+          "value_vs_price_ratio": 0.8,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "independent",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 180000,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 180,000 − INR 60,000 = INR 120,000/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR 160,000",
+              "roi_pct": "= INR 160,000 ÷ INR 200,000 × 100 = 80.0%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR 113,447",
+              "breakeven_month": "first month with cumulative ≥ 0 = month 20"
+            }
+          }
+        }
+      },
+      "conservative": {
+        "id": "AI1",
+        "benefit": 125999.99999999999,
+        "net": 65999.99999999999,
+        "payback_months": 36.363636363636374,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": -2000,
+          "roi_pct": -1.0,
+          "npv_inr": -26892,
+          "breakeven_month": null,
+          "breakeven_beyond_horizon": true,
+          "cumulative": [
+            -194500,
+            -189000,
+            -183500,
+            -178000,
+            -172500,
+            -167000,
+            -161500,
+            -156000,
+            -150500,
+            -145000,
+            -139500,
+            -134000,
+            -128500,
+            -123000,
+            -117500,
+            -112000,
+            -106500,
+            -101000,
+            -95500,
+            -90000,
+            -84500,
+            -79000,
+            -73500,
+            -68000,
+            -62500,
+            -57000,
+            -51500,
+            -46000,
+            -40500,
+            -35000,
+            -29500,
+            -24000,
+            -18500,
+            -13000,
+            -7500,
+            -2000
+          ],
+          "value_per_1m_tokens": 110.0,
+          "value_vs_price_ratio": 0.44,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "conservative",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 126000.0,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 126,000 − INR 60,000 = INR 66,000/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR -2,000",
+              "roi_pct": "= INR -2,000 ÷ INR 200,000 × 100 = -1.0%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR -26,892",
+              "breakeven_month": "beyond the horizon"
+            }
+          }
+        }
+      },
+      "provenance": {
+        "setup_inr": {
+          "value": 200000,
+          "source": "fixture (synthetic)",
+          "note": "setup_cost_inr from the fixture"
+        },
+        "annual_running_cost_inr": {
+          "value": 60000,
+          "source": "fixture (synthetic)",
+          "note": "annual_running_cost_inr from the fixture"
+        },
+        "annual_benefit_inr": {
+          "value": 180000,
+          "source": "fixture (synthetic)",
+          "note": "annual_benefit_inr from the fixture"
+        },
+        "benefit_type": {
+          "value": "cashable assumption",
+          "source": "fixture (synthetic)",
+          "note": "cash factor 1.0 by the rulebook"
+        },
+        "adoption_pct": {
+          "value": 70,
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "readiness": {
+          "value": "high",
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "observed_adoption_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "observed_quality_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "net_independent": {
+          "value": 120000,
+          "source": "calculated",
+          "note": "= INR 180,000 − INR 60,000 = INR 120,000/yr"
+        },
+        "payback_months_independent": {
+          "value": 20.0,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 120,000/yr × 12"
+        },
+        "net_conservative": {
+          "value": 65999.99999999999,
+          "source": "calculated",
+          "note": "= INR 126,000 − INR 60,000 = INR 66,000/yr"
+        },
+        "payback_months_conservative": {
+          "value": 36.363636363636374,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 66,000/yr × 12"
+        },
+        "multi_period": {
+          "source": "calculated",
+          "note": "Σ of monthly flows over 36 months; one-time cost in month 1; NPV discounts flow t by (1+r)^(t/12) at r = 0.1"
+        }
+      },
+      "breakeven_adoption_pct": 33.33333333333333,
+      "scenarios": [
+        {
+          "scenario": "bad",
+          "adoption_pct": 35.0,
+          "realized_benefit": 63000,
+          "net_annual": 3000,
+          "payback_months": 800.0,
+          "assumptions": {
+            "adoption_multiplier": 0.5,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "base",
+          "adoption_pct": 70.0,
+          "realized_benefit": 126000,
+          "net_annual": 66000,
+          "payback_months": 36.4,
+          "assumptions": {
+            "adoption_multiplier": 1.0,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "good",
+          "adoption_pct": 87.5,
+          "realized_benefit": 157500,
+          "net_annual": 97500,
+          "payback_months": 24.6,
+          "assumptions": {
+            "adoption_multiplier": 1.25,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        }
+      ],
+      "advice": {
+        "evidence": {
+          "inputs": [
+            {
+              "input": "annual_benefit_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 3
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "setup_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "adoption_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "quality_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            },
+            {
+              "input": "readiness",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            }
+          ],
+          "observed_weight": 0,
+          "total_weight": 11,
+          "share": 0.0,
+          "band": "low",
+          "band_capped_by_fixture": true,
+          "gaps": [
+            {
+              "input": "annual_benefit_inr",
+              "impact": "high",
+              "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+            },
+            {
+              "input": "adoption_pct",
+              "impact": "medium",
+              "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "impact": "medium",
+              "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+            },
+            {
+              "input": "setup_cost_inr",
+              "impact": "medium",
+              "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+            },
+            {
+              "input": "quality_pct",
+              "impact": "low",
+              "why": "The quality gate cannot be verified until one batch is measured."
+            },
+            {
+              "input": "readiness",
+              "impact": "low",
+              "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+            }
+          ]
+        },
+        "outcome": "insufficient_information",
+        "reasons": [
+          "No decision-driving input is backed by real data: the money numbers are fixture (synthetic) check values and neither adoption nor quality has ever been measured."
+        ],
+        "what_would_change_it": [
+          "Record one real measurement (an adoption spot-check or a quality batch) and one real cost line (recurring costs or a vendor quote); the band then leaves Low and the rule can judge the pilot."
+        ],
+        "actions": [
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          },
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          }
+        ],
+        "reason_codes": [
+          "NO_OBSERVED_ADOPTION",
+          "NO_OBSERVED_QUALITY",
+          "FIXTURE_ONLY_EVIDENCE"
+        ]
+      },
+      "economics": {
+        "baseline_cost_inr": null,
+        "baseline_note": null,
+        "gross_cost_avoidance_inr": 180000,
+        "gross_note": "typed annual benefit",
+        "cashable_savings_inr": 180000,
+        "capacity_value_inr": 0,
+        "retained_human_cost_inr": null,
+        "cashable_share_pct": 100.0,
+        "cashable_share_source": "cash factor of benefit type 'cashable assumption'",
+        "net_cashable_inr": 120000,
+        "flags": [
+          {
+            "code": "BASELINE_MISSING",
+            "message": "No baseline (today's cost of the process); retained human cost is unknown."
+          }
+        ],
+        "competitiveness": {
+          "class": "marginal",
+          "ratio": 0.704,
+          "basis": "annualised AI cost INR 126,667 ÷ gross benefit INR 180,000",
+          "annualised_ai_cost_inr": 126667
+        },
+        "budget": {
+          "status": "unknown",
+          "contingency_pct": 10,
+          "lines": [
+            {
+              "line": "implementation_inr",
+              "need_inr": 200000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup ≤ implementation budget"
+            },
+            {
+              "line": "first_year_inr",
+              "need_inr": 260000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup + 12 months of running cost"
+            },
+            {
+              "line": "recurring_inr_per_year",
+              "need_inr": 60000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "annual running cost"
+            },
+            {
+              "line": "total_inr",
+              "need_inr": 418000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+            }
+          ],
+          "total_with_contingency_inr": 418000
+        }
+      },
+      "decision": {
+        "outcome": "gather_evidence",
+        "reasons": [
+          "Payable on paper, but no decision-driving input is observed or calculated: every number is fixture or team assumption."
+        ],
+        "reason_codes": [
+          "FIXTURE_ONLY_EVIDENCE"
+        ],
+        "eligibility": {
+          "eligible": true,
+          "gates": [
+            {
+              "gate": "NET_POSITIVE",
+              "status": "pass",
+              "detail": "net annual benefit INR 120,000/yr"
+            },
+            {
+              "gate": "BREAKEVEN_IN_HORIZON",
+              "status": "pass",
+              "detail": "break-even month 20"
+            },
+            {
+              "gate": "BUDGET_FIT",
+              "status": "not_checked",
+              "detail": "budget status unknown"
+            },
+            {
+              "gate": "BENEFIT_HAS_CASH",
+              "status": "pass",
+              "detail": "cashable savings INR 180,000/yr (100% of gross)"
+            }
+          ]
+        },
+        "data_readiness": {
+          "level": "ready",
+          "share": 0.857,
+          "checks": [
+            {
+              "check": "run cost stated",
+              "ok": true
+            },
+            {
+              "check": "adoption stated",
+              "ok": true
+            },
+            {
+              "check": "readiness stated",
+              "ok": true
+            },
+            {
+              "check": "benefit type known",
+              "ok": true
+            },
+            {
+              "check": "overlap group known",
+              "ok": true
+            },
+            {
+              "check": "baseline supplied",
+              "ok": false
+            },
+            {
+              "check": "team data readiness at least medium",
+              "ok": true
+            }
+          ],
+          "missing": [
+            "baseline supplied"
+          ]
+        },
+        "evidence": {
+          "band": "low",
+          "share": 0.0,
+          "observed_weight": 0,
+          "total_weight": 11,
+          "band_capped_by_fixture": true
+        },
+        "gaps": [
+          {
+            "input": "annual_benefit_inr",
+            "impact": "high",
+            "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+          },
+          {
+            "input": "adoption_pct",
+            "impact": "medium",
+            "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+          },
+          {
+            "input": "annual_running_cost_inr",
+            "impact": "medium",
+            "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+          },
+          {
+            "input": "setup_cost_inr",
+            "impact": "medium",
+            "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+          },
+          {
+            "input": "quality_pct",
+            "impact": "low",
+            "why": "The quality gate cannot be verified until one batch is measured."
+          },
+          {
+            "input": "readiness",
+            "impact": "low",
+            "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+          }
+        ],
+        "what_would_reverse": [
+          {
+            "field": "annual_benefit_inr",
+            "from_value": 180000,
+            "to_value": 126562,
+            "change_pct": -29.7,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_benefit_inr falls to INR 126,562 (-29.7%)."
+          },
+          {
+            "field": "setup_cost_inr",
+            "from_value": 200000,
+            "to_value": 360156,
+            "change_pct": 80.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if setup_cost_inr rises to INR 360,156 (+80.1%)."
+          },
+          {
+            "field": "annual_running_cost_inr",
+            "from_value": 60000,
+            "to_value": 113438,
+            "change_pct": 89.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_running_cost_inr rises to INR 113,438 (+89.1%)."
+          }
+        ],
+        "next_actions": [
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          },
+          {
+            "code": "BASELINE_MISSING",
+            "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+            "owner_hint": "ops lead",
+            "expected_test": "baseline cost known; retained human cost computed"
+          },
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          }
+        ]
+      },
+      "checkpoint": {
+        "checkpoint": "pending",
+        "reasons": [
+          "Checkpoint needs real evidence: observed adoption and observed quality not recorded yet."
+        ],
+        "inputs": {
+          "observed_adoption_pct": null,
+          "observed_quality_pct": null,
+          "target_adoption_pct": 60,
+          "quality_threshold_pct": 80,
+          "breakeven_adoption_pct": 33.3,
+          "duration_days": null,
+          "revised_before": false,
+          "evidence_band": "low"
+        }
+      },
+      "stop_rule": {
+        "decision": "REVISE",
+        "reasons": [
+          "Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend."
+        ],
+        "metric": "data",
+        "threshold": null,
+        "actual": null
+      }
+    },
+    {
+      "id": "AI2",
+      "task": "Order exception triage",
+      "description": "Flag and route exceptional orders to the right owner.",
+      "setup": 200000,
+      "run": 60000,
+      "benefit": 180000,
+      "benefit_type": "cashable assumption",
+      "group": "ops",
+      "adoption_pct": 60,
+      "readiness": "medium",
+      "observed_adoption_pct": null,
+      "observed_quality_pct": null,
+      "flags": [],
+      "one_time_costs": null,
+      "recurring_costs": null,
+      "benefit_driver": null,
+      "ramp_months": 0,
+      "delay_months": 0,
+      "money_source": "fixture (synthetic)",
+      "independent": {
+        "id": "AI2",
+        "benefit": 180000,
+        "net": 120000,
+        "payback_months": 20.0,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": 160000,
+          "roi_pct": 80.0,
+          "npv_inr": 113447,
+          "breakeven_month": 20,
+          "breakeven_beyond_horizon": false,
+          "cumulative": [
+            -190000,
+            -180000,
+            -170000,
+            -160000,
+            -150000,
+            -140000,
+            -130000,
+            -120000,
+            -110000,
+            -100000,
+            -90000,
+            -80000,
+            -70000,
+            -60000,
+            -50000,
+            -40000,
+            -30000,
+            -20000,
+            -10000,
+            0,
+            10000,
+            20000,
+            30000,
+            40000,
+            50000,
+            60000,
+            70000,
+            80000,
+            90000,
+            100000,
+            110000,
+            120000,
+            130000,
+            140000,
+            150000,
+            160000
+          ],
+          "value_per_1m_tokens": 200.0,
+          "value_vs_price_ratio": 0.8,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "independent",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 180000,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 180,000 − INR 60,000 = INR 120,000/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR 160,000",
+              "roi_pct": "= INR 160,000 ÷ INR 200,000 × 100 = 80.0%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR 113,447",
+              "breakeven_month": "first month with cumulative ≥ 0 = month 20"
+            }
+          }
+        }
+      },
+      "conservative": {
+        "id": "AI2",
+        "benefit": 86400.0,
+        "net": 26400.0,
+        "payback_months": 90.9090909090909,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": -120800,
+          "roi_pct": -60.4,
+          "npv_inr": -129808,
+          "breakeven_month": null,
+          "breakeven_beyond_horizon": true,
+          "cumulative": [
+            -197800,
+            -195600,
+            -193400,
+            -191200,
+            -189000,
+            -186800,
+            -184600,
+            -182400,
+            -180200,
+            -178000,
+            -175800,
+            -173600,
+            -171400,
+            -169200,
+            -167000,
+            -164800,
+            -162600,
+            -160400,
+            -158200,
+            -156000,
+            -153800,
+            -151600,
+            -149400,
+            -147200,
+            -145000,
+            -142800,
+            -140600,
+            -138400,
+            -136200,
+            -134000,
+            -131800,
+            -129600,
+            -127400,
+            -125200,
+            -123000,
+            -120800
+          ],
+          "value_per_1m_tokens": 44.0,
+          "value_vs_price_ratio": 0.18,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "conservative",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 86400.0,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 86,400 − INR 60,000 = INR 26,400/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR -120,800",
+              "roi_pct": "= INR -120,800 ÷ INR 200,000 × 100 = -60.4%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR -129,808",
+              "breakeven_month": "beyond the horizon"
+            }
+          }
+        }
+      },
+      "provenance": {
+        "setup_inr": {
+          "value": 200000,
+          "source": "fixture (synthetic)",
+          "note": "setup_cost_inr from the fixture"
+        },
+        "annual_running_cost_inr": {
+          "value": 60000,
+          "source": "fixture (synthetic)",
+          "note": "annual_running_cost_inr from the fixture"
+        },
+        "annual_benefit_inr": {
+          "value": 180000,
+          "source": "fixture (synthetic)",
+          "note": "annual_benefit_inr from the fixture"
+        },
+        "benefit_type": {
+          "value": "cashable assumption",
+          "source": "fixture (synthetic)",
+          "note": "cash factor 1.0 by the rulebook"
+        },
+        "adoption_pct": {
+          "value": 60,
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "readiness": {
+          "value": "medium",
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "observed_adoption_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "observed_quality_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "net_independent": {
+          "value": 120000,
+          "source": "calculated",
+          "note": "= INR 180,000 − INR 60,000 = INR 120,000/yr"
+        },
+        "payback_months_independent": {
+          "value": 20.0,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 120,000/yr × 12"
+        },
+        "net_conservative": {
+          "value": 26400.0,
+          "source": "calculated",
+          "note": "= INR 86,400 − INR 60,000 = INR 26,400/yr"
+        },
+        "payback_months_conservative": {
+          "value": 90.9090909090909,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 26,400/yr × 12"
+        },
+        "multi_period": {
+          "source": "calculated",
+          "note": "Σ of monthly flows over 36 months; one-time cost in month 1; NPV discounts flow t by (1+r)^(t/12) at r = 0.1"
+        }
+      },
+      "breakeven_adoption_pct": 41.66666666666667,
+      "scenarios": [
+        {
+          "scenario": "bad",
+          "adoption_pct": 30.0,
+          "realized_benefit": 43200,
+          "net_annual": -16800,
+          "payback_months": null,
+          "assumptions": {
+            "adoption_multiplier": 0.5,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "base",
+          "adoption_pct": 60.0,
+          "realized_benefit": 86400,
+          "net_annual": 26400,
+          "payback_months": 90.9,
+          "assumptions": {
+            "adoption_multiplier": 1.0,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "good",
+          "adoption_pct": 75.0,
+          "realized_benefit": 108000,
+          "net_annual": 48000,
+          "payback_months": 50.0,
+          "assumptions": {
+            "adoption_multiplier": 1.25,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        }
+      ],
+      "advice": {
+        "evidence": {
+          "inputs": [
+            {
+              "input": "annual_benefit_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 3
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "setup_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "adoption_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "quality_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            },
+            {
+              "input": "readiness",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            }
+          ],
+          "observed_weight": 0,
+          "total_weight": 11,
+          "share": 0.0,
+          "band": "low",
+          "band_capped_by_fixture": true,
+          "gaps": [
+            {
+              "input": "annual_benefit_inr",
+              "impact": "high",
+              "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+            },
+            {
+              "input": "adoption_pct",
+              "impact": "medium",
+              "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "impact": "medium",
+              "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+            },
+            {
+              "input": "setup_cost_inr",
+              "impact": "medium",
+              "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+            },
+            {
+              "input": "quality_pct",
+              "impact": "low",
+              "why": "The quality gate cannot be verified until one batch is measured."
+            },
+            {
+              "input": "readiness",
+              "impact": "low",
+              "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+            }
+          ]
+        },
+        "outcome": "insufficient_information",
+        "reasons": [
+          "No decision-driving input is backed by real data: the money numbers are fixture (synthetic) check values and neither adoption nor quality has ever been measured."
+        ],
+        "what_would_change_it": [
+          "Record one real measurement (an adoption spot-check or a quality batch) and one real cost line (recurring costs or a vendor quote); the band then leaves Low and the rule can judge the pilot."
+        ],
+        "actions": [
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          },
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          }
+        ],
+        "reason_codes": [
+          "NO_OBSERVED_ADOPTION",
+          "NO_OBSERVED_QUALITY",
+          "FIXTURE_ONLY_EVIDENCE"
+        ]
+      },
+      "economics": {
+        "baseline_cost_inr": null,
+        "baseline_note": null,
+        "gross_cost_avoidance_inr": 180000,
+        "gross_note": "typed annual benefit",
+        "cashable_savings_inr": 180000,
+        "capacity_value_inr": 0,
+        "retained_human_cost_inr": null,
+        "cashable_share_pct": 100.0,
+        "cashable_share_source": "cash factor of benefit type 'cashable assumption'",
+        "net_cashable_inr": 120000,
+        "flags": [
+          {
+            "code": "BASELINE_MISSING",
+            "message": "No baseline (today's cost of the process); retained human cost is unknown."
+          }
+        ],
+        "competitiveness": {
+          "class": "marginal",
+          "ratio": 0.704,
+          "basis": "annualised AI cost INR 126,667 ÷ gross benefit INR 180,000",
+          "annualised_ai_cost_inr": 126667
+        },
+        "budget": {
+          "status": "unknown",
+          "contingency_pct": 10,
+          "lines": [
+            {
+              "line": "implementation_inr",
+              "need_inr": 200000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup ≤ implementation budget"
+            },
+            {
+              "line": "first_year_inr",
+              "need_inr": 260000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup + 12 months of running cost"
+            },
+            {
+              "line": "recurring_inr_per_year",
+              "need_inr": 60000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "annual running cost"
+            },
+            {
+              "line": "total_inr",
+              "need_inr": 418000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+            }
+          ],
+          "total_with_contingency_inr": 418000
+        }
+      },
+      "decision": {
+        "outcome": "gather_evidence",
+        "reasons": [
+          "Payable on paper, but no decision-driving input is observed or calculated: every number is fixture or team assumption."
+        ],
+        "reason_codes": [
+          "FIXTURE_ONLY_EVIDENCE"
+        ],
+        "eligibility": {
+          "eligible": true,
+          "gates": [
+            {
+              "gate": "NET_POSITIVE",
+              "status": "pass",
+              "detail": "net annual benefit INR 120,000/yr"
+            },
+            {
+              "gate": "BREAKEVEN_IN_HORIZON",
+              "status": "pass",
+              "detail": "break-even month 20"
+            },
+            {
+              "gate": "BUDGET_FIT",
+              "status": "not_checked",
+              "detail": "budget status unknown"
+            },
+            {
+              "gate": "BENEFIT_HAS_CASH",
+              "status": "pass",
+              "detail": "cashable savings INR 180,000/yr (100% of gross)"
+            }
+          ]
+        },
+        "data_readiness": {
+          "level": "ready",
+          "share": 0.857,
+          "checks": [
+            {
+              "check": "run cost stated",
+              "ok": true
+            },
+            {
+              "check": "adoption stated",
+              "ok": true
+            },
+            {
+              "check": "readiness stated",
+              "ok": true
+            },
+            {
+              "check": "benefit type known",
+              "ok": true
+            },
+            {
+              "check": "overlap group known",
+              "ok": true
+            },
+            {
+              "check": "baseline supplied",
+              "ok": false
+            },
+            {
+              "check": "team data readiness at least medium",
+              "ok": true
+            }
+          ],
+          "missing": [
+            "baseline supplied"
+          ]
+        },
+        "evidence": {
+          "band": "low",
+          "share": 0.0,
+          "observed_weight": 0,
+          "total_weight": 11,
+          "band_capped_by_fixture": true
+        },
+        "gaps": [
+          {
+            "input": "annual_benefit_inr",
+            "impact": "high",
+            "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+          },
+          {
+            "input": "adoption_pct",
+            "impact": "medium",
+            "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+          },
+          {
+            "input": "annual_running_cost_inr",
+            "impact": "medium",
+            "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+          },
+          {
+            "input": "setup_cost_inr",
+            "impact": "medium",
+            "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+          },
+          {
+            "input": "quality_pct",
+            "impact": "low",
+            "why": "The quality gate cannot be verified until one batch is measured."
+          },
+          {
+            "input": "readiness",
+            "impact": "low",
+            "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+          }
+        ],
+        "what_would_reverse": [
+          {
+            "field": "annual_benefit_inr",
+            "from_value": 180000,
+            "to_value": 126562,
+            "change_pct": -29.7,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_benefit_inr falls to INR 126,562 (-29.7%)."
+          },
+          {
+            "field": "setup_cost_inr",
+            "from_value": 200000,
+            "to_value": 360156,
+            "change_pct": 80.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if setup_cost_inr rises to INR 360,156 (+80.1%)."
+          },
+          {
+            "field": "annual_running_cost_inr",
+            "from_value": 60000,
+            "to_value": 113438,
+            "change_pct": 89.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_running_cost_inr rises to INR 113,438 (+89.1%)."
+          }
+        ],
+        "next_actions": [
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          },
+          {
+            "code": "BASELINE_MISSING",
+            "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+            "owner_hint": "ops lead",
+            "expected_test": "baseline cost known; retained human cost computed"
+          },
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          }
+        ]
+      },
+      "checkpoint": {
+        "checkpoint": "pending",
+        "reasons": [
+          "Checkpoint needs real evidence: observed adoption and observed quality not recorded yet."
+        ],
+        "inputs": {
+          "observed_adoption_pct": null,
+          "observed_quality_pct": null,
+          "target_adoption_pct": 60,
+          "quality_threshold_pct": 80,
+          "breakeven_adoption_pct": 41.7,
+          "duration_days": null,
+          "revised_before": false,
+          "evidence_band": "low"
+        }
+      },
+      "stop_rule": {
+        "decision": "REVISE",
+        "reasons": [
+          "Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend."
+        ],
+        "metric": "data",
+        "threshold": null,
+        "actual": null
+      }
+    },
+    {
+      "id": "AI3",
+      "task": "Weekly catalogue review",
+      "description": "Draft the weekly catalogue quality review.",
+      "setup": 200000,
+      "run": 60000,
+      "benefit": 180000,
+      "benefit_type": "cashable assumption",
+      "group": "catalog",
+      "adoption_pct": 50,
+      "readiness": "medium",
+      "observed_adoption_pct": null,
+      "observed_quality_pct": null,
+      "flags": [],
+      "one_time_costs": null,
+      "recurring_costs": null,
+      "benefit_driver": null,
+      "ramp_months": 0,
+      "delay_months": 0,
+      "money_source": "fixture (synthetic)",
+      "independent": {
+        "id": "AI3",
+        "benefit": 180000,
+        "net": 120000,
+        "payback_months": 20.0,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": 160000,
+          "roi_pct": 80.0,
+          "npv_inr": 113447,
+          "breakeven_month": 20,
+          "breakeven_beyond_horizon": false,
+          "cumulative": [
+            -190000,
+            -180000,
+            -170000,
+            -160000,
+            -150000,
+            -140000,
+            -130000,
+            -120000,
+            -110000,
+            -100000,
+            -90000,
+            -80000,
+            -70000,
+            -60000,
+            -50000,
+            -40000,
+            -30000,
+            -20000,
+            -10000,
+            0,
+            10000,
+            20000,
+            30000,
+            40000,
+            50000,
+            60000,
+            70000,
+            80000,
+            90000,
+            100000,
+            110000,
+            120000,
+            130000,
+            140000,
+            150000,
+            160000
+          ],
+          "value_per_1m_tokens": 200.0,
+          "value_vs_price_ratio": 0.8,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "independent",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 180000,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 180,000 − INR 60,000 = INR 120,000/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR 160,000",
+              "roi_pct": "= INR 160,000 ÷ INR 200,000 × 100 = 80.0%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR 113,447",
+              "breakeven_month": "first month with cumulative ≥ 0 = month 20"
+            }
+          }
+        }
+      },
+      "conservative": {
+        "id": "AI3",
+        "benefit": 72000.0,
+        "net": 12000.0,
+        "payback_months": 200.0,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": -164000,
+          "roi_pct": -82.0,
+          "npv_inr": -167231,
+          "breakeven_month": null,
+          "breakeven_beyond_horizon": true,
+          "cumulative": [
+            -199000,
+            -198000,
+            -197000,
+            -196000,
+            -195000,
+            -194000,
+            -193000,
+            -192000,
+            -191000,
+            -190000,
+            -189000,
+            -188000,
+            -187000,
+            -186000,
+            -185000,
+            -184000,
+            -183000,
+            -182000,
+            -181000,
+            -180000,
+            -179000,
+            -178000,
+            -177000,
+            -176000,
+            -175000,
+            -174000,
+            -173000,
+            -172000,
+            -171000,
+            -170000,
+            -169000,
+            -168000,
+            -167000,
+            -166000,
+            -165000,
+            -164000
+          ],
+          "value_per_1m_tokens": 20.0,
+          "value_vs_price_ratio": 0.08,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "conservative",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 72000.0,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 72,000 − INR 60,000 = INR 12,000/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR -164,000",
+              "roi_pct": "= INR -164,000 ÷ INR 200,000 × 100 = -82.0%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR -167,231",
+              "breakeven_month": "beyond the horizon"
+            }
+          }
+        }
+      },
+      "provenance": {
+        "setup_inr": {
+          "value": 200000,
+          "source": "fixture (synthetic)",
+          "note": "setup_cost_inr from the fixture"
+        },
+        "annual_running_cost_inr": {
+          "value": 60000,
+          "source": "fixture (synthetic)",
+          "note": "annual_running_cost_inr from the fixture"
+        },
+        "annual_benefit_inr": {
+          "value": 180000,
+          "source": "fixture (synthetic)",
+          "note": "annual_benefit_inr from the fixture"
+        },
+        "benefit_type": {
+          "value": "cashable assumption",
+          "source": "fixture (synthetic)",
+          "note": "cash factor 1.0 by the rulebook"
+        },
+        "adoption_pct": {
+          "value": 50,
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "readiness": {
+          "value": "medium",
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "observed_adoption_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "observed_quality_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "net_independent": {
+          "value": 120000,
+          "source": "calculated",
+          "note": "= INR 180,000 − INR 60,000 = INR 120,000/yr"
+        },
+        "payback_months_independent": {
+          "value": 20.0,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 120,000/yr × 12"
+        },
+        "net_conservative": {
+          "value": 12000.0,
+          "source": "calculated",
+          "note": "= INR 72,000 − INR 60,000 = INR 12,000/yr"
+        },
+        "payback_months_conservative": {
+          "value": 200.0,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 12,000/yr × 12"
+        },
+        "multi_period": {
+          "source": "calculated",
+          "note": "Σ of monthly flows over 36 months; one-time cost in month 1; NPV discounts flow t by (1+r)^(t/12) at r = 0.1"
+        }
+      },
+      "breakeven_adoption_pct": 41.66666666666667,
+      "scenarios": [
+        {
+          "scenario": "bad",
+          "adoption_pct": 25.0,
+          "realized_benefit": 36000,
+          "net_annual": -24000,
+          "payback_months": null,
+          "assumptions": {
+            "adoption_multiplier": 0.5,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "base",
+          "adoption_pct": 50.0,
+          "realized_benefit": 72000,
+          "net_annual": 12000,
+          "payback_months": 200.0,
+          "assumptions": {
+            "adoption_multiplier": 1.0,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "good",
+          "adoption_pct": 62.5,
+          "realized_benefit": 90000,
+          "net_annual": 30000,
+          "payback_months": 80.0,
+          "assumptions": {
+            "adoption_multiplier": 1.25,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        }
+      ],
+      "advice": {
+        "evidence": {
+          "inputs": [
+            {
+              "input": "annual_benefit_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 3
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "setup_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "adoption_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "quality_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            },
+            {
+              "input": "readiness",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            }
+          ],
+          "observed_weight": 0,
+          "total_weight": 11,
+          "share": 0.0,
+          "band": "low",
+          "band_capped_by_fixture": true,
+          "gaps": [
+            {
+              "input": "annual_benefit_inr",
+              "impact": "high",
+              "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+            },
+            {
+              "input": "adoption_pct",
+              "impact": "medium",
+              "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "impact": "medium",
+              "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+            },
+            {
+              "input": "setup_cost_inr",
+              "impact": "medium",
+              "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+            },
+            {
+              "input": "quality_pct",
+              "impact": "low",
+              "why": "The quality gate cannot be verified until one batch is measured."
+            },
+            {
+              "input": "readiness",
+              "impact": "low",
+              "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+            }
+          ]
+        },
+        "outcome": "insufficient_information",
+        "reasons": [
+          "No decision-driving input is backed by real data: the money numbers are fixture (synthetic) check values and neither adoption nor quality has ever been measured."
+        ],
+        "what_would_change_it": [
+          "Record one real measurement (an adoption spot-check or a quality batch) and one real cost line (recurring costs or a vendor quote); the band then leaves Low and the rule can judge the pilot."
+        ],
+        "actions": [
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          },
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          }
+        ],
+        "reason_codes": [
+          "NO_OBSERVED_ADOPTION",
+          "NO_OBSERVED_QUALITY",
+          "FIXTURE_ONLY_EVIDENCE"
+        ]
+      },
+      "economics": {
+        "baseline_cost_inr": null,
+        "baseline_note": null,
+        "gross_cost_avoidance_inr": 180000,
+        "gross_note": "typed annual benefit",
+        "cashable_savings_inr": 180000,
+        "capacity_value_inr": 0,
+        "retained_human_cost_inr": null,
+        "cashable_share_pct": 100.0,
+        "cashable_share_source": "cash factor of benefit type 'cashable assumption'",
+        "net_cashable_inr": 120000,
+        "flags": [
+          {
+            "code": "BASELINE_MISSING",
+            "message": "No baseline (today's cost of the process); retained human cost is unknown."
+          }
+        ],
+        "competitiveness": {
+          "class": "marginal",
+          "ratio": 0.704,
+          "basis": "annualised AI cost INR 126,667 ÷ gross benefit INR 180,000",
+          "annualised_ai_cost_inr": 126667
+        },
+        "budget": {
+          "status": "unknown",
+          "contingency_pct": 10,
+          "lines": [
+            {
+              "line": "implementation_inr",
+              "need_inr": 200000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup ≤ implementation budget"
+            },
+            {
+              "line": "first_year_inr",
+              "need_inr": 260000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup + 12 months of running cost"
+            },
+            {
+              "line": "recurring_inr_per_year",
+              "need_inr": 60000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "annual running cost"
+            },
+            {
+              "line": "total_inr",
+              "need_inr": 418000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+            }
+          ],
+          "total_with_contingency_inr": 418000
+        }
+      },
+      "decision": {
+        "outcome": "gather_evidence",
+        "reasons": [
+          "Payable on paper, but no decision-driving input is observed or calculated: every number is fixture or team assumption."
+        ],
+        "reason_codes": [
+          "FIXTURE_ONLY_EVIDENCE"
+        ],
+        "eligibility": {
+          "eligible": true,
+          "gates": [
+            {
+              "gate": "NET_POSITIVE",
+              "status": "pass",
+              "detail": "net annual benefit INR 120,000/yr"
+            },
+            {
+              "gate": "BREAKEVEN_IN_HORIZON",
+              "status": "pass",
+              "detail": "break-even month 20"
+            },
+            {
+              "gate": "BUDGET_FIT",
+              "status": "not_checked",
+              "detail": "budget status unknown"
+            },
+            {
+              "gate": "BENEFIT_HAS_CASH",
+              "status": "pass",
+              "detail": "cashable savings INR 180,000/yr (100% of gross)"
+            }
+          ]
+        },
+        "data_readiness": {
+          "level": "ready",
+          "share": 0.857,
+          "checks": [
+            {
+              "check": "run cost stated",
+              "ok": true
+            },
+            {
+              "check": "adoption stated",
+              "ok": true
+            },
+            {
+              "check": "readiness stated",
+              "ok": true
+            },
+            {
+              "check": "benefit type known",
+              "ok": true
+            },
+            {
+              "check": "overlap group known",
+              "ok": true
+            },
+            {
+              "check": "baseline supplied",
+              "ok": false
+            },
+            {
+              "check": "team data readiness at least medium",
+              "ok": true
+            }
+          ],
+          "missing": [
+            "baseline supplied"
+          ]
+        },
+        "evidence": {
+          "band": "low",
+          "share": 0.0,
+          "observed_weight": 0,
+          "total_weight": 11,
+          "band_capped_by_fixture": true
+        },
+        "gaps": [
+          {
+            "input": "annual_benefit_inr",
+            "impact": "high",
+            "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+          },
+          {
+            "input": "adoption_pct",
+            "impact": "medium",
+            "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+          },
+          {
+            "input": "annual_running_cost_inr",
+            "impact": "medium",
+            "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+          },
+          {
+            "input": "setup_cost_inr",
+            "impact": "medium",
+            "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+          },
+          {
+            "input": "quality_pct",
+            "impact": "low",
+            "why": "The quality gate cannot be verified until one batch is measured."
+          },
+          {
+            "input": "readiness",
+            "impact": "low",
+            "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+          }
+        ],
+        "what_would_reverse": [
+          {
+            "field": "annual_benefit_inr",
+            "from_value": 180000,
+            "to_value": 126562,
+            "change_pct": -29.7,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_benefit_inr falls to INR 126,562 (-29.7%)."
+          },
+          {
+            "field": "setup_cost_inr",
+            "from_value": 200000,
+            "to_value": 360156,
+            "change_pct": 80.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if setup_cost_inr rises to INR 360,156 (+80.1%)."
+          },
+          {
+            "field": "annual_running_cost_inr",
+            "from_value": 60000,
+            "to_value": 113438,
+            "change_pct": 89.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_running_cost_inr rises to INR 113,438 (+89.1%)."
+          }
+        ],
+        "next_actions": [
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          },
+          {
+            "code": "BASELINE_MISSING",
+            "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+            "owner_hint": "ops lead",
+            "expected_test": "baseline cost known; retained human cost computed"
+          },
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          }
+        ]
+      },
+      "checkpoint": {
+        "checkpoint": "pending",
+        "reasons": [
+          "Checkpoint needs real evidence: observed adoption and observed quality not recorded yet."
+        ],
+        "inputs": {
+          "observed_adoption_pct": null,
+          "observed_quality_pct": null,
+          "target_adoption_pct": 60,
+          "quality_threshold_pct": 80,
+          "breakeven_adoption_pct": 41.7,
+          "duration_days": null,
+          "revised_before": false,
+          "evidence_band": "low"
+        }
+      },
+      "stop_rule": {
+        "decision": "REVISE",
+        "reasons": [
+          "Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend."
+        ],
+        "metric": "data",
+        "threshold": null,
+        "actual": null
+      }
+    },
+    {
+      "id": "AI4",
+      "task": "Support reply drafting",
+      "description": "Draft first replies for support agents to edit.",
+      "setup": 200000,
+      "run": 60000,
+      "benefit": 180000,
+      "benefit_type": "cashable assumption",
+      "group": "support",
+      "adoption_pct": 65,
+      "readiness": "high",
+      "observed_adoption_pct": null,
+      "observed_quality_pct": null,
+      "flags": [],
+      "one_time_costs": null,
+      "recurring_costs": null,
+      "benefit_driver": null,
+      "ramp_months": 0,
+      "delay_months": 0,
+      "money_source": "fixture (synthetic)",
+      "independent": {
+        "id": "AI4",
+        "benefit": 180000,
+        "net": 120000,
+        "payback_months": 20.0,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": 160000,
+          "roi_pct": 80.0,
+          "npv_inr": 113447,
+          "breakeven_month": 20,
+          "breakeven_beyond_horizon": false,
+          "cumulative": [
+            -190000,
+            -180000,
+            -170000,
+            -160000,
+            -150000,
+            -140000,
+            -130000,
+            -120000,
+            -110000,
+            -100000,
+            -90000,
+            -80000,
+            -70000,
+            -60000,
+            -50000,
+            -40000,
+            -30000,
+            -20000,
+            -10000,
+            0,
+            10000,
+            20000,
+            30000,
+            40000,
+            50000,
+            60000,
+            70000,
+            80000,
+            90000,
+            100000,
+            110000,
+            120000,
+            130000,
+            140000,
+            150000,
+            160000
+          ],
+          "value_per_1m_tokens": 200.0,
+          "value_vs_price_ratio": 0.8,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "independent",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 180000,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 180,000 − INR 60,000 = INR 120,000/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR 160,000",
+              "roi_pct": "= INR 160,000 ÷ INR 200,000 × 100 = 80.0%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR 113,447",
+              "breakeven_month": "first month with cumulative ≥ 0 = month 20"
+            }
+          }
+        }
+      },
+      "conservative": {
+        "id": "AI4",
+        "benefit": 117000.0,
+        "net": 57000.0,
+        "payback_months": 42.10526315789473,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": -29000,
+          "roi_pct": -14.5,
+          "npv_inr": -50282,
+          "breakeven_month": null,
+          "breakeven_beyond_horizon": true,
+          "cumulative": [
+            -195250,
+            -190500,
+            -185750,
+            -181000,
+            -176250,
+            -171500,
+            -166750,
+            -162000,
+            -157250,
+            -152500,
+            -147750,
+            -143000,
+            -138250,
+            -133500,
+            -128750,
+            -124000,
+            -119250,
+            -114500,
+            -109750,
+            -105000,
+            -100250,
+            -95500,
+            -90750,
+            -86000,
+            -81250,
+            -76500,
+            -71750,
+            -67000,
+            -62250,
+            -57500,
+            -52750,
+            -48000,
+            -43250,
+            -38500,
+            -33750,
+            -29000
+          ],
+          "value_per_1m_tokens": 95.0,
+          "value_vs_price_ratio": 0.38,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "conservative",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 117000.0,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 117,000 − INR 60,000 = INR 57,000/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR -29,000",
+              "roi_pct": "= INR -29,000 ÷ INR 200,000 × 100 = -14.5%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR -50,282",
+              "breakeven_month": "beyond the horizon"
+            }
+          }
+        }
+      },
+      "provenance": {
+        "setup_inr": {
+          "value": 200000,
+          "source": "fixture (synthetic)",
+          "note": "setup_cost_inr from the fixture"
+        },
+        "annual_running_cost_inr": {
+          "value": 60000,
+          "source": "fixture (synthetic)",
+          "note": "annual_running_cost_inr from the fixture"
+        },
+        "annual_benefit_inr": {
+          "value": 180000,
+          "source": "fixture (synthetic)",
+          "note": "annual_benefit_inr from the fixture"
+        },
+        "benefit_type": {
+          "value": "cashable assumption",
+          "source": "fixture (synthetic)",
+          "note": "cash factor 1.0 by the rulebook"
+        },
+        "adoption_pct": {
+          "value": 65,
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "readiness": {
+          "value": "high",
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "observed_adoption_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "observed_quality_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "net_independent": {
+          "value": 120000,
+          "source": "calculated",
+          "note": "= INR 180,000 − INR 60,000 = INR 120,000/yr"
+        },
+        "payback_months_independent": {
+          "value": 20.0,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 120,000/yr × 12"
+        },
+        "net_conservative": {
+          "value": 57000.0,
+          "source": "calculated",
+          "note": "= INR 117,000 − INR 60,000 = INR 57,000/yr"
+        },
+        "payback_months_conservative": {
+          "value": 42.10526315789473,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 57,000/yr × 12"
+        },
+        "multi_period": {
+          "source": "calculated",
+          "note": "Σ of monthly flows over 36 months; one-time cost in month 1; NPV discounts flow t by (1+r)^(t/12) at r = 0.1"
+        }
+      },
+      "breakeven_adoption_pct": 33.33333333333333,
+      "scenarios": [
+        {
+          "scenario": "bad",
+          "adoption_pct": 32.5,
+          "realized_benefit": 58500,
+          "net_annual": -1500,
+          "payback_months": null,
+          "assumptions": {
+            "adoption_multiplier": 0.5,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "base",
+          "adoption_pct": 65.0,
+          "realized_benefit": 117000,
+          "net_annual": 57000,
+          "payback_months": 42.1,
+          "assumptions": {
+            "adoption_multiplier": 1.0,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "good",
+          "adoption_pct": 81.2,
+          "realized_benefit": 146250,
+          "net_annual": 86250,
+          "payback_months": 27.8,
+          "assumptions": {
+            "adoption_multiplier": 1.25,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        }
+      ],
+      "advice": {
+        "evidence": {
+          "inputs": [
+            {
+              "input": "annual_benefit_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 3
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "setup_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "adoption_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "quality_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            },
+            {
+              "input": "readiness",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            }
+          ],
+          "observed_weight": 0,
+          "total_weight": 11,
+          "share": 0.0,
+          "band": "low",
+          "band_capped_by_fixture": true,
+          "gaps": [
+            {
+              "input": "annual_benefit_inr",
+              "impact": "high",
+              "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+            },
+            {
+              "input": "adoption_pct",
+              "impact": "medium",
+              "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "impact": "medium",
+              "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+            },
+            {
+              "input": "setup_cost_inr",
+              "impact": "medium",
+              "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+            },
+            {
+              "input": "quality_pct",
+              "impact": "low",
+              "why": "The quality gate cannot be verified until one batch is measured."
+            },
+            {
+              "input": "readiness",
+              "impact": "low",
+              "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+            }
+          ]
+        },
+        "outcome": "insufficient_information",
+        "reasons": [
+          "No decision-driving input is backed by real data: the money numbers are fixture (synthetic) check values and neither adoption nor quality has ever been measured."
+        ],
+        "what_would_change_it": [
+          "Record one real measurement (an adoption spot-check or a quality batch) and one real cost line (recurring costs or a vendor quote); the band then leaves Low and the rule can judge the pilot."
+        ],
+        "actions": [
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          },
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          }
+        ],
+        "reason_codes": [
+          "NO_OBSERVED_ADOPTION",
+          "NO_OBSERVED_QUALITY",
+          "FIXTURE_ONLY_EVIDENCE"
+        ]
+      },
+      "economics": {
+        "baseline_cost_inr": null,
+        "baseline_note": null,
+        "gross_cost_avoidance_inr": 180000,
+        "gross_note": "typed annual benefit",
+        "cashable_savings_inr": 180000,
+        "capacity_value_inr": 0,
+        "retained_human_cost_inr": null,
+        "cashable_share_pct": 100.0,
+        "cashable_share_source": "cash factor of benefit type 'cashable assumption'",
+        "net_cashable_inr": 120000,
+        "flags": [
+          {
+            "code": "BASELINE_MISSING",
+            "message": "No baseline (today's cost of the process); retained human cost is unknown."
+          }
+        ],
+        "competitiveness": {
+          "class": "marginal",
+          "ratio": 0.704,
+          "basis": "annualised AI cost INR 126,667 ÷ gross benefit INR 180,000",
+          "annualised_ai_cost_inr": 126667
+        },
+        "budget": {
+          "status": "unknown",
+          "contingency_pct": 10,
+          "lines": [
+            {
+              "line": "implementation_inr",
+              "need_inr": 200000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup ≤ implementation budget"
+            },
+            {
+              "line": "first_year_inr",
+              "need_inr": 260000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup + 12 months of running cost"
+            },
+            {
+              "line": "recurring_inr_per_year",
+              "need_inr": 60000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "annual running cost"
+            },
+            {
+              "line": "total_inr",
+              "need_inr": 418000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+            }
+          ],
+          "total_with_contingency_inr": 418000
+        }
+      },
+      "decision": {
+        "outcome": "gather_evidence",
+        "reasons": [
+          "Payable on paper, but no decision-driving input is observed or calculated: every number is fixture or team assumption."
+        ],
+        "reason_codes": [
+          "FIXTURE_ONLY_EVIDENCE"
+        ],
+        "eligibility": {
+          "eligible": true,
+          "gates": [
+            {
+              "gate": "NET_POSITIVE",
+              "status": "pass",
+              "detail": "net annual benefit INR 120,000/yr"
+            },
+            {
+              "gate": "BREAKEVEN_IN_HORIZON",
+              "status": "pass",
+              "detail": "break-even month 20"
+            },
+            {
+              "gate": "BUDGET_FIT",
+              "status": "not_checked",
+              "detail": "budget status unknown"
+            },
+            {
+              "gate": "BENEFIT_HAS_CASH",
+              "status": "pass",
+              "detail": "cashable savings INR 180,000/yr (100% of gross)"
+            }
+          ]
+        },
+        "data_readiness": {
+          "level": "ready",
+          "share": 0.857,
+          "checks": [
+            {
+              "check": "run cost stated",
+              "ok": true
+            },
+            {
+              "check": "adoption stated",
+              "ok": true
+            },
+            {
+              "check": "readiness stated",
+              "ok": true
+            },
+            {
+              "check": "benefit type known",
+              "ok": true
+            },
+            {
+              "check": "overlap group known",
+              "ok": true
+            },
+            {
+              "check": "baseline supplied",
+              "ok": false
+            },
+            {
+              "check": "team data readiness at least medium",
+              "ok": true
+            }
+          ],
+          "missing": [
+            "baseline supplied"
+          ]
+        },
+        "evidence": {
+          "band": "low",
+          "share": 0.0,
+          "observed_weight": 0,
+          "total_weight": 11,
+          "band_capped_by_fixture": true
+        },
+        "gaps": [
+          {
+            "input": "annual_benefit_inr",
+            "impact": "high",
+            "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+          },
+          {
+            "input": "adoption_pct",
+            "impact": "medium",
+            "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+          },
+          {
+            "input": "annual_running_cost_inr",
+            "impact": "medium",
+            "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+          },
+          {
+            "input": "setup_cost_inr",
+            "impact": "medium",
+            "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+          },
+          {
+            "input": "quality_pct",
+            "impact": "low",
+            "why": "The quality gate cannot be verified until one batch is measured."
+          },
+          {
+            "input": "readiness",
+            "impact": "low",
+            "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+          }
+        ],
+        "what_would_reverse": [
+          {
+            "field": "annual_benefit_inr",
+            "from_value": 180000,
+            "to_value": 126562,
+            "change_pct": -29.7,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_benefit_inr falls to INR 126,562 (-29.7%)."
+          },
+          {
+            "field": "setup_cost_inr",
+            "from_value": 200000,
+            "to_value": 360156,
+            "change_pct": 80.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if setup_cost_inr rises to INR 360,156 (+80.1%)."
+          },
+          {
+            "field": "annual_running_cost_inr",
+            "from_value": 60000,
+            "to_value": 113438,
+            "change_pct": 89.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_running_cost_inr rises to INR 113,438 (+89.1%)."
+          }
+        ],
+        "next_actions": [
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          },
+          {
+            "code": "BASELINE_MISSING",
+            "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+            "owner_hint": "ops lead",
+            "expected_test": "baseline cost known; retained human cost computed"
+          },
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          }
+        ]
+      },
+      "checkpoint": {
+        "checkpoint": "pending",
+        "reasons": [
+          "Checkpoint needs real evidence: observed adoption and observed quality not recorded yet."
+        ],
+        "inputs": {
+          "observed_adoption_pct": null,
+          "observed_quality_pct": null,
+          "target_adoption_pct": 60,
+          "quality_threshold_pct": 80,
+          "breakeven_adoption_pct": 33.3,
+          "duration_days": null,
+          "revised_before": false,
+          "evidence_band": "low"
+        }
+      },
+      "stop_rule": {
+        "decision": "REVISE",
+        "reasons": [
+          "Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend."
+        ],
+        "metric": "data",
+        "threshold": null,
+        "actual": null
+      }
+    },
+    {
+      "id": "AI5",
+      "task": "Ticket tagging",
+      "description": "Auto-tag incoming support tickets by topic.",
+      "setup": 200000,
+      "run": 60000,
+      "benefit": 180000,
+      "benefit_type": "cashable assumption",
+      "group": "support",
+      "adoption_pct": 40,
+      "readiness": "low",
+      "observed_adoption_pct": null,
+      "observed_quality_pct": null,
+      "flags": [],
+      "one_time_costs": null,
+      "recurring_costs": null,
+      "benefit_driver": null,
+      "ramp_months": 0,
+      "delay_months": 0,
+      "money_source": "fixture (synthetic)",
+      "independent": {
+        "id": "AI5",
+        "benefit": 180000,
+        "net": 120000,
+        "payback_months": 20.0,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": 160000,
+          "roi_pct": 80.0,
+          "npv_inr": 113447,
+          "breakeven_month": 20,
+          "breakeven_beyond_horizon": false,
+          "cumulative": [
+            -190000,
+            -180000,
+            -170000,
+            -160000,
+            -150000,
+            -140000,
+            -130000,
+            -120000,
+            -110000,
+            -100000,
+            -90000,
+            -80000,
+            -70000,
+            -60000,
+            -50000,
+            -40000,
+            -30000,
+            -20000,
+            -10000,
+            0,
+            10000,
+            20000,
+            30000,
+            40000,
+            50000,
+            60000,
+            70000,
+            80000,
+            90000,
+            100000,
+            110000,
+            120000,
+            130000,
+            140000,
+            150000,
+            160000
+          ],
+          "value_per_1m_tokens": 200.0,
+          "value_vs_price_ratio": 0.8,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "independent",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 180000,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 180,000 − INR 60,000 = INR 120,000/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR 160,000",
+              "roi_pct": "= INR 160,000 ÷ INR 200,000 × 100 = 80.0%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR 113,447",
+              "breakeven_month": "first month with cumulative ≥ 0 = month 20"
+            }
+          }
+        }
+      },
+      "conservative": {
+        "id": "AI5",
+        "benefit": 43200.0,
+        "net": -16800.0,
+        "payback_months": null,
+        "multi_period": {
+          "horizon_months": 36,
+          "discount_rate": 0.1,
+          "profit_inr": -250400,
+          "roi_pct": -125.2,
+          "npv_inr": -242079,
+          "breakeven_month": null,
+          "breakeven_beyond_horizon": true,
+          "cumulative": [
+            -201400,
+            -202800,
+            -204200,
+            -205600,
+            -207000,
+            -208400,
+            -209800,
+            -211200,
+            -212600,
+            -214000,
+            -215400,
+            -216800,
+            -218200,
+            -219600,
+            -221000,
+            -222400,
+            -223800,
+            -225200,
+            -226600,
+            -228000,
+            -229400,
+            -230800,
+            -232200,
+            -233600,
+            -235000,
+            -236400,
+            -237800,
+            -239200,
+            -240600,
+            -242000,
+            -243400,
+            -244800,
+            -246200,
+            -247600,
+            -249000,
+            -250400
+          ],
+          "value_per_1m_tokens": -28.0,
+          "value_vs_price_ratio": -0.11,
+          "formula_version": "cf-1",
+          "breakdown": {
+            "formula_version": "cf-1",
+            "mode": "conservative",
+            "inputs": {
+              "one_time_inr": 200000,
+              "annual_benefit_inr": 43200.0,
+              "annual_running_cost_inr": 60000,
+              "ramp_months": 0,
+              "delay_months": 0,
+              "horizon_months": 36,
+              "discount_rate": 0.1
+            },
+            "formulas": {
+              "net_annual": "= INR 43,200 − INR 60,000 = INR -16,800/yr",
+              "profit_loss": "= Σ 36 monthly flows (one-time INR 200,000 in month 1) = INR -250,400",
+              "roi_pct": "= INR -250,400 ÷ INR 200,000 × 100 = -125.2%",
+              "npv": "= Σ flow(t) ÷ (1 + 0.1)^(t/12) = INR -242,079",
+              "breakeven_month": "beyond the horizon"
+            }
+          }
+        }
+      },
+      "provenance": {
+        "setup_inr": {
+          "value": 200000,
+          "source": "fixture (synthetic)",
+          "note": "setup_cost_inr from the fixture"
+        },
+        "annual_running_cost_inr": {
+          "value": 60000,
+          "source": "fixture (synthetic)",
+          "note": "annual_running_cost_inr from the fixture"
+        },
+        "annual_benefit_inr": {
+          "value": 180000,
+          "source": "fixture (synthetic)",
+          "note": "annual_benefit_inr from the fixture"
+        },
+        "benefit_type": {
+          "value": "cashable assumption",
+          "source": "fixture (synthetic)",
+          "note": "cash factor 1.0 by the rulebook"
+        },
+        "adoption_pct": {
+          "value": 40,
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "readiness": {
+          "value": "low",
+          "source": "assumed (team)",
+          "note": "team-authored extension"
+        },
+        "observed_adoption_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "observed_quality_pct": {
+          "value": null,
+          "source": null,
+          "note": "not recorded yet"
+        },
+        "net_independent": {
+          "value": 120000,
+          "source": "calculated",
+          "note": "= INR 180,000 − INR 60,000 = INR 120,000/yr"
+        },
+        "payback_months_independent": {
+          "value": 20.0,
+          "source": "calculated",
+          "note": "= setup INR 200,000 ÷ net INR 120,000/yr × 12"
+        },
+        "net_conservative": {
+          "value": -16800.0,
+          "source": "calculated",
+          "note": "= INR 43,200 − INR 60,000 = INR -16,800/yr"
+        },
+        "payback_months_conservative": {
+          "value": null,
+          "source": "calculated",
+          "note": null
+        },
+        "multi_period": {
+          "source": "calculated",
+          "note": "Σ of monthly flows over 36 months; one-time cost in month 1; NPV discounts flow t by (1+r)^(t/12) at r = 0.1"
+        }
+      },
+      "breakeven_adoption_pct": 55.55555555555556,
+      "scenarios": [
+        {
+          "scenario": "bad",
+          "adoption_pct": 20.0,
+          "realized_benefit": 21600,
+          "net_annual": -38400,
+          "payback_months": null,
+          "assumptions": {
+            "adoption_multiplier": 0.5,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "base",
+          "adoption_pct": 40.0,
+          "realized_benefit": 43200,
+          "net_annual": -16800,
+          "payback_months": null,
+          "assumptions": {
+            "adoption_multiplier": 1.0,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        },
+        {
+          "scenario": "good",
+          "adoption_pct": 50.0,
+          "realized_benefit": 54000,
+          "net_annual": -6000,
+          "payback_months": null,
+          "assumptions": {
+            "adoption_multiplier": 1.25,
+            "multiplies": "adoption_pct",
+            "held_at_base": [
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "readiness",
+              "setup"
+            ]
+          }
+        }
+      ],
+      "advice": {
+        "evidence": {
+          "inputs": [
+            {
+              "input": "annual_benefit_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 3
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "setup_cost_inr",
+              "source": "fixture (synthetic)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "adoption_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 2
+            },
+            {
+              "input": "quality_pct",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            },
+            {
+              "input": "readiness",
+              "source": "assumed (team)",
+              "observed": false,
+              "weight": 1
+            }
+          ],
+          "observed_weight": 0,
+          "total_weight": 11,
+          "share": 0.0,
+          "band": "low",
+          "band_capped_by_fixture": true,
+          "gaps": [
+            {
+              "input": "annual_benefit_inr",
+              "impact": "high",
+              "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+            },
+            {
+              "input": "adoption_pct",
+              "impact": "medium",
+              "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+            },
+            {
+              "input": "annual_running_cost_inr",
+              "impact": "medium",
+              "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+            },
+            {
+              "input": "setup_cost_inr",
+              "impact": "medium",
+              "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+            },
+            {
+              "input": "quality_pct",
+              "impact": "low",
+              "why": "The quality gate cannot be verified until one batch is measured."
+            },
+            {
+              "input": "readiness",
+              "impact": "low",
+              "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+            }
+          ]
+        },
+        "outcome": "insufficient_information",
+        "reasons": [
+          "No decision-driving input is backed by real data: the money numbers are fixture (synthetic) check values and neither adoption nor quality has ever been measured."
+        ],
+        "what_would_change_it": [
+          "Record one real measurement (an adoption spot-check or a quality batch) and one real cost line (recurring costs or a vendor quote); the band then leaves Low and the rule can judge the pilot."
+        ],
+        "actions": [
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          },
+          {
+            "code": "LOW_READINESS",
+            "action": "clean the data first",
+            "owner_hint": "data engineering",
+            "expected_test": "readiness at medium or higher before funding"
+          },
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          }
+        ],
+        "reason_codes": [
+          "NO_OBSERVED_ADOPTION",
+          "NO_OBSERVED_QUALITY",
+          "LOW_READINESS",
+          "FIXTURE_ONLY_EVIDENCE"
+        ]
+      },
+      "economics": {
+        "baseline_cost_inr": null,
+        "baseline_note": null,
+        "gross_cost_avoidance_inr": 180000,
+        "gross_note": "typed annual benefit",
+        "cashable_savings_inr": 180000,
+        "capacity_value_inr": 0,
+        "retained_human_cost_inr": null,
+        "cashable_share_pct": 100.0,
+        "cashable_share_source": "cash factor of benefit type 'cashable assumption'",
+        "net_cashable_inr": 120000,
+        "flags": [
+          {
+            "code": "BASELINE_MISSING",
+            "message": "No baseline (today's cost of the process); retained human cost is unknown."
+          }
+        ],
+        "competitiveness": {
+          "class": "marginal",
+          "ratio": 0.704,
+          "basis": "annualised AI cost INR 126,667 ÷ gross benefit INR 180,000",
+          "annualised_ai_cost_inr": 126667
+        },
+        "budget": {
+          "status": "unknown",
+          "contingency_pct": 10,
+          "lines": [
+            {
+              "line": "implementation_inr",
+              "need_inr": 200000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup ≤ implementation budget"
+            },
+            {
+              "line": "first_year_inr",
+              "need_inr": 260000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup + 12 months of running cost"
+            },
+            {
+              "line": "recurring_inr_per_year",
+              "need_inr": 60000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "annual running cost"
+            },
+            {
+              "line": "total_inr",
+              "need_inr": 418000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+            }
+          ],
+          "total_with_contingency_inr": 418000
+        }
+      },
+      "decision": {
+        "outcome": "gather_evidence",
+        "reasons": [
+          "Payable on paper, but no decision-driving input is observed or calculated: every number is fixture or team assumption."
+        ],
+        "reason_codes": [
+          "FIXTURE_ONLY_EVIDENCE"
+        ],
+        "eligibility": {
+          "eligible": true,
+          "gates": [
+            {
+              "gate": "NET_POSITIVE",
+              "status": "pass",
+              "detail": "net annual benefit INR 120,000/yr"
+            },
+            {
+              "gate": "BREAKEVEN_IN_HORIZON",
+              "status": "pass",
+              "detail": "break-even month 20"
+            },
+            {
+              "gate": "BUDGET_FIT",
+              "status": "not_checked",
+              "detail": "budget status unknown"
+            },
+            {
+              "gate": "BENEFIT_HAS_CASH",
+              "status": "pass",
+              "detail": "cashable savings INR 180,000/yr (100% of gross)"
+            }
+          ]
+        },
+        "data_readiness": {
+          "level": "partial",
+          "share": 0.714,
+          "checks": [
+            {
+              "check": "run cost stated",
+              "ok": true
+            },
+            {
+              "check": "adoption stated",
+              "ok": true
+            },
+            {
+              "check": "readiness stated",
+              "ok": true
+            },
+            {
+              "check": "benefit type known",
+              "ok": true
+            },
+            {
+              "check": "overlap group known",
+              "ok": true
+            },
+            {
+              "check": "baseline supplied",
+              "ok": false
+            },
+            {
+              "check": "team data readiness at least medium",
+              "ok": false
+            }
+          ],
+          "missing": [
+            "baseline supplied",
+            "team data readiness at least medium"
+          ]
+        },
+        "evidence": {
+          "band": "low",
+          "share": 0.0,
+          "observed_weight": 0,
+          "total_weight": 11,
+          "band_capped_by_fixture": true
+        },
+        "gaps": [
+          {
+            "input": "annual_benefit_inr",
+            "impact": "high",
+            "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+          },
+          {
+            "input": "adoption_pct",
+            "impact": "medium",
+            "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+          },
+          {
+            "input": "annual_running_cost_inr",
+            "impact": "medium",
+            "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+          },
+          {
+            "input": "setup_cost_inr",
+            "impact": "medium",
+            "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+          },
+          {
+            "input": "quality_pct",
+            "impact": "low",
+            "why": "The quality gate cannot be verified until one batch is measured."
+          },
+          {
+            "input": "readiness",
+            "impact": "low",
+            "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+          }
+        ],
+        "what_would_reverse": [
+          {
+            "field": "annual_benefit_inr",
+            "from_value": 180000,
+            "to_value": 126562,
+            "change_pct": -29.7,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_benefit_inr falls to INR 126,562 (-29.7%)."
+          },
+          {
+            "field": "setup_cost_inr",
+            "from_value": 200000,
+            "to_value": 360156,
+            "change_pct": 80.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if setup_cost_inr rises to INR 360,156 (+80.1%)."
+          },
+          {
+            "field": "annual_running_cost_inr",
+            "from_value": 60000,
+            "to_value": 113438,
+            "change_pct": 89.1,
+            "new_outcome": "renegotiate",
+            "statement": "gather_evidence becomes renegotiate if annual_running_cost_inr rises to INR 113,438 (+89.1%)."
+          }
+        ],
+        "next_actions": [
+          {
+            "code": "FIXTURE_ONLY_EVIDENCE",
+            "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+            "owner_hint": "finance + service owner",
+            "expected_test": "no decision-driving input sourced from the fixture"
+          },
+          {
+            "code": "DATA_NOT_READY",
+            "action": "fill the missing inputs (stated run cost, adoption, baseline, overlap group)",
+            "owner_hint": "service owner",
+            "expected_test": "data readiness partial or ready"
+          },
+          {
+            "code": "BASELINE_MISSING",
+            "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+            "owner_hint": "ops lead",
+            "expected_test": "baseline cost known; retained human cost computed"
+          },
+          {
+            "code": "NO_OBSERVED_ADOPTION",
+            "action": "run one adoption spot-check batch over the real users",
+            "owner_hint": "org lead",
+            "expected_test": "observed adoption recorded from the batch"
+          },
+          {
+            "code": "NO_OBSERVED_QUALITY",
+            "action": "run one quality spot-check on pilot outputs and record it",
+            "owner_hint": "ops lead",
+            "expected_test": "observed quality recorded from the batch"
+          },
+          {
+            "code": "LOW_READINESS",
+            "action": "clean the data first",
+            "owner_hint": "data engineering",
+            "expected_test": "readiness at medium or higher before funding"
+          }
+        ]
+      },
+      "checkpoint": {
+        "checkpoint": "pending",
+        "reasons": [
+          "Checkpoint needs real evidence: observed adoption and observed quality not recorded yet."
+        ],
+        "inputs": {
+          "observed_adoption_pct": null,
+          "observed_quality_pct": null,
+          "target_adoption_pct": 60,
+          "quality_threshold_pct": 80,
+          "breakeven_adoption_pct": 55.6,
+          "duration_days": null,
+          "revised_before": false,
+          "evidence_band": "low"
+        }
+      },
+      "stop_rule": {
+        "decision": "REVISE",
+        "reasons": [
+          "Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend."
+        ],
+        "metric": "data",
+        "threshold": null,
+        "actual": null
+      }
+    }
+  ],
+  "forecast": {
+    "method": "assumed_growth_fallback",
+    "method_note": "one-step assumed usage growth and price drift (linear fallback); send usage history to /forecast/usage for a backtested forecast",
+    "inputs": {
+      "tokens_per_month": 50000000,
+      "price_per_1m_tokens": 250,
+      "ai_fixed_cost_inr_per_year": 20000,
+      "annual_usage_growth_pct": 20,
+      "annual_price_drift_pct": -10
+    },
+    "ai_run_cost_inr": 170000,
+    "next_fy_cost_inr": 182000,
+    "inflation_flag": true,
+    "flags": [],
+    "provenance": {
+      "monthly_tokens": {
+        "value": 50000000,
+        "source": "assumed (team)",
+        "note": "not imported from the balance sheet yet"
+      },
+      "ai_run_cost_inr": {
+        "value": 170000,
+        "source": "calculated",
+        "note": "= tokens/month × 12 × price ÷ 1,000,000 + fixed = 50M × 250 × 12 + 20000"
+      },
+      "next_fy_cost_inr": {
+        "value": 182000,
+        "source": "calculated",
+        "note": "tokens × (1 + usage growth), price × (1 + price drift); fixed annual unchanged"
+      }
+    }
+  },
+  "invalid": [],
+  "warnings": [],
+  "tie_break_order": [
+    "higher net benefit",
+    "faster payback",
+    "higher readiness",
+    "higher adoption",
+    "lower setup cost",
+    "lower id"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "method": "POST",
+  "path": "/forecast/usage",
+  "body": {
+    "history": [
+      40000000.0,
+      43000000.0,
+      47000000.0,
+      50000000.0,
+      52000000.0,
+      57000000.0
+    ],
+    "months": 12,
+    "rule": {
+      "type": "per_unit",
+      "unit_price": 0.00025
+    }
+  }
+}

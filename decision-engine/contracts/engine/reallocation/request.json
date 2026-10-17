@@ -1,0 +1,15 @@
+{
+  "method": "POST",
+  "path": "/reallocation",
+  "body": {
+    "budget": 600000,
+    "funded_ids": [
+      "AI1",
+      "AI2",
+      "AI4"
+    ],
+    "stopped_ids": [
+      "AI2"
+    ]
+  }
+}

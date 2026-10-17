@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /whatif",
+  "type": "object",
+  "properties": {
+    "pilot_id": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string"
+    },
+    "overrides_applied": {
+      "type": "object",
+      "properties": {
+        "observed_adoption_pct": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "observed_adoption_pct"
+      ]
+    },
+    "base": {
+      "type": "object",
+      "properties": {
+        "benefit_inr": {
+          "type": "number"
+        },
+        "net": {
+          "type": "number"
+        },
+        "payback_months": {
+          "type": "number"
+        },
+        "profit_inr": {
+          "type": "number"
+        },
+        "roi_pct": {
+          "type": "number"
+        },
+        "npv_inr": {
+          "type": "number"
+        },
+        "breakeven_month": {
+          "type": "number"
+        },
+        "verdict": {
+          "type": "string"
+        },
+        "stop_rule": {
+          "type": "object",
+          "properties": {
+            "decision": {
+              "type": "string"
+            },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "metric": {
+              "type": "string"
+            },
+            "threshold": {
+              "type": "null"
+            },
+            "actual": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "actual",
+            "decision",
+            "metric",
+            "reasons",
+            "threshold"
+          ]
+        },
+        "portfolio": {
+          "type": "object",
+          "properties": {
+            "selected": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "total_net": {
+              "type": "number"
+            },
+            "budget_left": {
+              "type": "number"
+            },
+            "ok": {
+              "type": "boolean"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "budget_left",
+            "message",
+            "ok",
+            "selected",
+            "total_net"
+          ]
+        }
+      },
+      "required": [
+        "benefit_inr",
+        "breakeven_month",
+        "net",
+        "npv_inr",
+        "payback_months",
+        "portfolio",
+        "profit_inr",
+        "roi_pct",
+        "stop_rule",
+        "verdict"
+      ]
+    },
+    "changed": {
+      "type": "object",
+      "properties": {
+        "benefit_inr": {
+          "type": "number"
+        },
+        "net": {
+          "type": "number"
+        },
+        "payback_months": {
+          "type": "number"
+        },
+        "profit_inr": {
+          "type": "number"
+        },
+        "roi_pct": {
+          "type": "number"
+        },
+        "npv_inr": {
+          "type": "number"
+        },
+        "breakeven_month": {
+          "type": "number"
+        },
+        "verdict": {
+          "type": "string"
+        },
+        "stop_rule": {
+          "type": "object",
+          "properties": {
+            "decision": {
+              "type": "string"
+            },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "metric": {
+              "type": "string"
+            },
+            "threshold": {
+              "type": "null"
+            },
+            "actual": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "actual",
+            "decision",
+            "metric",
+            "reasons",
+            "threshold"
+          ]
+        },
+        "portfolio": {
+          "type": "object",
+          "properties": {
+            "selected": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "total_net": {
+              "type": "number"
+            },
+            "budget_left": {
+              "type": "number"
+            },
+            "ok": {
+              "type": "boolean"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "budget_left",
+            "message",
+            "ok",
+            "selected",
+            "total_net"
+          ]
+        }
+      },
+      "required": [
+        "benefit_inr",
+        "breakeven_month",
+        "net",
+        "npv_inr",
+        "payback_months",
+        "portfolio",
+        "profit_inr",
+        "roi_pct",
+        "stop_rule",
+        "verdict"
+      ]
+    },
+    "deltas": {
+      "type": "object",
+      "properties": {
+        "benefit_inr": {
+          "type": "number"
+        },
+        "net": {
+          "type": "number"
+        },
+        "payback_months": {
+          "type": "number"
+        },
+        "profit_inr": {
+          "type": "number"
+        },
+        "roi_pct": {
+          "type": "number"
+        },
+        "npv_inr": {
+          "type": "number"
+        },
+        "breakeven_month": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "benefit_inr",
+        "breakeven_month",
+        "net",
+        "npv_inr",
+        "payback_months",
+        "profit_inr",
+        "roi_pct"
+      ]
+    }
+  },
+  "required": [
+    "base",
+    "changed",
+    "deltas",
+    "mode",
+    "overrides_applied",
+    "pilot_id"
+  ]
+}

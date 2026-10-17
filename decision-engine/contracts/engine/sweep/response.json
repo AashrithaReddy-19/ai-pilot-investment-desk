@@ -1,0 +1,120 @@
+{
+  "parameter": "adoption_pct",
+  "pilot_id": "AI1",
+  "mode": "independent",
+  "steps": [
+    {
+      "value": 0,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 10,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 20,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 30,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 40,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 50,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 60,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 70,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 80,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 90,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    },
+    {
+      "value": 100,
+      "benefit_inr": 180000,
+      "net": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20
+    }
+  ],
+  "direction": "up_improves",
+  "flags": [],
+  "monotonic": true
+}

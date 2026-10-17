@@ -1,0 +1,8 @@
+{
+  "method": "POST",
+  "path": "/stoprule/AI1",
+  "body": {
+    "observed_adoption_pct": 72,
+    "observed_quality_pct": 85
+  }
+}

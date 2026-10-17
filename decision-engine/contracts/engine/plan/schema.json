@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /plan",
+  "type": "object",
+  "properties": {
+    "pilot_id": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "adoption_target_pct": {
+      "type": "number"
+    },
+    "quality_target_pct": {
+      "type": "number"
+    },
+    "cost_limit_inr": {
+      "type": "number"
+    },
+    "cost_limit_note": {
+      "type": "string"
+    },
+    "duration_days": {
+      "type": "number"
+    },
+    "stop_rule": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "adoption_target_pct",
+    "cost_limit_inr",
+    "cost_limit_note",
+    "duration_days",
+    "objective",
+    "owner",
+    "pilot_id",
+    "quality_target_pct",
+    "status",
+    "stop_rule"
+  ]
+}

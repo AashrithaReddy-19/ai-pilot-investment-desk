@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /pricing/quote",
+  "type": "object",
+  "properties": {
+    "units": {
+      "type": "number"
+    },
+    "total_inr": {
+      "type": "number"
+    },
+    "lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "amount_inr": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount_inr",
+          "label"
+        ]
+      }
+    },
+    "effective_unit_price": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "effective_unit_price",
+    "lines",
+    "total_inr",
+    "units"
+  ]
+}

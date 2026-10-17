@@ -1,0 +1,103 @@
+{
+  "rows": 2,
+  "valid_rows": 2,
+  "error_rows": 0,
+  "headers": [
+    "id",
+    "task",
+    "setup_cost_inr",
+    "annual_benefit_inr",
+    "annual_running_cost_inr",
+    "readiness",
+    "adoption_pct"
+  ],
+  "column_map": {
+    "id": "id",
+    "task": "task",
+    "setup_cost_inr": "setup_cost_inr",
+    "annual_running_cost_inr": "annual_running_cost_inr",
+    "annual_benefit_inr": "annual_benefit_inr",
+    "adoption_pct": "adoption_pct",
+    "readiness": "readiness"
+  },
+  "unit": {
+    "choice": "auto",
+    "unit": "rupees",
+    "multiplier": 1.0,
+    "source": "default (no unit detected)"
+  },
+  "records": [
+    {
+      "line": 2,
+      "pilot": {
+        "id": "P1",
+        "task": "Invoice extraction",
+        "setup_cost_inr": 200000,
+        "annual_benefit_inr": 180000,
+        "annual_running_cost_inr": 60000
+      },
+      "extension": {
+        "id": "P1",
+        "adoption_pct": 70,
+        "readiness": "high"
+      }
+    },
+    {
+      "line": 3,
+      "pilot": {
+        "id": "P2",
+        "task": "Ticket triage",
+        "setup_cost_inr": 150000,
+        "annual_benefit_inr": 120000
+      },
+      "extension": {
+        "id": "P2",
+        "readiness": "medium"
+      }
+    }
+  ],
+  "pilots": [
+    {
+      "id": "P1",
+      "task": "Invoice extraction",
+      "setup_cost_inr": 200000,
+      "annual_benefit_inr": 180000,
+      "annual_running_cost_inr": 60000
+    },
+    {
+      "id": "P2",
+      "task": "Ticket triage",
+      "setup_cost_inr": 150000,
+      "annual_benefit_inr": 120000
+    }
+  ],
+  "extensions": [
+    {
+      "id": "P1",
+      "adoption_pct": 70,
+      "readiness": "high"
+    },
+    {
+      "id": "P2",
+      "readiness": "medium"
+    }
+  ],
+  "warnings": [],
+  "flags": [],
+  "format": "csv",
+  "periods": {
+    "annual_running_cost_inr": {
+      "column": "annual_running_cost_inr",
+      "period": "annual",
+      "annualisation_factor": 1,
+      "source": "column header"
+    },
+    "annual_benefit_inr": {
+      "column": "annual_benefit_inr",
+      "period": "annual",
+      "annualisation_factor": 1,
+      "source": "column header"
+    }
+  },
+  "findings": []
+}

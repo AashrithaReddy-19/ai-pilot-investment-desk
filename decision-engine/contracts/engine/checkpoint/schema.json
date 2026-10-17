@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /checkpoint/AI1",
+  "type": "object",
+  "properties": {
+    "pilot_id": {
+      "type": "string"
+    },
+    "checkpoint": {
+      "type": "string"
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "observed_adoption_pct": {
+          "type": "number"
+        },
+        "observed_quality_pct": {
+          "type": "number"
+        },
+        "target_adoption_pct": {
+          "type": "number"
+        },
+        "quality_threshold_pct": {
+          "type": "number"
+        },
+        "breakeven_adoption_pct": {
+          "type": "number"
+        },
+        "duration_days": {
+          "type": "number"
+        },
+        "revised_before": {
+          "type": "boolean"
+        },
+        "evidence_band": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "breakeven_adoption_pct",
+        "duration_days",
+        "evidence_band",
+        "observed_adoption_pct",
+        "observed_quality_pct",
+        "quality_threshold_pct",
+        "revised_before",
+        "target_adoption_pct"
+      ]
+    },
+    "stop_rule": {
+      "type": "object",
+      "properties": {
+        "decision": {
+          "type": "string"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metric": {
+          "type": "string"
+        },
+        "threshold": {
+          "type": "null"
+        },
+        "actual": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "actual",
+        "decision",
+        "metric",
+        "reasons",
+        "threshold"
+      ]
+    }
+  },
+  "required": [
+    "checkpoint",
+    "inputs",
+    "pilot_id",
+    "reasons",
+    "stop_rule"
+  ]
+}

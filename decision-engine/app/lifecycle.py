@@ -83,9 +83,15 @@ def plan_30d(p: "core.Pilot", d: dict, *, duration_days: Optional[int] = None,
             "cost_limit_inr": round(p.setup) + run_portion,
             "cost_limit_note": f"setup {core._inr(p.setup)} + running {core._inr(run_portion)} for {days} days",
             "duration_days": days,
-            "stop_rule": (f"Stop when observed adoption falls below break-even "
-                          f"{(core.breakeven_adoption_pct(p) or 0):.1f}% or net <= 0; revise once while adoption stays at or above break-even."),
+            "stop_rule": _plan_stop_rule(core.breakeven_adoption_pct(p)),
             "status": "planned"}
+
+
+def _plan_stop_rule(be: Optional[float]) -> str:
+    if be is None:
+        return "Stop now: the pilot never pays back even at full adoption (no break-even adoption exists)."
+    return (f"Stop when observed adoption falls below break-even {be:.1f}% or net <= 0; "
+            "revise once while adoption stays at or above break-even.")
 
 
 def reallocation(pilots: list, budget: float, funded_ids: list, stopped_ids: list,

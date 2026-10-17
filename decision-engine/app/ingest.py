@@ -1,4 +1,4 @@
-"""CSV ingest: the balance-sheet parser (Note A point 4) and the proposal importer (Note A point 5).
+"""CSV/XLSX ingest: the balance-sheet parser (Note A point 4) and the proposal importer (Note A point 5).
 
 Pure functions over uploaded bytes. Nothing is stored — parse returns candidates for the user
 to confirm, confirm re-parses the same upload. Missing is never zero: an unparsable amount is
@@ -11,7 +11,17 @@ import math
 import re
 from typing import Any, Optional
 
+from . import xlsx
+
 MAX_UPLOAD_BYTES = 2_000_000
+
+# Period normalisation: amounts are annualised from the period their header names.
+PERIOD_FACTORS = {"annual": 1, "half_year": 2, "quarterly": 4, "monthly": 12}
+# Month names are deliberately NOT hints: "31 Mar 2024" on a balance sheet is a year-end date.
+PERIOD_HEADER_HINTS = [("monthly", re.compile(r"month|\bpm\b|/\s*mo\b", re.I)),
+                       ("quarterly", re.compile(r"quarter|\bqtr\b|\bq[1-4]\b", re.I)),
+                       ("half_year", re.compile(r"half|\bh[12]\b", re.I)),
+                       ("annual", re.compile(r"annual|year|\bfy|\bp\.?a\.?\b", re.I))]
 
 # Note A point 4: candidates matched only by keyword; the user confirms which rows are AI spend.
 BALANCE_KEYWORDS = ["ai", "software", "cloud", "licence", "license", "token"]
@@ -59,6 +69,55 @@ def _delimiter(text: str) -> str:
 
 def _rows(text: str) -> list[list[str]]:
     return [r for r in csv.reader(io.StringIO(text), delimiter=_delimiter(text)) if any(c.strip() for c in r)]
+
+
+def _table(raw: bytes) -> tuple[list[list[str]], str]:
+    """Rows of strings from a CSV or an XLSX upload (first sheet), plus the detected format."""
+    if len(raw) > MAX_UPLOAD_BYTES:
+        raise ParseError(f"Upload exceeds the {MAX_UPLOAD_BYTES:,}-byte limit.")
+    if xlsx.is_xlsx(raw):
+        try:
+            return xlsx.read_first_sheet(raw), "xlsx"
+        except xlsx.XlsxError as exc:
+            raise ParseError(str(exc)) from exc
+    return _rows(_decode(raw)), "csv"
+
+
+def resolve_period(headers: list[str], period: str = "auto") -> tuple[str, int, str]:
+    """(period name, annualisation factor, source). User choice wins; auto reads the headers."""
+    choice = (period or "auto").strip().lower()
+    if choice != "auto" and choice not in PERIOD_FACTORS:
+        raise ParseError(f"Unknown period {period!r}; supported: auto, {', '.join(PERIOD_FACTORS)}.")
+    if choice != "auto":
+        return choice, PERIOD_FACTORS[choice], "user choice"
+    for name, hint in PERIOD_HEADER_HINTS:
+        if any(hint.search(h) for h in headers):
+            return name, PERIOD_FACTORS[name], "column header"
+    return "annual", 1, "default (no period detected)"
+
+
+_FLAG_SEVERITY = {"IMPORT_NO_VALID_ROWS": "error", "BALANCE_NO_AI_ROW": "warning",
+                  "IMPORT_ROWS_REJECTED": "warning", "CONFIRMED_ROW_AMOUNT_MISSING": "warning"}
+
+
+def findings(records: list[dict] = (), warnings: list[str] = (), flags: list[dict] = (), extra: list[dict] = ()) -> list[dict]:
+    """One review list over everything the parser noticed: {severity, code, line, field, message}.
+    Errors exclude a row, warnings need a look, info is for the record."""
+    out = []
+    for r in records:
+        for e in r.get("errors", []):
+            out.append({"severity": "error", "code": "ROW_INVALID", "line": r.get("line"), "field": e["field"],
+                        "message": e["reason"]})
+    out += list(extra)
+    for f in flags:
+        out.append({"severity": _FLAG_SEVERITY.get(f["code"], "warning"), "code": f["code"], "line": None,
+                    "field": None, "message": f["message"]})
+    for w in warnings:
+        m = re.match(r"Row (\d+)", w)
+        out.append({"severity": "warning", "code": "PARSE_WARNING", "line": int(m.group(1)) if m else None,
+                    "field": None, "message": w})
+    order = {"error": 0, "warning": 1, "info": 2}
+    return sorted(out, key=lambda f: (order[f["severity"]], f["line"] if f["line"] is not None else 10**9, f["code"]))
 
 
 def parse_money(raw: Any, column_multiplier: float = 1.0) -> Optional[float]:
@@ -139,11 +198,11 @@ def _cell(row: list[str], idx: int) -> str:
     return row[idx].strip() if idx < len(row) else ""
 
 
-def parse_balance_sheet(raw: bytes, unit: str = "auto", amount_column: Optional[str] = None) -> dict:
-    """Parse a PY balance-sheet CSV into candidate AI-spend rows. ai_burn_to_date stays None:
+def parse_balance_sheet(raw: bytes, unit: str = "auto", amount_column: Optional[str] = None,
+                        period: str = "auto") -> dict:
+    """Parse a PY balance-sheet CSV or XLSX into candidate AI-spend rows. ai_burn_to_date stays None:
     the user decides which candidates are AI spend (never guessed)."""
-    text = _decode(raw)
-    all_rows = _rows(text)
+    all_rows, fmt = _table(raw)
     if len(all_rows) < 2:
         raise ParseError("The CSV needs a header row and at least one data row.")
     header = [h.strip() for h in all_rows[0]]
@@ -164,6 +223,7 @@ def parse_balance_sheet(raw: bytes, unit: str = "auto", amount_column: Optional[
         warnings.append(f"Multiple numeric amount columns ({', '.join(amt_headers)}); using {header[chosen]!r}. "
                         "Send 'amount_column' to pick another.")
     unit_name, mult = resolve_unit(amt_headers, unit)
+    period_name, pfactor, period_src = resolve_period([header[chosen]], period)
 
     candidates, flags = [], []
     for n, row in enumerate(data, start=2):
@@ -176,7 +236,8 @@ def parse_balance_sheet(raw: bytes, unit: str = "auto", amount_column: Optional[
         if raw_amt and amt is None:
             warnings.append(f"Row {n}: could not parse amount {raw_amt!r}; treated as missing.")
         candidates.append({"row": n, "label": label, "matched": matched,
-                           "raw": raw_amt or None, "amount_inr": None if amt is None else round(amt)})
+                           "raw": raw_amt or None, "amount_inr": None if amt is None else round(amt),
+                           "annualised_amount_inr": None if amt is None else round(amt * pfactor)})
     if not candidates:
         flags.append({"code": "BALANCE_NO_AI_ROW",
                       "message": f"No line item matched the AI-spend keywords ({', '.join(BALANCE_KEYWORDS)}); "
@@ -188,14 +249,19 @@ def parse_balance_sheet(raw: bytes, unit: str = "auto", amount_column: Optional[
                  "source": _unit_source((unit or "auto").strip().lower(), unit_name)},
         "ai_burn_to_date": None,  # populated only by /balance-sheet/confirm after the user picks rows
         "candidates": candidates, "warnings": warnings, "flags": flags,
+        "format": fmt,
+        "period": {"choice": (period or "auto").strip().lower(), "period": period_name,
+                   "annualisation_factor": pfactor, "source": period_src},
+        "findings": findings(warnings=warnings, flags=flags),
     }
 
 
 def confirm_balance_sheet(raw: bytes, selected_rows: list[int], unit: str = "auto",
-                          amount_column: Optional[str] = None, d: Optional[dict] = None) -> dict:
+                          amount_column: Optional[str] = None, d: Optional[dict] = None,
+                          period: str = "auto") -> dict:
     """Re-parse the same upload and total the confirmed rows into ai_burn_to_date (observed),
     beside the next-FY AI forecast from the token assumptions in d. Nothing is stored."""
-    parsed = parse_balance_sheet(raw, unit, amount_column)
+    parsed = parse_balance_sheet(raw, unit, amount_column, period)
     by_row = {c["row"]: c for c in parsed["candidates"]}
     if not selected_rows:
         valid = sorted(by_row) or "none (no candidates in the file)"
@@ -222,6 +288,9 @@ def confirm_balance_sheet(raw: bytes, selected_rows: list[int], unit: str = "aut
         "confirmations": per_row, "amount_column_used": parsed["amount_column_used"], "unit": parsed["unit"],
         "next_fy": {k: nxt[k] for k in ("inputs", "ai_run_cost_inr", "next_fy_cost_inr", "inflation_flag")},
         "flags": flags, "warnings": warnings,
+        "ai_burn_annualised_inr": round(burn * parsed["period"]["annualisation_factor"]),
+        "period": parsed["period"], "format": parsed["format"],
+        "findings": findings(warnings=warnings, flags=flags),
     }
 
 
@@ -232,8 +301,10 @@ FIELD_ALIASES: dict[str, list[str]] = {
     "id": ["id", "pilot_id", "pilot", "proposal_id"],
     "task": ["task", "name", "title", "description"],
     "setup_cost_inr": ["setup_cost_inr", "setup_inr", "setup_cost", "setup", "one_time_cost_inr", "one_time", "cost"],
-    "annual_running_cost_inr": ["annual_running_cost_inr", "running_cost_inr", "ai_running_cost_inr", "ai_running_cost", "running_cost", "run_cost", "cost_inr"],
-    "annual_benefit_inr": ["annual_benefit_inr", "yearly_savings_inr", "yearly_savings", "savings", "benefit"],
+    "annual_running_cost_inr": ["annual_running_cost_inr", "running_cost_inr", "ai_running_cost_inr", "ai_running_cost", "running_cost", "run_cost", "cost_inr",
+                                "monthly_running_cost_inr", "monthly_running_cost", "running_cost_per_month", "quarterly_running_cost_inr", "quarterly_running_cost"],
+    "annual_benefit_inr": ["annual_benefit_inr", "yearly_savings_inr", "yearly_savings", "savings", "benefit",
+                           "monthly_savings_inr", "monthly_savings", "savings_per_month", "quarterly_savings_inr", "quarterly_savings"],
     "benefit_type": ["benefit_type", "type", "cash_type"],
     "adoption_pct": ["adoption_pct", "adoption"],
     "readiness": ["readiness", "data_readiness"],
@@ -247,6 +318,13 @@ PARSE_RULES = {
     "balance_sheet_keywords": BALANCE_KEYWORDS,
     "unit_multipliers": UNIT_MULTIPLIERS,
     "pilot_csv_columns": FIELD_ALIASES,
+    "formats": ["csv", "xlsx (first sheet)"],
+    "xlsx_limits": {"max_uncompressed_bytes": xlsx.MAX_UNCOMPRESSED_BYTES, "max_rows": xlsx.MAX_ROWS},
+    "period_factors": PERIOD_FACTORS,
+    "period_rule": "recurring amounts (savings, running cost, balance-sheet lines) are annualised from the period "
+                   "their column header names; one-time setup is never annualised",
+    "finding_severities": ["error", "warning", "info"],
+    "possible_duplicate_rule": "different ids with the same task (case-insensitive), setup, benefit and running cost",
 }
 
 
@@ -268,19 +346,27 @@ def _map_columns(header: list[str]) -> tuple[dict[str, int], list[str]]:
     return colmap, warnings
 
 
-def parse_pilots_csv(raw: bytes, unit: str = "auto") -> dict:
+def parse_pilots_csv(raw: bytes, unit: str = "auto", period: str = "auto") -> dict:
     """Parse a proposal CSV into engine pilot rows with per-row error review.
 
     Every error is {line, field, reason}; rows with any error are excluded from the result but
     listed for the user to fix. Duplicate ids inside the file are blocked (all but the first).
     Money columns inherit the unit stated in their header (auto-detect), or the user choice.
     """
-    text = _decode(raw)
-    all_rows = _rows(text)
+    all_rows, fmt = _table(raw)
     if len(all_rows) < 2:
         raise ParseError("The CSV needs a header row and at least one data row.")
     header = [h.strip() for h in all_rows[0]]
     colmap, warnings = _map_columns(header)
+    periods: dict = {}
+    for f in ("annual_running_cost_inr", "annual_benefit_inr"):
+        if f in colmap:
+            name, factor, src = resolve_period([header[colmap[f]]], period)
+            periods[f] = {"column": header[colmap[f]], "period": name, "annualisation_factor": factor, "source": src}
+    if "setup_cost_inr" in colmap and resolve_period([header[colmap["setup_cost_inr"]]])[0] != "annual" \
+            and resolve_period([header[colmap["setup_cost_inr"]]])[2] == "column header":
+        warnings.append(f"Setup column {header[colmap['setup_cost_inr']]!r} names a period; setup is one-time "
+                        "and is not annualised.")
     if "id" not in colmap:
         raise ParseError(f"No id column found; accepted headers: {', '.join(FIELD_ALIASES['id'])}.")
     amount_headers = [header[colmap[f]] for f in ("setup_cost_inr", "annual_running_cost_inr", "annual_benefit_inr")
@@ -300,8 +386,8 @@ def parse_pilots_csv(raw: bytes, unit: str = "auto") -> dict:
         if v is None:
             return (None, [{"field": field, "reason": f"{raw_v!r} is not a parsable amount"}])
         if v < 0:
-            return (None, [{"field": field, "reason": f"must be non-negative, got {v:g}"}])
-        return (round(v), [])
+            return (None, [{"field": field, "reason": f"must be non-negative, got {v:,.0f}"}])
+        return (round(v * periods.get(field, {}).get("annualisation_factor", 1)), [])
 
     records: list[dict] = []
     seen_ids: set[str] = set()
@@ -381,19 +467,35 @@ def parse_pilots_csv(raw: bytes, unit: str = "auto") -> dict:
                       "message": f"{error_rows} of {len(records)} rows had errors and are excluded; fix them and re-upload."})
     if records and not valid:
         flags.append({"code": "IMPORT_NO_VALID_ROWS", "message": "No row parsed cleanly; nothing would be imported."})
+    dup_findings, seen_content = [], {}
+    for r in records:
+        if "pilot" not in r:
+            continue
+        p = r["pilot"]
+        key = (p["task"].strip().lower(), p["setup_cost_inr"], p["annual_benefit_inr"], p.get("annual_running_cost_inr"))
+        if key in seen_content:
+            first = seen_content[key]
+            dup_findings.append({"severity": "warning", "code": "POSSIBLE_DUPLICATE", "line": r["line"], "field": "id",
+                                 "message": f"{p['id']!r} repeats {first[1]!r} (line {first[0]}): same task and money "
+                                            "figures under a different id. Keep one unless they are truly separate."})
+        else:
+            seen_content[key] = (r["line"], p["id"])
     return {"rows": len(records), "valid_rows": len(valid), "error_rows": error_rows,
             "headers": header, "column_map": {k: header[v] for k, v in colmap.items()},
             "unit": {"choice": choice, "unit": unit_name, "multiplier": mult, "source": _unit_source(choice, unit_name)},
             "records": records,
             "pilots": [p for p, _ in valid],
             "extensions": [e for _, e in valid],  # aligned with `pilots` (adoption/readiness live on extension rows)
-            "warnings": warnings, "flags": flags}
+            "warnings": warnings, "flags": flags,
+            "format": fmt, "periods": periods,
+            "findings": findings(records, warnings, flags, dup_findings)}
 
 
-def confirm_pilots_csv(raw: bytes, keep_ids: list[str], unit: str = "auto", fixture_ids: list[str] = ()) -> dict:
+def confirm_pilots_csv(raw: bytes, keep_ids: list[str], unit: str = "auto", fixture_ids: list[str] = (),
+                       period: str = "auto") -> dict:
     """Re-parse and return only the kept ids, in the shape the client uses on subsequent calls:
     `pilots` go into `fixture`, `extension_pilots` into `extension`. Persistence stays in Go."""
-    parsed = parse_pilots_csv(raw, unit)
+    parsed = parse_pilots_csv(raw, unit, period)
     by_id = {p["id"]: (p, e) for p, e in zip(parsed["pilots"], parsed["extensions"])}
     if not keep_ids:
         ids = sorted(by_id) or "none parsed cleanly"
@@ -414,4 +516,4 @@ def confirm_pilots_csv(raw: bytes, keep_ids: list[str], unit: str = "auto", fixt
         if len(e) > 1:          # extension rows carry at least one field besides id
             exts.append(e)
     return {"pilots": pilots, "extension_pilots": exts, "flags": parsed["flags"], "warnings": warnings,
-            "unit": parsed["unit"]}
+            "unit": parsed["unit"], "periods": parsed["periods"], "format": parsed["format"]}

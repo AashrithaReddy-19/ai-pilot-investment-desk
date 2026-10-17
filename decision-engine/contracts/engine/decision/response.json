@@ -1,0 +1,788 @@
+{
+  "overall": {
+    "outcome": "limited_pilot",
+    "best": "A",
+    "contenders": [],
+    "reasons": [
+      "A ranks first with score 79.04."
+    ],
+    "next_actions": [
+      {
+        "code": "MONEY_ASSUMED",
+        "action": "back one money figure with an invoice, a signed contract or a written vendor quote",
+        "owner_hint": "finance",
+        "expected_test": "a decision-driving money input sourced as observed"
+      }
+    ]
+  },
+  "ranking": [
+    {
+      "id": "A",
+      "score": 79.04,
+      "contributions": {
+        "net_annual": 13.04,
+        "npv": 16.0,
+        "payback": 15.0,
+        "evidence": 15.0,
+        "readiness": 10.0,
+        "cash_share": 10.0
+      },
+      "criteria": {
+        "net_annual": 120000,
+        "npv": 113447,
+        "payback": 20.0,
+        "evidence": 0.273,
+        "readiness": 2,
+        "cash_share": 100.0
+      },
+      "eligible": true,
+      "outcome": "limited_pilot",
+      "rank": 1
+    },
+    {
+      "id": "B",
+      "score": 73.5,
+      "contributions": {
+        "net_annual": 30.0,
+        "npv": 20.0,
+        "payback": 13.5,
+        "evidence": 0.0,
+        "readiness": 0.0,
+        "cash_share": 10.0
+      },
+      "criteria": {
+        "net_annual": 250000,
+        "npv": 153673,
+        "payback": 24.0,
+        "evidence": 0.0,
+        "readiness": 1,
+        "cash_share": 100.0
+      },
+      "eligible": true,
+      "outcome": "gather_evidence",
+      "rank": 2
+    },
+    {
+      "id": "C",
+      "score": 10.0,
+      "contributions": {
+        "net_annual": 0.0,
+        "npv": 0.0,
+        "payback": 0.0,
+        "evidence": 0.0,
+        "readiness": 0.0,
+        "cash_share": 10.0
+      },
+      "criteria": {
+        "net_annual": 20000,
+        "npv": -47231,
+        "payback": 60.0,
+        "evidence": 0.0,
+        "readiness": 1,
+        "cash_share": 100.0
+      },
+      "eligible": false,
+      "outcome": "renegotiate",
+      "rank": 3
+    }
+  ],
+  "why_a_over_b": [
+    {
+      "over": "A",
+      "under": "B",
+      "score_gap": 5.54,
+      "reasons": [
+        "net annual benefit: INR 120,000 vs INR 250,000 (17.0 points to B)",
+        "evidence strength: 27% observed vs 0% observed (15.0 points to A)",
+        "data readiness: high vs medium (10.0 points to A)",
+        "NPV: INR 113,447 vs INR 153,673 (4.0 points to B)",
+        "payback: 20.0 months vs 24.0 months (1.5 points to A)"
+      ]
+    },
+    {
+      "over": "B",
+      "under": "C",
+      "score_gap": 63.5,
+      "reasons": [
+        "C fails a mandatory eligibility gate; B passes them all",
+        "net annual benefit: INR 250,000 vs INR 20,000 (30.0 points to B)",
+        "NPV: INR 153,673 vs INR -47,231 (20.0 points to B)",
+        "payback: 24.0 months vs 60.0 months (13.5 points to B)"
+      ]
+    }
+  ],
+  "weights": {
+    "net_annual": 0.3,
+    "npv": 0.2,
+    "payback": 0.15,
+    "evidence": 0.15,
+    "readiness": 0.1,
+    "cash_share": 0.1
+  },
+  "decisions": {
+    "A": {
+      "outcome": "limited_pilot",
+      "reasons": [
+        "Payable (net INR 120,000/yr, break-even month 20) but the evidence band is low: run a time-boxed limited pilot first."
+      ],
+      "reason_codes": [
+        "MONEY_ASSUMED"
+      ],
+      "eligibility": {
+        "eligible": true,
+        "gates": [
+          {
+            "gate": "NET_POSITIVE",
+            "status": "pass",
+            "detail": "net annual benefit INR 120,000/yr"
+          },
+          {
+            "gate": "BREAKEVEN_IN_HORIZON",
+            "status": "pass",
+            "detail": "break-even month 20"
+          },
+          {
+            "gate": "BUDGET_FIT",
+            "status": "pass",
+            "detail": "budget status within"
+          },
+          {
+            "gate": "BENEFIT_HAS_CASH",
+            "status": "pass",
+            "detail": "cashable savings INR 180,000/yr (100% of gross)"
+          }
+        ]
+      },
+      "data_readiness": {
+        "level": "ready",
+        "share": 1.0,
+        "checks": [
+          {
+            "check": "run cost stated",
+            "ok": true
+          },
+          {
+            "check": "adoption stated",
+            "ok": true
+          },
+          {
+            "check": "readiness stated",
+            "ok": true
+          },
+          {
+            "check": "benefit type known",
+            "ok": true
+          },
+          {
+            "check": "overlap group known",
+            "ok": true
+          },
+          {
+            "check": "baseline supplied",
+            "ok": true
+          },
+          {
+            "check": "team data readiness at least medium",
+            "ok": true
+          }
+        ],
+        "missing": []
+      },
+      "evidence": {
+        "band": "low",
+        "share": 0.273,
+        "observed_weight": 3,
+        "total_weight": 11,
+        "band_capped_by_fixture": false
+      },
+      "gaps": [
+        {
+          "input": "annual_benefit_inr",
+          "impact": "high",
+          "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+        },
+        {
+          "input": "annual_running_cost_inr",
+          "impact": "medium",
+          "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+        },
+        {
+          "input": "setup_cost_inr",
+          "impact": "medium",
+          "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+        },
+        {
+          "input": "readiness",
+          "impact": "low",
+          "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+        }
+      ],
+      "economics": {
+        "baseline_cost_inr": 2400000,
+        "baseline_note": "2,000 units/month × 6 min × INR 1,000/h × 12",
+        "gross_cost_avoidance_inr": 180000,
+        "gross_note": "typed annual benefit",
+        "cashable_savings_inr": 180000,
+        "capacity_value_inr": 0,
+        "retained_human_cost_inr": 2220000,
+        "cashable_share_pct": 100.0,
+        "cashable_share_source": "cash factor of benefit type 'cashable'",
+        "net_cashable_inr": 120000,
+        "flags": [],
+        "competitiveness": {
+          "class": "highly_competitive",
+          "ratio": 0.053,
+          "basis": "AI INR 5.28/unit vs human INR 100.00/unit",
+          "annualised_ai_cost_inr": 126667
+        },
+        "budget": {
+          "status": "within",
+          "contingency_pct": 10,
+          "lines": [
+            {
+              "line": "implementation_inr",
+              "need_inr": 200000,
+              "budget_inr": 800000,
+              "status": "within",
+              "note": "setup ≤ implementation budget"
+            },
+            {
+              "line": "first_year_inr",
+              "need_inr": 260000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup + 12 months of running cost"
+            },
+            {
+              "line": "recurring_inr_per_year",
+              "need_inr": 60000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "annual running cost"
+            },
+            {
+              "line": "total_inr",
+              "need_inr": 418000,
+              "budget_inr": 1500000,
+              "status": "within",
+              "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+            }
+          ],
+          "total_with_contingency_inr": 418000
+        }
+      },
+      "what_would_reverse": [
+        {
+          "field": "annual_benefit_inr",
+          "from_value": 180000,
+          "to_value": 126562,
+          "change_pct": -29.7,
+          "new_outcome": "defer",
+          "statement": "limited_pilot becomes defer if annual_benefit_inr falls to INR 126,562 (-29.7%)."
+        },
+        {
+          "field": "setup_cost_inr",
+          "from_value": 200000,
+          "to_value": 360156,
+          "change_pct": 80.1,
+          "new_outcome": "defer",
+          "statement": "limited_pilot becomes defer if setup_cost_inr rises to INR 360,156 (+80.1%)."
+        },
+        {
+          "field": "annual_running_cost_inr",
+          "from_value": 60000,
+          "to_value": 113438,
+          "change_pct": 89.1,
+          "new_outcome": "defer",
+          "statement": "limited_pilot becomes defer if annual_running_cost_inr rises to INR 113,438 (+89.1%)."
+        }
+      ],
+      "next_actions": [
+        {
+          "code": "MONEY_ASSUMED",
+          "action": "back one money figure with an invoice, a signed contract or a written vendor quote",
+          "owner_hint": "finance",
+          "expected_test": "a decision-driving money input sourced as observed"
+        }
+      ]
+    },
+    "B": {
+      "outcome": "gather_evidence",
+      "reasons": [
+        "Payable on paper, but no decision-driving input is observed or calculated: every number is fixture or team assumption."
+      ],
+      "reason_codes": [
+        "NO_OBSERVED_ADOPTION"
+      ],
+      "eligibility": {
+        "eligible": true,
+        "gates": [
+          {
+            "gate": "NET_POSITIVE",
+            "status": "pass",
+            "detail": "net annual benefit INR 250,000/yr"
+          },
+          {
+            "gate": "BREAKEVEN_IN_HORIZON",
+            "status": "pass",
+            "detail": "break-even month 24"
+          },
+          {
+            "gate": "BUDGET_FIT",
+            "status": "pass",
+            "detail": "budget status within"
+          },
+          {
+            "gate": "BENEFIT_HAS_CASH",
+            "status": "pass",
+            "detail": "cashable savings INR 400,000/yr (100% of gross)"
+          }
+        ]
+      },
+      "data_readiness": {
+        "level": "ready",
+        "share": 0.857,
+        "checks": [
+          {
+            "check": "run cost stated",
+            "ok": true
+          },
+          {
+            "check": "adoption stated",
+            "ok": true
+          },
+          {
+            "check": "readiness stated",
+            "ok": true
+          },
+          {
+            "check": "benefit type known",
+            "ok": true
+          },
+          {
+            "check": "overlap group known",
+            "ok": true
+          },
+          {
+            "check": "baseline supplied",
+            "ok": false
+          },
+          {
+            "check": "team data readiness at least medium",
+            "ok": true
+          }
+        ],
+        "missing": [
+          "baseline supplied"
+        ]
+      },
+      "evidence": {
+        "band": "low",
+        "share": 0.0,
+        "observed_weight": 0,
+        "total_weight": 11,
+        "band_capped_by_fixture": false
+      },
+      "gaps": [
+        {
+          "input": "annual_benefit_inr",
+          "impact": "high",
+          "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+        },
+        {
+          "input": "adoption_pct",
+          "impact": "medium",
+          "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+        },
+        {
+          "input": "annual_running_cost_inr",
+          "impact": "medium",
+          "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+        },
+        {
+          "input": "setup_cost_inr",
+          "impact": "medium",
+          "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+        },
+        {
+          "input": "quality_pct",
+          "impact": "low",
+          "why": "The quality gate cannot be verified until one batch is measured."
+        },
+        {
+          "input": "readiness",
+          "impact": "low",
+          "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+        }
+      ],
+      "economics": {
+        "baseline_cost_inr": null,
+        "baseline_note": null,
+        "gross_cost_avoidance_inr": 400000,
+        "gross_note": "typed annual benefit",
+        "cashable_savings_inr": 400000,
+        "capacity_value_inr": 0,
+        "retained_human_cost_inr": null,
+        "cashable_share_pct": 100.0,
+        "cashable_share_source": "cash factor of benefit type 'cashable'",
+        "net_cashable_inr": 250000,
+        "flags": [
+          {
+            "code": "BASELINE_MISSING",
+            "message": "No baseline (today's cost of the process); retained human cost is unknown."
+          }
+        ],
+        "competitiveness": {
+          "class": "marginal",
+          "ratio": 0.792,
+          "basis": "annualised AI cost INR 316,667 ÷ gross benefit INR 400,000",
+          "annualised_ai_cost_inr": 316667
+        },
+        "budget": {
+          "status": "within",
+          "contingency_pct": 10,
+          "lines": [
+            {
+              "line": "implementation_inr",
+              "need_inr": 500000,
+              "budget_inr": 800000,
+              "status": "within",
+              "note": "setup ≤ implementation budget"
+            },
+            {
+              "line": "first_year_inr",
+              "need_inr": 650000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup + 12 months of running cost"
+            },
+            {
+              "line": "recurring_inr_per_year",
+              "need_inr": 150000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "annual running cost"
+            },
+            {
+              "line": "total_inr",
+              "need_inr": 1045000,
+              "budget_inr": 1500000,
+              "status": "within",
+              "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+            }
+          ],
+          "total_with_contingency_inr": 1045000
+        }
+      },
+      "what_would_reverse": [
+        {
+          "field": "annual_benefit_inr",
+          "from_value": 400000,
+          "to_value": 315625,
+          "change_pct": -21.1,
+          "new_outcome": "renegotiate",
+          "statement": "gather_evidence becomes renegotiate if annual_benefit_inr falls to INR 315,625 (-21.1%)."
+        },
+        {
+          "field": "setup_cost_inr",
+          "from_value": 500000,
+          "to_value": 751953,
+          "change_pct": 50.4,
+          "new_outcome": "renegotiate",
+          "statement": "gather_evidence becomes renegotiate if setup_cost_inr rises to INR 751,953 (+50.4%)."
+        },
+        {
+          "field": "annual_running_cost_inr",
+          "from_value": 150000,
+          "to_value": 233789,
+          "change_pct": 55.9,
+          "new_outcome": "renegotiate",
+          "statement": "gather_evidence becomes renegotiate if annual_running_cost_inr rises to INR 233,789 (+55.9%)."
+        }
+      ],
+      "next_actions": [
+        {
+          "code": "NO_OBSERVED_ADOPTION",
+          "action": "run one adoption spot-check batch over the real users",
+          "owner_hint": "org lead",
+          "expected_test": "observed adoption recorded from the batch"
+        },
+        {
+          "code": "BASELINE_MISSING",
+          "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+          "owner_hint": "ops lead",
+          "expected_test": "baseline cost known; retained human cost computed"
+        },
+        {
+          "code": "NO_OBSERVED_QUALITY",
+          "action": "run one quality spot-check on pilot outputs and record it",
+          "owner_hint": "ops lead",
+          "expected_test": "observed quality recorded from the batch"
+        },
+        {
+          "code": "MONEY_ASSUMED",
+          "action": "back one money figure with an invoice, a signed contract or a written vendor quote",
+          "owner_hint": "finance",
+          "expected_test": "a decision-driving money input sourced as observed"
+        }
+      ]
+    },
+    "C": {
+      "outcome": "renegotiate",
+      "reasons": [
+        "Cost competitiveness is uncompetitive (annualised AI cost INR 103,333 ÷ gross benefit INR 90,000): the AI costs more than the work it replaces."
+      ],
+      "reason_codes": [
+        "UNCOMPETITIVE_COST"
+      ],
+      "eligibility": {
+        "eligible": false,
+        "gates": [
+          {
+            "gate": "NET_POSITIVE",
+            "status": "pass",
+            "detail": "net annual benefit INR 20,000/yr"
+          },
+          {
+            "gate": "BREAKEVEN_IN_HORIZON",
+            "status": "fail",
+            "detail": "break-even beyond month 36"
+          },
+          {
+            "gate": "BUDGET_FIT",
+            "status": "pass",
+            "detail": "budget status within"
+          },
+          {
+            "gate": "BENEFIT_HAS_CASH",
+            "status": "pass",
+            "detail": "cashable savings INR 90,000/yr (100% of gross)"
+          }
+        ]
+      },
+      "data_readiness": {
+        "level": "partial",
+        "share": 0.714,
+        "checks": [
+          {
+            "check": "run cost stated",
+            "ok": true
+          },
+          {
+            "check": "adoption stated",
+            "ok": true
+          },
+          {
+            "check": "readiness stated",
+            "ok": true
+          },
+          {
+            "check": "benefit type known",
+            "ok": true
+          },
+          {
+            "check": "overlap group known",
+            "ok": false
+          },
+          {
+            "check": "baseline supplied",
+            "ok": false
+          },
+          {
+            "check": "team data readiness at least medium",
+            "ok": true
+          }
+        ],
+        "missing": [
+          "overlap group known",
+          "baseline supplied"
+        ]
+      },
+      "evidence": {
+        "band": "low",
+        "share": 0.0,
+        "observed_weight": 0,
+        "total_weight": 11,
+        "band_capped_by_fixture": false
+      },
+      "gaps": [
+        {
+          "input": "annual_benefit_inr",
+          "impact": "high",
+          "why": "The benefit is the biggest lever on net, payback and the ranking; without a driver or invoice trail the number is stated, not evidenced."
+        },
+        {
+          "input": "adoption_pct",
+          "impact": "medium",
+          "why": "Gates and realized benefit depend on adoption; without a spot-check the pilot is unconfirmed."
+        },
+        {
+          "input": "annual_running_cost_inr",
+          "impact": "medium",
+          "why": "The running cost is subtracted from every view; a wrong run cost flips net, payback and break-even adoption."
+        },
+        {
+          "input": "setup_cost_inr",
+          "impact": "medium",
+          "why": "The one-time cost sets payback and NPV; missing lines hide the real outlay."
+        },
+        {
+          "input": "quality_pct",
+          "impact": "low",
+          "why": "The quality gate cannot be verified until one batch is measured."
+        },
+        {
+          "input": "readiness",
+          "impact": "low",
+          "why": "Readiness is a team judgement; scoring it against the data checklist would make the haircut evidence-backed."
+        }
+      ],
+      "economics": {
+        "baseline_cost_inr": null,
+        "baseline_note": null,
+        "gross_cost_avoidance_inr": 90000,
+        "gross_note": "typed annual benefit",
+        "cashable_savings_inr": 90000,
+        "capacity_value_inr": 0,
+        "retained_human_cost_inr": null,
+        "cashable_share_pct": 100.0,
+        "cashable_share_source": "cash factor of benefit type 'cashable'",
+        "net_cashable_inr": 20000,
+        "flags": [
+          {
+            "code": "BASELINE_MISSING",
+            "message": "No baseline (today's cost of the process); retained human cost is unknown."
+          }
+        ],
+        "competitiveness": {
+          "class": "uncompetitive",
+          "ratio": 1.148,
+          "basis": "annualised AI cost INR 103,333 ÷ gross benefit INR 90,000",
+          "annualised_ai_cost_inr": 103333
+        },
+        "budget": {
+          "status": "within",
+          "contingency_pct": 10,
+          "lines": [
+            {
+              "line": "implementation_inr",
+              "need_inr": 100000,
+              "budget_inr": 800000,
+              "status": "within",
+              "note": "setup ≤ implementation budget"
+            },
+            {
+              "line": "first_year_inr",
+              "need_inr": 170000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "setup + 12 months of running cost"
+            },
+            {
+              "line": "recurring_inr_per_year",
+              "need_inr": 70000,
+              "budget_inr": null,
+              "status": "unknown",
+              "note": "annual running cost"
+            },
+            {
+              "line": "total_inr",
+              "need_inr": 341000,
+              "budget_inr": 1500000,
+              "status": "within",
+              "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+            }
+          ],
+          "total_with_contingency_inr": 341000
+        }
+      },
+      "what_would_reverse": [
+        {
+          "field": "annual_benefit_inr",
+          "from_value": 90000,
+          "to_value": 103359,
+          "change_pct": 14.8,
+          "new_outcome": "gather_evidence",
+          "statement": "renegotiate becomes gather_evidence if annual_benefit_inr rises to INR 103,359 (+14.8%)."
+        },
+        {
+          "field": "annual_running_cost_inr",
+          "from_value": 70000,
+          "to_value": 56602,
+          "change_pct": -19.1,
+          "new_outcome": "gather_evidence",
+          "statement": "renegotiate becomes gather_evidence if annual_running_cost_inr falls to INR 56,602 (-19.1%)."
+        },
+        {
+          "field": "setup_cost_inr",
+          "from_value": 100000,
+          "to_value": 59766,
+          "change_pct": -40.2,
+          "new_outcome": "gather_evidence",
+          "statement": "renegotiate becomes gather_evidence if setup_cost_inr falls to INR 59,766 (-40.2%)."
+        },
+        {
+          "field": "annual_benefit_inr",
+          "from_value": 90000,
+          "to_value": 48867,
+          "change_pct": -45.7,
+          "new_outcome": "reject",
+          "statement": "renegotiate becomes reject if annual_benefit_inr falls to INR 48,867 (-45.7%)."
+        },
+        {
+          "field": "annual_running_cost_inr",
+          "from_value": 70000,
+          "to_value": 128789,
+          "change_pct": 84.0,
+          "new_outcome": "reject",
+          "statement": "renegotiate becomes reject if annual_running_cost_inr rises to INR 128,789 (+84.0%)."
+        }
+      ],
+      "next_actions": [
+        {
+          "code": "UNCOMPETITIVE_COST",
+          "action": "re-quote or re-scope: the AI costs more per unit than the work it replaces",
+          "owner_hint": "procurement + service owner",
+          "expected_test": "competitiveness class marginal or better"
+        },
+        {
+          "code": "DATA_NOT_READY",
+          "action": "fill the missing inputs (stated run cost, adoption, baseline, overlap group)",
+          "owner_hint": "service owner",
+          "expected_test": "data readiness partial or ready"
+        },
+        {
+          "code": "BASELINE_MISSING",
+          "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+          "owner_hint": "ops lead",
+          "expected_test": "baseline cost known; retained human cost computed"
+        },
+        {
+          "code": "NO_OBSERVED_ADOPTION",
+          "action": "run one adoption spot-check batch over the real users",
+          "owner_hint": "org lead",
+          "expected_test": "observed adoption recorded from the batch"
+        },
+        {
+          "code": "NO_OBSERVED_QUALITY",
+          "action": "run one quality spot-check on pilot outputs and record it",
+          "owner_hint": "ops lead",
+          "expected_test": "observed quality recorded from the batch"
+        },
+        {
+          "code": "BREAK_EVEN_BEYOND_HORIZON",
+          "action": "re-cost with a faster ramp (build and rollout sooner) or re-decide at the next budget cycle",
+          "owner_hint": "finance",
+          "expected_test": "break-even month <= horizon"
+        },
+        {
+          "code": "MONEY_ASSUMED",
+          "action": "back one money figure with an invoice, a signed contract or a written vendor quote",
+          "owner_hint": "finance",
+          "expected_test": "a decision-driving money input sourced as observed"
+        }
+      ]
+    }
+  },
+  "warnings": []
+}

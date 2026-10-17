@@ -1,0 +1,341 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /economics",
+  "type": "object",
+  "properties": {
+    "proposals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "baseline_cost_inr": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "baseline_note": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "budget": {
+            "type": "object",
+            "properties": {
+              "contingency_pct": {
+                "type": "number"
+              },
+              "lines": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "budget_inr": {
+                      "type": [
+                        "null",
+                        "number"
+                      ]
+                    },
+                    "line": {
+                      "type": "string"
+                    },
+                    "need_inr": {
+                      "type": "number"
+                    },
+                    "note": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "budget_inr",
+                    "line",
+                    "need_inr",
+                    "note",
+                    "status"
+                  ]
+                }
+              },
+              "status": {
+                "type": "string"
+              },
+              "total_with_contingency_inr": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "contingency_pct",
+              "lines",
+              "status",
+              "total_with_contingency_inr"
+            ]
+          },
+          "capacity_value_inr": {
+            "type": "number"
+          },
+          "cashable_savings_inr": {
+            "type": "number"
+          },
+          "cashable_share_pct": {
+            "type": "number"
+          },
+          "cashable_share_source": {
+            "type": "string"
+          },
+          "competitiveness": {
+            "type": "object",
+            "properties": {
+              "annualised_ai_cost_inr": {
+                "type": "number"
+              },
+              "basis": {
+                "type": "string"
+              },
+              "class": {
+                "type": "string"
+              },
+              "ratio": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "annualised_ai_cost_inr",
+              "basis",
+              "class",
+              "ratio"
+            ]
+          },
+          "flags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ]
+            }
+          },
+          "gross_cost_avoidance_inr": {
+            "type": "number"
+          },
+          "gross_note": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "net_cashable_inr": {
+            "type": "number"
+          },
+          "retained_human_cost_inr": {
+            "type": [
+              "null",
+              "number"
+            ]
+          }
+        },
+        "required": [
+          "baseline_cost_inr",
+          "baseline_note",
+          "budget",
+          "capacity_value_inr",
+          "cashable_savings_inr",
+          "cashable_share_pct",
+          "cashable_share_source",
+          "competitiveness",
+          "flags",
+          "gross_cost_avoidance_inr",
+          "gross_note",
+          "id",
+          "net_cashable_inr",
+          "retained_human_cost_inr"
+        ]
+      }
+    },
+    "portfolio_budget": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string"
+        },
+        "contingency_pct": {
+          "type": "number"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "budget_inr": {
+                "type": [
+                  "null",
+                  "number"
+                ]
+              },
+              "line": {
+                "type": "string"
+              },
+              "need_inr": {
+                "type": "number"
+              },
+              "note": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "budget_inr",
+              "line",
+              "need_inr",
+              "note",
+              "status"
+            ]
+          }
+        },
+        "total_with_contingency_inr": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "contingency_pct",
+        "ids",
+        "lines",
+        "status",
+        "total_with_contingency_inr"
+      ]
+    },
+    "budget_set": {
+      "type": "object",
+      "properties": {
+        "total_inr": {
+          "type": "number"
+        },
+        "implementation_inr": {
+          "type": "number"
+        },
+        "contingency_pct": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "contingency_pct",
+        "implementation_inr",
+        "total_inr"
+      ]
+    },
+    "rules": {
+      "type": "object",
+      "properties": {
+        "competitiveness_edges": {
+          "type": "object",
+          "properties": {
+            "highly_competitive": {
+              "type": "number"
+            },
+            "competitive": {
+              "type": "number"
+            },
+            "marginal": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "competitive",
+            "highly_competitive",
+            "marginal"
+          ]
+        },
+        "competitiveness_worst": {
+          "type": "string"
+        },
+        "competitiveness_ratio": {
+          "type": "string"
+        },
+        "annualised_ai_cost": {
+          "type": "string"
+        },
+        "budget_status_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "default_contingency_pct": {
+          "type": "number"
+        },
+        "budget_checks": {
+          "type": "object",
+          "properties": {
+            "implementation_inr": {
+              "type": "string"
+            },
+            "first_year_inr": {
+              "type": "string"
+            },
+            "recurring_inr_per_year": {
+              "type": "string"
+            },
+            "total_inr": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "first_year_inr",
+            "implementation_inr",
+            "recurring_inr_per_year",
+            "total_inr"
+          ]
+        },
+        "at_risk_rule": {
+          "type": "string"
+        },
+        "baseline_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "annualised_ai_cost",
+        "at_risk_rule",
+        "baseline_fields",
+        "budget_checks",
+        "budget_status_order",
+        "competitiveness_edges",
+        "competitiveness_ratio",
+        "competitiveness_worst",
+        "default_contingency_pct"
+      ]
+    },
+    "warnings": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "budget_set",
+    "portfolio_budget",
+    "proposals",
+    "rules",
+    "warnings"
+  ]
+}

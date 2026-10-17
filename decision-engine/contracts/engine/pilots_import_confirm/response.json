@@ -1,0 +1,51 @@
+{
+  "pilots": [
+    {
+      "id": "P1",
+      "task": "Invoice extraction",
+      "setup_cost_inr": 200000,
+      "annual_benefit_inr": 180000,
+      "annual_running_cost_inr": 60000
+    },
+    {
+      "id": "P2",
+      "task": "Ticket triage",
+      "setup_cost_inr": 150000,
+      "annual_benefit_inr": 120000
+    }
+  ],
+  "extension_pilots": [
+    {
+      "id": "P1",
+      "adoption_pct": 70,
+      "readiness": "high"
+    },
+    {
+      "id": "P2",
+      "readiness": "medium"
+    }
+  ],
+  "flags": [],
+  "warnings": [],
+  "unit": {
+    "choice": "auto",
+    "unit": "rupees",
+    "multiplier": 1.0,
+    "source": "default (no unit detected)"
+  },
+  "periods": {
+    "annual_running_cost_inr": {
+      "column": "annual_running_cost_inr",
+      "period": "annual",
+      "annualisation_factor": 1,
+      "source": "column header"
+    },
+    "annual_benefit_inr": {
+      "column": "annual_benefit_inr",
+      "period": "annual",
+      "annualisation_factor": 1,
+      "source": "column header"
+    }
+  },
+  "format": "csv"
+}

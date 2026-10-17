@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /forecast/usage",
+  "type": "object",
+  "properties": {
+    "method": {
+      "type": "string"
+    },
+    "months": {
+      "type": "number"
+    },
+    "note": {
+      "type": "string"
+    },
+    "band_pct": {
+      "type": "number"
+    },
+    "base": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "low": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "high": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "backtest": {
+      "type": "object",
+      "properties": {
+        "holdout_months": {
+          "type": "number"
+        },
+        "holdout_actual": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "scores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "holdout_predictions": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "mape": {
+                "type": "number"
+              },
+              "method": {
+                "type": "string"
+              },
+              "usable": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "holdout_predictions",
+              "mape",
+              "method",
+              "usable"
+            ]
+          }
+        },
+        "winner": {
+          "type": "string"
+        },
+        "winner_mape": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "holdout_actual",
+        "holdout_months",
+        "scores",
+        "winner",
+        "winner_mape"
+      ]
+    },
+    "flags": {
+      "type": "array"
+    },
+    "cost": {
+      "type": "object",
+      "properties": {
+        "low": {
+          "type": "object",
+          "properties": {
+            "annual_inr": {
+              "type": "number"
+            },
+            "monthly_inr": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": [
+            "annual_inr",
+            "monthly_inr"
+          ]
+        },
+        "base": {
+          "type": "object",
+          "properties": {
+            "annual_inr": {
+              "type": "number"
+            },
+            "monthly_inr": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": [
+            "annual_inr",
+            "monthly_inr"
+          ]
+        },
+        "high": {
+          "type": "object",
+          "properties": {
+            "annual_inr": {
+              "type": "number"
+            },
+            "monthly_inr": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": [
+            "annual_inr",
+            "monthly_inr"
+          ]
+        }
+      },
+      "required": [
+        "base",
+        "high",
+        "low"
+      ]
+    }
+  },
+  "required": [
+    "backtest",
+    "band_pct",
+    "base",
+    "cost",
+    "flags",
+    "high",
+    "low",
+    "method",
+    "months",
+    "note"
+  ]
+}

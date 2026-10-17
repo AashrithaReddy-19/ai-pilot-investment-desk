@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /balance-sheet/parse",
+  "type": "object",
+  "properties": {
+    "file_bytes": {
+      "type": "number"
+    },
+    "rows": {
+      "type": "number"
+    },
+    "label_column": {
+      "type": "string"
+    },
+    "amount_columns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "amount_column_used": {
+      "type": "string"
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "multiplier": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "choice",
+        "multiplier",
+        "source",
+        "unit"
+      ]
+    },
+    "ai_burn_to_date": {
+      "type": "null"
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "amount_inr": {
+            "type": "number"
+          },
+          "annualised_amount_inr": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "matched": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "raw": {
+            "type": "string"
+          },
+          "row": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "amount_inr",
+          "annualised_amount_inr",
+          "label",
+          "matched",
+          "raw",
+          "row"
+        ]
+      }
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "flags": {
+      "type": "array"
+    },
+    "format": {
+      "type": "string"
+    },
+    "period": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "annualisation_factor": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "annualisation_factor",
+        "choice",
+        "period",
+        "source"
+      ]
+    },
+    "findings": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "ai_burn_to_date",
+    "amount_column_used",
+    "amount_columns",
+    "candidates",
+    "file_bytes",
+    "findings",
+    "flags",
+    "format",
+    "label_column",
+    "period",
+    "rows",
+    "unit",
+    "warnings"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /portfolio",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "budget": {
+      "type": "number"
+    },
+    "selected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "total_setup": {
+      "type": "number"
+    },
+    "total_net": {
+      "type": "number"
+    },
+    "budget_left": {
+      "type": "number"
+    },
+    "rejected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "reason"
+        ]
+      }
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "message": {
+      "type": "string"
+    },
+    "invalid": {
+      "type": "array"
+    },
+    "warnings": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "budget",
+    "budget_left",
+    "invalid",
+    "message",
+    "mode",
+    "objective",
+    "ok",
+    "rejected",
+    "selected",
+    "total_net",
+    "total_setup",
+    "warnings"
+  ]
+}

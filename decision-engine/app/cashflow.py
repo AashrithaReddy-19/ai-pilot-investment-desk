@@ -30,14 +30,38 @@ def ramp_factor(t: int, ramp_months: int, delay_months: int) -> float:
 
 def monthly_cash_flows(one_time_inr: float, net_benefit_per_month: float, run_per_month: float,
                        horizon_months: int, ramp_months: int = 0, delay_months: int = 0) -> list:
-    """One cash-flow number per month. net_benefit_per_month is benefit before ramp/delay minus... no:
-    pass full monthly benefit; run cost is deducted here."""
+    """One cash-flow number per month. Pass the full (pre-ramp) monthly benefit as
+    net_benefit_per_month; ramp/delay scale it here and the monthly run cost is deducted here."""
     flows: list = []
     for t in range(1, max(1, horizon_months) + 1):
         ben = net_benefit_per_month * ramp_factor(t, ramp_months, delay_months)
         cf = ben - run_per_month - (one_time_inr if t == 1 else 0.0)
         flows.append(cf)
     return flows
+
+
+def monthly_components(one_time_inr: float, benefit_per_month: float, run_per_month: float,
+                       horizon_months: int, ramp_months: int = 0, delay_months: int = 0) -> list:
+    """The same months as monthly_cash_flows, split into (benefit, run, one_time) so views
+    can show where the money comes from. benefit − run − one_time equals the flow exactly."""
+    out: list = []
+    for t in range(1, max(1, horizon_months) + 1):
+        out.append((benefit_per_month * ramp_factor(t, ramp_months, delay_months), run_per_month,
+                    one_time_inr if t == 1 else 0.0))
+    return out
+
+
+def yearly_totals(components: list) -> list:
+    """Aggregate monthly components into 12-month years (the last year may be partial)."""
+    years: list = []
+    for i in range(0, len(components), 12):
+        chunk = components[i:i + 12]
+        ben = sum(c[0] for c in chunk)
+        run = sum(c[1] for c in chunk)
+        one = sum(c[2] for c in chunk)
+        years.append({"year": i // 12 + 1, "months": len(chunk), "benefit": ben, "run": run,
+                      "one_time": one, "net": ben - run - one})
+    return years
 
 
 def cumulative(cflows: list) -> list:
@@ -71,7 +95,7 @@ def roi_pct(profit: float, one_time_inr: float) -> Optional[float]:
     return profit / one_time_inr * 100
 
 
-def npv(cflows: list, discount_rate: float, months_per_step: int = 1) -> float:
+def npv(cflows: list, discount_rate: float) -> float:
     """Σ cashflow(t) ÷ (1+r)^(t / 12) for 1-based months; r may be 0 (= profit/loss)."""
     total = 0.0
     for t, cf in enumerate(cflows):

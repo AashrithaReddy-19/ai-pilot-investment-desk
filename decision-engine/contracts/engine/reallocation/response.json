@@ -1,0 +1,30 @@
+{
+  "mode": "independent",
+  "objective": "net",
+  "budget": 600000,
+  "freed_budget_inr": 200000,
+  "locked_funded": [
+    "AI1",
+    "AI4"
+  ],
+  "stopped": [
+    "AI2"
+  ],
+  "remaining_budget_inr": 400000,
+  "reallocation": {
+    "mode": "independent",
+    "objective": "net",
+    "budget": 400000,
+    "selected": [
+      "AI3"
+    ],
+    "total_setup": 200000,
+    "total_net": 120000,
+    "budget_left": 200000,
+    "rejected": [],
+    "ok": true,
+    "message": "Selected 1 pilot(s), INR 200,000 of 400,000."
+  },
+  "ok": true,
+  "message": "Freed INR 200,000; locked 2 funded pilot(s); Selected 1 pilot(s), INR 200,000 of 400,000."
+}

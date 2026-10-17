@@ -1,0 +1,8 @@
+{
+  "method": "POST",
+  "path": "/sweep",
+  "body": {
+    "pilot_id": "AI1",
+    "parameter": "adoption_pct"
+  }
+}

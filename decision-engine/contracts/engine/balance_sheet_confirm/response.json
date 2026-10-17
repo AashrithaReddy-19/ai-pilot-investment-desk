@@ -1,0 +1,50 @@
+{
+  "ai_burn_to_date": 1550000,
+  "source": "observed",
+  "rows_confirmed": [
+    2,
+    4
+  ],
+  "confirmations": [
+    {
+      "row": 2,
+      "label": "AI software licences",
+      "amount_inr": 1200000
+    },
+    {
+      "row": 4,
+      "label": "Cloud AI platform",
+      "amount_inr": 350000
+    }
+  ],
+  "amount_column_used": "Amount in INR",
+  "unit": {
+    "choice": "auto",
+    "unit": "rupees",
+    "multiplier": 1.0,
+    "source": "default (no unit detected)"
+  },
+  "next_fy": {
+    "inputs": {
+      "tokens_per_month": 50000000,
+      "price_per_1m_tokens": 250,
+      "ai_fixed_cost_inr_per_year": 20000,
+      "annual_usage_growth_pct": 20,
+      "annual_price_drift_pct": -10
+    },
+    "ai_run_cost_inr": 170000,
+    "next_fy_cost_inr": 182000,
+    "inflation_flag": true
+  },
+  "flags": [],
+  "warnings": [],
+  "ai_burn_annualised_inr": 1550000,
+  "period": {
+    "choice": "auto",
+    "period": "annual",
+    "annualisation_factor": 1,
+    "source": "default (no period detected)"
+  },
+  "format": "csv",
+  "findings": []
+}

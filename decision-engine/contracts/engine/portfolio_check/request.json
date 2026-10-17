@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "path": "/portfolio/check",
+  "body": {
+    "ids": [
+      "AI1",
+      "AI2"
+    ],
+    "budget": 600000
+  }
+}

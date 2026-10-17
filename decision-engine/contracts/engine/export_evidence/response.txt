@@ -1,0 +1,59 @@
+# C23 Evidence Report
+
+> Synthetic data. Inputs are assumptions. No claim of live revenue or production readiness.
+
+## Result
+- Mode: independent
+- Budget: INR 600,000
+- Selected 3 pilot(s), INR 600,000 of 600,000.
+- Selected: AI1, AI4, AI2
+- Total net annual benefit: INR 360,000
+- Tie-break order: higher net benefit > faster payback > higher readiness > higher adoption > lower setup cost > lower id
+
+## Rejected / not funded
+- AI3: Not funded: budget fully used by higher-ranked pilots.
+- AI5: Overlap: shares benefit group "support" with AI4; benefit counted once.
+
+## Pilot table (observed fixture figures vs team assumptions)
+
+| Pilot | Setup | Run/yr | Benefit/yr | Payback (indep.) | Adoption* | Readiness* | Breakeven adoption | Flags |
+|---|---|---|---|---|---|---|---|---|
+| AI1 Invoice field extraction | 200,000 | 60,000 | 180,000 | 20.0 mo | 70% | high | 33.3% | - |
+| AI2 Order exception triage | 200,000 | 60,000 | 180,000 | 20.0 mo | 60% | medium | 41.7% | - |
+| AI3 Weekly catalogue review | 200,000 | 60,000 | 180,000 | 20.0 mo | 50% | medium | 41.7% | - |
+| AI4 Support reply drafting | 200,000 | 60,000 | 180,000 | 20.0 mo | 65% | high | 33.3% | - |
+| AI5 Ticket tagging | 200,000 | 60,000 | 180,000 | 20.0 mo | 40% | low | 55.6% | - |
+
+\* team-authored assumption, not in the fixture.
+
+## Money over time (multi-period view)
+Horizon and discount rate are stated inputs; the one-time cost lands in month 1.
+
+| Pilot | Profit over horizon | ROI | Break-even | NPV (indep.) |
+|---|---|---|---|---|
+| AI1 | INR 160,000 | 80.0% | 20 mo | INR 113,447 |
+| AI2 | INR 160,000 | 80.0% | 20 mo | INR 113,447 |
+| AI3 | INR 160,000 | 80.0% | 20 mo | INR 113,447 |
+| AI4 | INR 160,000 | 80.0% | 20 mo | INR 113,447 |
+| AI5 | INR 160,000 | 80.0% | 20 mo | INR 113,447 |
+
+## Provenance of the decision-driving numbers
+- AI1: setup fixture (synthetic), run cost fixture (synthetic), benefit fixture (synthetic), adoption assumed (team)
+- AI2: setup fixture (synthetic), run cost fixture (synthetic), benefit fixture (synthetic), adoption assumed (team)
+- AI3: setup fixture (synthetic), run cost fixture (synthetic), benefit fixture (synthetic), adoption assumed (team)
+- AI4: setup fixture (synthetic), run cost fixture (synthetic), benefit fixture (synthetic), adoption assumed (team)
+- AI5: setup fixture (synthetic), run cost fixture (synthetic), benefit fixture (synthetic), adoption assumed (team)
+
+## Stop-rule status
+- AI1: **REVISE**: Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend.
+- AI2: **REVISE**: Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend.
+- AI3: **REVISE**: Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend.
+- AI4: **REVISE**: Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend.
+- AI5: **REVISE**: Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend.
+
+## What-if scenarios (conservative mode)
+- AI1: bad adoption 35.0% -> net 3000, payback 800.0 mo; base adoption 70.0% -> net 66000, payback 36.4 mo; good adoption 87.5% -> net 97500, payback 24.6 mo
+- AI2: bad adoption 30.0% -> net -16800, payback never; base adoption 60.0% -> net 26400, payback 90.9 mo; good adoption 75.0% -> net 48000, payback 50.0 mo
+- AI3: bad adoption 25.0% -> net -24000, payback never; base adoption 50.0% -> net 12000, payback 200.0 mo; good adoption 62.5% -> net 30000, payback 80.0 mo
+- AI4: bad adoption 32.5% -> net -1500, payback never; base adoption 65.0% -> net 57000, payback 42.1 mo; good adoption 81.2% -> net 86250, payback 27.8 mo
+- AI5: bad adoption 20.0% -> net -38400, payback never; base adoption 40.0% -> net -16800, payback never; good adoption 50.0% -> net -6000, payback never

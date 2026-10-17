@@ -1,0 +1,255 @@
+{
+  "proposals": [
+    {
+      "id": "A",
+      "baseline_cost_inr": 2400000,
+      "baseline_note": "2,000 units/month × 6 min × INR 1,000/h × 12",
+      "gross_cost_avoidance_inr": 180000,
+      "gross_note": "typed annual benefit",
+      "cashable_savings_inr": 180000,
+      "capacity_value_inr": 0,
+      "retained_human_cost_inr": 2220000,
+      "cashable_share_pct": 100.0,
+      "cashable_share_source": "cash factor of benefit type 'cashable'",
+      "net_cashable_inr": 120000,
+      "flags": [],
+      "competitiveness": {
+        "class": "highly_competitive",
+        "ratio": 0.053,
+        "basis": "AI INR 5.28/unit vs human INR 100.00/unit",
+        "annualised_ai_cost_inr": 126667
+      },
+      "budget": {
+        "status": "within",
+        "contingency_pct": 10,
+        "lines": [
+          {
+            "line": "implementation_inr",
+            "need_inr": 200000,
+            "budget_inr": 800000,
+            "status": "within",
+            "note": "setup ≤ implementation budget"
+          },
+          {
+            "line": "first_year_inr",
+            "need_inr": 260000,
+            "budget_inr": null,
+            "status": "unknown",
+            "note": "setup + 12 months of running cost"
+          },
+          {
+            "line": "recurring_inr_per_year",
+            "need_inr": 60000,
+            "budget_inr": null,
+            "status": "unknown",
+            "note": "annual running cost"
+          },
+          {
+            "line": "total_inr",
+            "need_inr": 418000,
+            "budget_inr": 1500000,
+            "status": "within",
+            "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+          }
+        ],
+        "total_with_contingency_inr": 418000
+      }
+    },
+    {
+      "id": "B",
+      "baseline_cost_inr": null,
+      "baseline_note": null,
+      "gross_cost_avoidance_inr": 400000,
+      "gross_note": "typed annual benefit",
+      "cashable_savings_inr": 400000,
+      "capacity_value_inr": 0,
+      "retained_human_cost_inr": null,
+      "cashable_share_pct": 100.0,
+      "cashable_share_source": "cash factor of benefit type 'cashable'",
+      "net_cashable_inr": 250000,
+      "flags": [
+        {
+          "code": "BASELINE_MISSING",
+          "message": "No baseline (today's cost of the process); retained human cost is unknown."
+        }
+      ],
+      "competitiveness": {
+        "class": "marginal",
+        "ratio": 0.792,
+        "basis": "annualised AI cost INR 316,667 ÷ gross benefit INR 400,000",
+        "annualised_ai_cost_inr": 316667
+      },
+      "budget": {
+        "status": "within",
+        "contingency_pct": 10,
+        "lines": [
+          {
+            "line": "implementation_inr",
+            "need_inr": 500000,
+            "budget_inr": 800000,
+            "status": "within",
+            "note": "setup ≤ implementation budget"
+          },
+          {
+            "line": "first_year_inr",
+            "need_inr": 650000,
+            "budget_inr": null,
+            "status": "unknown",
+            "note": "setup + 12 months of running cost"
+          },
+          {
+            "line": "recurring_inr_per_year",
+            "need_inr": 150000,
+            "budget_inr": null,
+            "status": "unknown",
+            "note": "annual running cost"
+          },
+          {
+            "line": "total_inr",
+            "need_inr": 1045000,
+            "budget_inr": 1500000,
+            "status": "within",
+            "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+          }
+        ],
+        "total_with_contingency_inr": 1045000
+      }
+    },
+    {
+      "id": "C",
+      "baseline_cost_inr": null,
+      "baseline_note": null,
+      "gross_cost_avoidance_inr": 90000,
+      "gross_note": "typed annual benefit",
+      "cashable_savings_inr": 90000,
+      "capacity_value_inr": 0,
+      "retained_human_cost_inr": null,
+      "cashable_share_pct": 100.0,
+      "cashable_share_source": "cash factor of benefit type 'cashable'",
+      "net_cashable_inr": 20000,
+      "flags": [
+        {
+          "code": "BASELINE_MISSING",
+          "message": "No baseline (today's cost of the process); retained human cost is unknown."
+        }
+      ],
+      "competitiveness": {
+        "class": "uncompetitive",
+        "ratio": 1.148,
+        "basis": "annualised AI cost INR 103,333 ÷ gross benefit INR 90,000",
+        "annualised_ai_cost_inr": 103333
+      },
+      "budget": {
+        "status": "within",
+        "contingency_pct": 10,
+        "lines": [
+          {
+            "line": "implementation_inr",
+            "need_inr": 100000,
+            "budget_inr": 800000,
+            "status": "within",
+            "note": "setup ≤ implementation budget"
+          },
+          {
+            "line": "first_year_inr",
+            "need_inr": 170000,
+            "budget_inr": null,
+            "status": "unknown",
+            "note": "setup + 12 months of running cost"
+          },
+          {
+            "line": "recurring_inr_per_year",
+            "need_inr": 70000,
+            "budget_inr": null,
+            "status": "unknown",
+            "note": "annual running cost"
+          },
+          {
+            "line": "total_inr",
+            "need_inr": 341000,
+            "budget_inr": 1500000,
+            "status": "within",
+            "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+          }
+        ],
+        "total_with_contingency_inr": 341000
+      }
+    }
+  ],
+  "portfolio_budget": {
+    "ids": [
+      "A",
+      "B",
+      "C"
+    ],
+    "status": "over",
+    "contingency_pct": 10,
+    "lines": [
+      {
+        "line": "implementation_inr",
+        "need_inr": 800000,
+        "budget_inr": 800000,
+        "status": "at_risk",
+        "note": "setup ≤ implementation budget"
+      },
+      {
+        "line": "first_year_inr",
+        "need_inr": 1080000,
+        "budget_inr": null,
+        "status": "unknown",
+        "note": "setup + 12 months of running cost"
+      },
+      {
+        "line": "recurring_inr_per_year",
+        "need_inr": 280000,
+        "budget_inr": null,
+        "status": "unknown",
+        "note": "annual running cost"
+      },
+      {
+        "line": "total_inr",
+        "need_inr": 1804000,
+        "budget_inr": 1500000,
+        "status": "over",
+        "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+      }
+    ],
+    "total_with_contingency_inr": 1804000
+  },
+  "budget_set": {
+    "total_inr": 1500000,
+    "implementation_inr": 800000,
+    "contingency_pct": 10
+  },
+  "rules": {
+    "competitiveness_edges": {
+      "highly_competitive": 0.4,
+      "competitive": 0.7,
+      "marginal": 1.0
+    },
+    "competitiveness_worst": "uncompetitive",
+    "competitiveness_ratio": "annualised AI cost ÷ gross benefit, or AI cost per unit ÷ human cost per unit when the baseline gives volume and per-unit human cost",
+    "annualised_ai_cost": "setup × 12 ÷ horizon_months + annual running cost",
+    "budget_status_order": [
+      "within",
+      "at_risk",
+      "over"
+    ],
+    "default_contingency_pct": 10,
+    "budget_checks": {
+      "implementation_inr": "setup ≤ implementation budget",
+      "first_year_inr": "setup + first-12-month running cost ≤ first-year budget",
+      "recurring_inr_per_year": "annual running cost ≤ recurring budget",
+      "total_inr": "(setup + running cost over the horizon) × (1 + contingency) ≤ total budget"
+    },
+    "at_risk_rule": "fits without contingency but not with it (total), or uses more than 90% of a line",
+    "baseline_fields": [
+      "annual_cost_inr",
+      "volume_per_month",
+      "minutes_per_unit",
+      "loaded_cost_per_hour",
+      "automation_share_pct"
+    ]
+  },
+  "warnings": []
+}

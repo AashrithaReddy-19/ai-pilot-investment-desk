@@ -1,0 +1,1522 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GET /defaults",
+  "type": "object",
+  "properties": {
+    "starting_state": {
+      "type": "object",
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "synthetic": {
+          "type": "boolean"
+        },
+        "data_version": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "missing_values": {
+          "type": "string"
+        },
+        "records": {
+          "type": "object",
+          "properties": {
+            "pilots": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "annual_benefit_inr": {
+                    "type": "number"
+                  },
+                  "annual_running_cost_inr": {
+                    "type": "number"
+                  },
+                  "benefit_type": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "overlap_group": {
+                    "type": "string"
+                  },
+                  "setup_cost_inr": {
+                    "type": "number"
+                  },
+                  "task": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "annual_benefit_inr",
+                  "annual_running_cost_inr",
+                  "benefit_type",
+                  "id",
+                  "overlap_group",
+                  "setup_cost_inr",
+                  "task"
+                ]
+              }
+            },
+            "expected_first_pilot_payback_months": {
+              "type": "number"
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "expected_first_pilot_payback_months",
+            "notes",
+            "pilots"
+          ]
+        },
+        "public_checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limit": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "currency",
+        "data_version",
+        "limit",
+        "missing_values",
+        "public_checks",
+        "records",
+        "synthetic"
+      ]
+    },
+    "extension": {
+      "type": "object",
+      "properties": {
+        "_label": {
+          "type": "string"
+        },
+        "pilot_budget_inr": {
+          "type": "number"
+        },
+        "defaults": {
+          "type": "object",
+          "properties": {
+            "target_adoption_pct": {
+              "type": "number"
+            },
+            "quality_threshold_pct": {
+              "type": "number"
+            },
+            "assumed_run_cost_pct_of_setup": {
+              "type": "number"
+            },
+            "assumed_adoption_pct": {
+              "type": "number"
+            },
+            "horizon_months": {
+              "type": "number"
+            },
+            "discount_rate": {
+              "type": "number"
+            },
+            "annual_usage_growth_pct": {
+              "type": "number"
+            },
+            "annual_price_drift_pct": {
+              "type": "number"
+            },
+            "tokens_per_month": {
+              "type": "number"
+            },
+            "price_per_1m_tokens": {
+              "type": "number"
+            },
+            "ai_fixed_cost_inr_per_year": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "ai_fixed_cost_inr_per_year",
+            "annual_price_drift_pct",
+            "annual_usage_growth_pct",
+            "assumed_adoption_pct",
+            "assumed_run_cost_pct_of_setup",
+            "discount_rate",
+            "horizon_months",
+            "price_per_1m_tokens",
+            "quality_threshold_pct",
+            "target_adoption_pct",
+            "tokens_per_month"
+          ]
+        },
+        "pilots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "adoption_pct": {
+                "type": "number"
+              },
+              "description": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "observed_adoption_pct": {
+                "type": "null"
+              },
+              "observed_quality_pct": {
+                "type": "null"
+              },
+              "readiness": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "adoption_pct",
+              "description",
+              "id",
+              "observed_adoption_pct",
+              "observed_quality_pct",
+              "readiness"
+            ]
+          }
+        }
+      },
+      "required": [
+        "_label",
+        "defaults",
+        "pilot_budget_inr",
+        "pilots"
+      ]
+    },
+    "pipeline_rules": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "object",
+          "properties": {
+            "rules_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "number"
+            },
+            "formula_version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "formula_version",
+            "rules_version"
+          ]
+        },
+        "cash_factor_by_type": {
+          "type": "object",
+          "properties": {
+            "cashable assumption": {
+              "type": "number"
+            },
+            "cashable": {
+              "type": "number"
+            },
+            "time freed": {
+              "type": "number"
+            },
+            "non-cashable": {
+              "type": "number"
+            },
+            "unknown": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "cashable",
+            "cashable assumption",
+            "non-cashable",
+            "time freed",
+            "unknown"
+          ]
+        },
+        "readiness_factor": {
+          "type": "object",
+          "properties": {
+            "low": {
+              "type": "number"
+            },
+            "medium": {
+              "type": "number"
+            },
+            "high": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "high",
+            "low",
+            "medium"
+          ]
+        },
+        "tie_break_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "horizon_months": {
+          "type": "number"
+        },
+        "discount_rate": {
+          "type": "number"
+        },
+        "scenario_multipliers": {
+          "type": "object",
+          "properties": {
+            "bad": {
+              "type": "number"
+            },
+            "base": {
+              "type": "number"
+            },
+            "good": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "bad",
+            "base",
+            "good"
+          ]
+        },
+        "parse_rules": {
+          "type": "object",
+          "properties": {
+            "max_upload_bytes": {
+              "type": "number"
+            },
+            "balance_sheet_keywords": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "unit_multipliers": {
+              "type": "object",
+              "properties": {
+                "rupees": {
+                  "type": "number"
+                },
+                "thousands": {
+                  "type": "number"
+                },
+                "lakh": {
+                  "type": "number"
+                },
+                "crore": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "crore",
+                "lakh",
+                "rupees",
+                "thousands"
+              ]
+            },
+            "pilot_csv_columns": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "task": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "setup_cost_inr": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "annual_running_cost_inr": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "annual_benefit_inr": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "benefit_type": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "adoption_pct": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "readiness": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ramp_months": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "delay_months": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "overlap_group": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "adoption_pct",
+                "annual_benefit_inr",
+                "annual_running_cost_inr",
+                "benefit_type",
+                "delay_months",
+                "id",
+                "overlap_group",
+                "ramp_months",
+                "readiness",
+                "setup_cost_inr",
+                "task"
+              ]
+            },
+            "formats": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "xlsx_limits": {
+              "type": "object",
+              "properties": {
+                "max_uncompressed_bytes": {
+                  "type": "number"
+                },
+                "max_rows": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "max_rows",
+                "max_uncompressed_bytes"
+              ]
+            },
+            "period_factors": {
+              "type": "object",
+              "properties": {
+                "annual": {
+                  "type": "number"
+                },
+                "half_year": {
+                  "type": "number"
+                },
+                "quarterly": {
+                  "type": "number"
+                },
+                "monthly": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "annual",
+                "half_year",
+                "monthly",
+                "quarterly"
+              ]
+            },
+            "period_rule": {
+              "type": "string"
+            },
+            "finding_severities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "possible_duplicate_rule": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "balance_sheet_keywords",
+            "finding_severities",
+            "formats",
+            "max_upload_bytes",
+            "period_factors",
+            "period_rule",
+            "pilot_csv_columns",
+            "possible_duplicate_rule",
+            "unit_multipliers",
+            "xlsx_limits"
+          ]
+        },
+        "advice_rules": {
+          "type": "object",
+          "properties": {
+            "input_weights": {
+              "type": "object",
+              "properties": {
+                "annual_benefit_inr": {
+                  "type": "number"
+                },
+                "annual_running_cost_inr": {
+                  "type": "number"
+                },
+                "setup_cost_inr": {
+                  "type": "number"
+                },
+                "adoption_pct": {
+                  "type": "number"
+                },
+                "quality_pct": {
+                  "type": "number"
+                },
+                "readiness": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "adoption_pct",
+                "annual_benefit_inr",
+                "annual_running_cost_inr",
+                "quality_pct",
+                "readiness",
+                "setup_cost_inr"
+              ]
+            },
+            "band_edges": {
+              "type": "object",
+              "properties": {
+                "medium": {
+                  "type": "number"
+                },
+                "high": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "high",
+                "medium"
+              ]
+            },
+            "outcome_order": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "observed_grades": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "fixture_cap_rule": {
+              "type": "string"
+            },
+            "next_actions": {
+              "type": "object",
+              "properties": {
+                "NET_NOT_POSITIVE": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "NON_CASHABLE": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "FIXTURE_ONLY_EVIDENCE": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "MONEY_ASSUMED": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "NO_OBSERVED_ADOPTION": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "NO_OBSERVED_QUALITY": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "RUN_COST_ASSUMED": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "ADOPTION_ASSUMED": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "LOW_OBSERVED_ADOPTION": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "LOW_READINESS": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "BREAK_EVEN_BEYOND_HORIZON": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "CONSERVATIVE_DIES": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                }
+              },
+              "required": [
+                "ADOPTION_ASSUMED",
+                "BREAK_EVEN_BEYOND_HORIZON",
+                "CONSERVATIVE_DIES",
+                "FIXTURE_ONLY_EVIDENCE",
+                "LOW_OBSERVED_ADOPTION",
+                "LOW_READINESS",
+                "MONEY_ASSUMED",
+                "NET_NOT_POSITIVE",
+                "NON_CASHABLE",
+                "NO_OBSERVED_ADOPTION",
+                "NO_OBSERVED_QUALITY",
+                "RUN_COST_ASSUMED"
+              ]
+            }
+          },
+          "required": [
+            "band_edges",
+            "fixture_cap_rule",
+            "input_weights",
+            "next_actions",
+            "observed_grades",
+            "outcome_order"
+          ]
+        },
+        "lifecycle_rules": {
+          "type": "object",
+          "properties": {
+            "checkpoint_outcomes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "planned_duration_days": {
+              "type": "number"
+            },
+            "plan_statuses": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "checkpoint_outcomes",
+            "plan_statuses",
+            "planned_duration_days"
+          ]
+        },
+        "solver": {
+          "type": "object",
+          "properties": {
+            "objectives": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "max_exact_candidates": {
+              "type": "number"
+            },
+            "max_candidates": {
+              "type": "number"
+            },
+            "node_budget": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "max_candidates",
+            "max_exact_candidates",
+            "node_budget",
+            "objectives"
+          ]
+        },
+        "whatif_rules": {
+          "type": "object",
+          "properties": {
+            "pilot_keys": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "org_keys": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "sweep_fractions": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "sweep_growth_pct": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "sweep_adoption_steps": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "flip_scan_step_of_base": {
+              "type": "number"
+            },
+            "flip_adoption_step_pct": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "flip_adoption_step_pct",
+            "flip_scan_step_of_base",
+            "org_keys",
+            "pilot_keys",
+            "sweep_adoption_steps",
+            "sweep_fractions",
+            "sweep_growth_pct"
+          ]
+        },
+        "compare_rules": {
+          "type": "object",
+          "properties": {
+            "min_proposals": {
+              "type": "number"
+            },
+            "max_proposals": {
+              "type": "number"
+            },
+            "drop_rule": {
+              "type": "string"
+            },
+            "selector": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "drop_rule",
+            "max_proposals",
+            "min_proposals",
+            "selector"
+          ]
+        },
+        "economics_rules": {
+          "type": "object",
+          "properties": {
+            "competitiveness_edges": {
+              "type": "object",
+              "properties": {
+                "highly_competitive": {
+                  "type": "number"
+                },
+                "competitive": {
+                  "type": "number"
+                },
+                "marginal": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "competitive",
+                "highly_competitive",
+                "marginal"
+              ]
+            },
+            "competitiveness_worst": {
+              "type": "string"
+            },
+            "competitiveness_ratio": {
+              "type": "string"
+            },
+            "annualised_ai_cost": {
+              "type": "string"
+            },
+            "budget_status_order": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "default_contingency_pct": {
+              "type": "number"
+            },
+            "budget_checks": {
+              "type": "object",
+              "properties": {
+                "implementation_inr": {
+                  "type": "string"
+                },
+                "first_year_inr": {
+                  "type": "string"
+                },
+                "recurring_inr_per_year": {
+                  "type": "string"
+                },
+                "total_inr": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "first_year_inr",
+                "implementation_inr",
+                "recurring_inr_per_year",
+                "total_inr"
+              ]
+            },
+            "at_risk_rule": {
+              "type": "string"
+            },
+            "baseline_fields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "annualised_ai_cost",
+            "at_risk_rule",
+            "baseline_fields",
+            "budget_checks",
+            "budget_status_order",
+            "competitiveness_edges",
+            "competitiveness_ratio",
+            "competitiveness_worst",
+            "default_contingency_pct"
+          ]
+        },
+        "pricing_rules": {
+          "type": "object",
+          "properties": {
+            "rule_types": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modifiers": {
+              "type": "object",
+              "properties": {
+                "fixed_monthly_inr": {
+                  "type": "string"
+                },
+                "minimum_monthly_inr": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "fixed_monthly_inr",
+                "minimum_monthly_inr"
+              ]
+            },
+            "tier_modes": {
+              "type": "object",
+              "properties": {
+                "graduated": {
+                  "type": "string"
+                },
+                "volume": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "graduated",
+                "volume"
+              ]
+            },
+            "package_rule": {
+              "type": "string"
+            },
+            "package_limits": {
+              "type": "object",
+              "properties": {
+                "max_kinds": {
+                  "type": "number"
+                },
+                "max_count_per_kind": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "max_count_per_kind",
+                "max_kinds"
+              ]
+            },
+            "forecast": {
+              "type": "object",
+              "properties": {
+                "methods": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "min_history_months": {
+                  "type": "number"
+                },
+                "holdout_max_months": {
+                  "type": "number"
+                },
+                "selection": {
+                  "type": "string"
+                },
+                "band": {
+                  "type": "string"
+                },
+                "fallback": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "band",
+                "fallback",
+                "holdout_max_months",
+                "methods",
+                "min_history_months",
+                "selection"
+              ]
+            },
+            "optimiser": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "forecast",
+            "modifiers",
+            "optimiser",
+            "package_limits",
+            "package_rule",
+            "rule_types",
+            "tier_modes"
+          ]
+        },
+        "decision_rules": {
+          "type": "object",
+          "properties": {
+            "outcome_order": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "set_outcomes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "rules": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "eligibility_gates": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ranking_weights": {
+              "type": "object",
+              "properties": {
+                "net_annual": {
+                  "type": "number"
+                },
+                "npv": {
+                  "type": "number"
+                },
+                "payback": {
+                  "type": "number"
+                },
+                "evidence": {
+                  "type": "number"
+                },
+                "readiness": {
+                  "type": "number"
+                },
+                "cash_share": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "cash_share",
+                "evidence",
+                "net_annual",
+                "npv",
+                "payback",
+                "readiness"
+              ]
+            },
+            "ranking_scale": {
+              "type": "string"
+            },
+            "no_clear_winner_margin_points": {
+              "type": "number"
+            },
+            "renegotiate_max_run_cut": {
+              "type": "number"
+            },
+            "data_readiness_edges": {
+              "type": "object",
+              "properties": {
+                "ready": {
+                  "type": "number"
+                },
+                "partial": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "partial",
+                "ready"
+              ]
+            },
+            "data_readiness_checks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "reversal": {
+              "type": "object",
+              "properties": {
+                "fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "range_x_base": {
+                  "type": "number"
+                },
+                "resolution_of_base": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "fields",
+                "range_x_base",
+                "resolution_of_base"
+              ]
+            },
+            "actions": {
+              "type": "object",
+              "properties": {
+                "RENEGOTIATE_RUN_COST": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "UNCOMPETITIVE_COST": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "OVER_BUDGET": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "DATA_NOT_READY": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "BASELINE_MISSING": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                },
+                "NO_CLEAR_WINNER": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                }
+              },
+              "required": [
+                "BASELINE_MISSING",
+                "DATA_NOT_READY",
+                "NO_CLEAR_WINNER",
+                "OVER_BUDGET",
+                "RENEGOTIATE_RUN_COST",
+                "UNCOMPETITIVE_COST"
+              ]
+            }
+          },
+          "required": [
+            "actions",
+            "data_readiness_checks",
+            "data_readiness_edges",
+            "eligibility_gates",
+            "no_clear_winner_margin_points",
+            "outcome_order",
+            "ranking_scale",
+            "ranking_weights",
+            "renegotiate_max_run_cut",
+            "reversal",
+            "rules",
+            "set_outcomes"
+          ]
+        },
+        "view_rules": {
+          "type": "object",
+          "properties": {
+            "proposal_states": {
+              "type": "object",
+              "properties": {
+                "recommended": {
+                  "type": "string"
+                },
+                "viable": {
+                  "type": "string"
+                },
+                "not_viable": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "not_viable",
+                "recommended",
+                "viable"
+              ]
+            },
+            "charts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "chart_sync": {
+              "type": "string"
+            },
+            "yearly_rule": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chart_sync",
+            "charts",
+            "proposal_states",
+            "yearly_rule"
+          ]
+        },
+        "formulas": {
+          "type": "object",
+          "properties": {
+            "net_annual": {
+              "type": "string"
+            },
+            "cash_flow_t": {
+              "type": "string"
+            },
+            "breakeven_month": {
+              "type": "string"
+            },
+            "profit_loss": {
+              "type": "string"
+            },
+            "roi": {
+              "type": "string"
+            },
+            "npv": {
+              "type": "string"
+            },
+            "ai_run_cost": {
+              "type": "string"
+            },
+            "next_fy_cost": {
+              "type": "string"
+            },
+            "token_value": {
+              "type": "string"
+            },
+            "inflation_flag": {
+              "type": "string"
+            },
+            "gross_cost_avoidance": {
+              "type": "string"
+            },
+            "cashable_savings": {
+              "type": "string"
+            },
+            "capacity_value": {
+              "type": "string"
+            },
+            "retained_human_cost": {
+              "type": "string"
+            },
+            "weighted_score": {
+              "type": "string"
+            },
+            "risk_adjusted_value": {
+              "type": "string"
+            },
+            "evidence_band": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ai_run_cost",
+            "breakeven_month",
+            "capacity_value",
+            "cash_flow_t",
+            "cashable_savings",
+            "evidence_band",
+            "gross_cost_avoidance",
+            "inflation_flag",
+            "net_annual",
+            "next_fy_cost",
+            "npv",
+            "profit_loss",
+            "retained_human_cost",
+            "risk_adjusted_value",
+            "roi",
+            "token_value",
+            "weighted_score"
+          ]
+        }
+      },
+      "required": [
+        "advice_rules",
+        "cash_factor_by_type",
+        "compare_rules",
+        "decision_rules",
+        "discount_rate",
+        "economics_rules",
+        "formulas",
+        "horizon_months",
+        "lifecycle_rules",
+        "parse_rules",
+        "pricing_rules",
+        "readiness_factor",
+        "scenario_multipliers",
+        "solver",
+        "tie_break_order",
+        "versions",
+        "view_rules",
+        "whatif_rules"
+      ]
+    }
+  },
+  "required": [
+    "extension",
+    "pipeline_rules",
+    "starting_state"
+  ]
+}

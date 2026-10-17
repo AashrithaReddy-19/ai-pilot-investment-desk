@@ -1,0 +1,27 @@
+{
+  "mode": "conservative",
+  "objective": "net",
+  "budget": 600000,
+  "selected": [
+    "AI1",
+    "AI4",
+    "AI2"
+  ],
+  "total_setup": 600000,
+  "total_net": 149400.0,
+  "budget_left": 0,
+  "rejected": [
+    {
+      "id": "AI5",
+      "reason": "Net annual benefit <= 0: never pays back."
+    },
+    {
+      "id": "AI3",
+      "reason": "Not funded: budget fully used by higher-ranked pilots."
+    }
+  ],
+  "ok": true,
+  "message": "Selected 3 pilot(s), INR 600,000 of 600,000.",
+  "invalid": [],
+  "warnings": []
+}

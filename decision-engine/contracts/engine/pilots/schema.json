@@ -1,0 +1,1477 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /pilots",
+  "type": "object",
+  "properties": {
+    "pilots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "adoption_pct": {
+            "type": "number"
+          },
+          "advice": {
+            "type": "object",
+            "properties": {
+              "actions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "code",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                }
+              },
+              "evidence": {
+                "type": "object",
+                "properties": {
+                  "band": {
+                    "type": "string"
+                  },
+                  "band_capped_by_fixture": {
+                    "type": "boolean"
+                  },
+                  "gaps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "impact": {
+                          "type": "string"
+                        },
+                        "input": {
+                          "type": "string"
+                        },
+                        "why": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "impact",
+                        "input",
+                        "why"
+                      ]
+                    }
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "input": {
+                          "type": "string"
+                        },
+                        "observed": {
+                          "type": "boolean"
+                        },
+                        "source": {
+                          "type": "string"
+                        },
+                        "weight": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "input",
+                        "observed",
+                        "source",
+                        "weight"
+                      ]
+                    }
+                  },
+                  "observed_weight": {
+                    "type": "number"
+                  },
+                  "share": {
+                    "type": "number"
+                  },
+                  "total_weight": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "band",
+                  "band_capped_by_fixture",
+                  "gaps",
+                  "inputs",
+                  "observed_weight",
+                  "share",
+                  "total_weight"
+                ]
+              },
+              "outcome": {
+                "type": "string"
+              },
+              "reason_codes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "what_would_change_it": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "actions",
+              "evidence",
+              "outcome",
+              "reason_codes",
+              "reasons",
+              "what_would_change_it"
+            ]
+          },
+          "benefit": {
+            "type": "number"
+          },
+          "benefit_driver": {
+            "type": "null"
+          },
+          "benefit_type": {
+            "type": "string"
+          },
+          "breakeven_adoption_pct": {
+            "type": "number"
+          },
+          "checkpoint": {
+            "type": "object",
+            "properties": {
+              "checkpoint": {
+                "type": "string"
+              },
+              "inputs": {
+                "type": "object",
+                "properties": {
+                  "breakeven_adoption_pct": {
+                    "type": "number"
+                  },
+                  "duration_days": {
+                    "type": "null"
+                  },
+                  "evidence_band": {
+                    "type": "string"
+                  },
+                  "observed_adoption_pct": {
+                    "type": "null"
+                  },
+                  "observed_quality_pct": {
+                    "type": "null"
+                  },
+                  "quality_threshold_pct": {
+                    "type": "number"
+                  },
+                  "revised_before": {
+                    "type": "boolean"
+                  },
+                  "target_adoption_pct": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "breakeven_adoption_pct",
+                  "duration_days",
+                  "evidence_band",
+                  "observed_adoption_pct",
+                  "observed_quality_pct",
+                  "quality_threshold_pct",
+                  "revised_before",
+                  "target_adoption_pct"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "checkpoint",
+              "inputs",
+              "reasons"
+            ]
+          },
+          "conservative": {
+            "type": "object",
+            "properties": {
+              "benefit": {
+                "type": "number"
+              },
+              "id": {
+                "type": "string"
+              },
+              "multi_period": {
+                "type": "object",
+                "properties": {
+                  "breakdown": {
+                    "type": "object",
+                    "properties": {
+                      "formula_version": {
+                        "type": "string"
+                      },
+                      "formulas": {
+                        "type": "object",
+                        "properties": {
+                          "breakeven_month": {
+                            "type": "string"
+                          },
+                          "net_annual": {
+                            "type": "string"
+                          },
+                          "npv": {
+                            "type": "string"
+                          },
+                          "profit_loss": {
+                            "type": "string"
+                          },
+                          "roi_pct": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "breakeven_month",
+                          "net_annual",
+                          "npv",
+                          "profit_loss",
+                          "roi_pct"
+                        ]
+                      },
+                      "inputs": {
+                        "type": "object",
+                        "properties": {
+                          "annual_benefit_inr": {
+                            "type": "number"
+                          },
+                          "annual_running_cost_inr": {
+                            "type": "number"
+                          },
+                          "delay_months": {
+                            "type": "number"
+                          },
+                          "discount_rate": {
+                            "type": "number"
+                          },
+                          "horizon_months": {
+                            "type": "number"
+                          },
+                          "one_time_inr": {
+                            "type": "number"
+                          },
+                          "ramp_months": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "annual_benefit_inr",
+                          "annual_running_cost_inr",
+                          "delay_months",
+                          "discount_rate",
+                          "horizon_months",
+                          "one_time_inr",
+                          "ramp_months"
+                        ]
+                      },
+                      "mode": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "formula_version",
+                      "formulas",
+                      "inputs",
+                      "mode"
+                    ]
+                  },
+                  "breakeven_beyond_horizon": {
+                    "type": "boolean"
+                  },
+                  "breakeven_month": {
+                    "type": "null"
+                  },
+                  "cumulative": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "discount_rate": {
+                    "type": "number"
+                  },
+                  "formula_version": {
+                    "type": "string"
+                  },
+                  "horizon_months": {
+                    "type": "number"
+                  },
+                  "npv_inr": {
+                    "type": "number"
+                  },
+                  "profit_inr": {
+                    "type": "number"
+                  },
+                  "roi_pct": {
+                    "type": "number"
+                  },
+                  "value_per_1m_tokens": {
+                    "type": "number"
+                  },
+                  "value_vs_price_ratio": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "breakdown",
+                  "breakeven_beyond_horizon",
+                  "breakeven_month",
+                  "cumulative",
+                  "discount_rate",
+                  "formula_version",
+                  "horizon_months",
+                  "npv_inr",
+                  "profit_inr",
+                  "roi_pct",
+                  "value_per_1m_tokens",
+                  "value_vs_price_ratio"
+                ]
+              },
+              "net": {
+                "type": "number"
+              },
+              "payback_months": {
+                "type": [
+                  "null",
+                  "number"
+                ]
+              }
+            },
+            "required": [
+              "benefit",
+              "id",
+              "multi_period",
+              "net",
+              "payback_months"
+            ]
+          },
+          "decision": {
+            "type": "object",
+            "properties": {
+              "data_readiness": {
+                "type": "object",
+                "properties": {
+                  "checks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "check": {
+                          "type": "string"
+                        },
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "check",
+                        "ok"
+                      ]
+                    }
+                  },
+                  "level": {
+                    "type": "string"
+                  },
+                  "missing": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "share": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "checks",
+                  "level",
+                  "missing",
+                  "share"
+                ]
+              },
+              "eligibility": {
+                "type": "object",
+                "properties": {
+                  "eligible": {
+                    "type": "boolean"
+                  },
+                  "gates": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "detail": {
+                          "type": "string"
+                        },
+                        "gate": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "detail",
+                        "gate",
+                        "status"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "eligible",
+                  "gates"
+                ]
+              },
+              "evidence": {
+                "type": "object",
+                "properties": {
+                  "band": {
+                    "type": "string"
+                  },
+                  "band_capped_by_fixture": {
+                    "type": "boolean"
+                  },
+                  "observed_weight": {
+                    "type": "number"
+                  },
+                  "share": {
+                    "type": "number"
+                  },
+                  "total_weight": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "band",
+                  "band_capped_by_fixture",
+                  "observed_weight",
+                  "share",
+                  "total_weight"
+                ]
+              },
+              "gaps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "impact": {
+                      "type": "string"
+                    },
+                    "input": {
+                      "type": "string"
+                    },
+                    "why": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "impact",
+                    "input",
+                    "why"
+                  ]
+                }
+              },
+              "next_actions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "expected_test": {
+                      "type": "string"
+                    },
+                    "owner_hint": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "code",
+                    "expected_test",
+                    "owner_hint"
+                  ]
+                }
+              },
+              "outcome": {
+                "type": "string"
+              },
+              "reason_codes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "what_would_reverse": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "change_pct": {
+                      "type": "number"
+                    },
+                    "field": {
+                      "type": "string"
+                    },
+                    "from_value": {
+                      "type": "number"
+                    },
+                    "new_outcome": {
+                      "type": "string"
+                    },
+                    "statement": {
+                      "type": "string"
+                    },
+                    "to_value": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "change_pct",
+                    "field",
+                    "from_value",
+                    "new_outcome",
+                    "statement",
+                    "to_value"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "data_readiness",
+              "eligibility",
+              "evidence",
+              "gaps",
+              "next_actions",
+              "outcome",
+              "reason_codes",
+              "reasons",
+              "what_would_reverse"
+            ]
+          },
+          "delay_months": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          },
+          "economics": {
+            "type": "object",
+            "properties": {
+              "baseline_cost_inr": {
+                "type": "null"
+              },
+              "baseline_note": {
+                "type": "null"
+              },
+              "budget": {
+                "type": "object",
+                "properties": {
+                  "contingency_pct": {
+                    "type": "number"
+                  },
+                  "lines": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "budget_inr": {
+                          "type": "null"
+                        },
+                        "line": {
+                          "type": "string"
+                        },
+                        "need_inr": {
+                          "type": "number"
+                        },
+                        "note": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "budget_inr",
+                        "line",
+                        "need_inr",
+                        "note",
+                        "status"
+                      ]
+                    }
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "total_with_contingency_inr": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "contingency_pct",
+                  "lines",
+                  "status",
+                  "total_with_contingency_inr"
+                ]
+              },
+              "capacity_value_inr": {
+                "type": "number"
+              },
+              "cashable_savings_inr": {
+                "type": "number"
+              },
+              "cashable_share_pct": {
+                "type": "number"
+              },
+              "cashable_share_source": {
+                "type": "string"
+              },
+              "competitiveness": {
+                "type": "object",
+                "properties": {
+                  "annualised_ai_cost_inr": {
+                    "type": "number"
+                  },
+                  "basis": {
+                    "type": "string"
+                  },
+                  "class": {
+                    "type": "string"
+                  },
+                  "ratio": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "annualised_ai_cost_inr",
+                  "basis",
+                  "class",
+                  "ratio"
+                ]
+              },
+              "flags": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                }
+              },
+              "gross_cost_avoidance_inr": {
+                "type": "number"
+              },
+              "gross_note": {
+                "type": "string"
+              },
+              "net_cashable_inr": {
+                "type": "number"
+              },
+              "retained_human_cost_inr": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "baseline_cost_inr",
+              "baseline_note",
+              "budget",
+              "capacity_value_inr",
+              "cashable_savings_inr",
+              "cashable_share_pct",
+              "cashable_share_source",
+              "competitiveness",
+              "flags",
+              "gross_cost_avoidance_inr",
+              "gross_note",
+              "net_cashable_inr",
+              "retained_human_cost_inr"
+            ]
+          },
+          "flags": {
+            "type": "array"
+          },
+          "group": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "independent": {
+            "type": "object",
+            "properties": {
+              "benefit": {
+                "type": "number"
+              },
+              "id": {
+                "type": "string"
+              },
+              "multi_period": {
+                "type": "object",
+                "properties": {
+                  "breakdown": {
+                    "type": "object",
+                    "properties": {
+                      "formula_version": {
+                        "type": "string"
+                      },
+                      "formulas": {
+                        "type": "object",
+                        "properties": {
+                          "breakeven_month": {
+                            "type": "string"
+                          },
+                          "net_annual": {
+                            "type": "string"
+                          },
+                          "npv": {
+                            "type": "string"
+                          },
+                          "profit_loss": {
+                            "type": "string"
+                          },
+                          "roi_pct": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "breakeven_month",
+                          "net_annual",
+                          "npv",
+                          "profit_loss",
+                          "roi_pct"
+                        ]
+                      },
+                      "inputs": {
+                        "type": "object",
+                        "properties": {
+                          "annual_benefit_inr": {
+                            "type": "number"
+                          },
+                          "annual_running_cost_inr": {
+                            "type": "number"
+                          },
+                          "delay_months": {
+                            "type": "number"
+                          },
+                          "discount_rate": {
+                            "type": "number"
+                          },
+                          "horizon_months": {
+                            "type": "number"
+                          },
+                          "one_time_inr": {
+                            "type": "number"
+                          },
+                          "ramp_months": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "annual_benefit_inr",
+                          "annual_running_cost_inr",
+                          "delay_months",
+                          "discount_rate",
+                          "horizon_months",
+                          "one_time_inr",
+                          "ramp_months"
+                        ]
+                      },
+                      "mode": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "formula_version",
+                      "formulas",
+                      "inputs",
+                      "mode"
+                    ]
+                  },
+                  "breakeven_beyond_horizon": {
+                    "type": "boolean"
+                  },
+                  "breakeven_month": {
+                    "type": "number"
+                  },
+                  "cumulative": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "discount_rate": {
+                    "type": "number"
+                  },
+                  "formula_version": {
+                    "type": "string"
+                  },
+                  "horizon_months": {
+                    "type": "number"
+                  },
+                  "npv_inr": {
+                    "type": "number"
+                  },
+                  "profit_inr": {
+                    "type": "number"
+                  },
+                  "roi_pct": {
+                    "type": "number"
+                  },
+                  "value_per_1m_tokens": {
+                    "type": "number"
+                  },
+                  "value_vs_price_ratio": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "breakdown",
+                  "breakeven_beyond_horizon",
+                  "breakeven_month",
+                  "cumulative",
+                  "discount_rate",
+                  "formula_version",
+                  "horizon_months",
+                  "npv_inr",
+                  "profit_inr",
+                  "roi_pct",
+                  "value_per_1m_tokens",
+                  "value_vs_price_ratio"
+                ]
+              },
+              "net": {
+                "type": "number"
+              },
+              "payback_months": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "benefit",
+              "id",
+              "multi_period",
+              "net",
+              "payback_months"
+            ]
+          },
+          "money_source": {
+            "type": "string"
+          },
+          "observed_adoption_pct": {
+            "type": "null"
+          },
+          "observed_quality_pct": {
+            "type": "null"
+          },
+          "one_time_costs": {
+            "type": "null"
+          },
+          "provenance": {
+            "type": "object",
+            "properties": {
+              "adoption_pct": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "annual_benefit_inr": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "annual_running_cost_inr": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "benefit_type": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "multi_period": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source"
+                ]
+              },
+              "net_conservative": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "net_independent": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "observed_adoption_pct": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "null"
+                  },
+                  "value": {
+                    "type": "null"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "observed_quality_pct": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "null"
+                  },
+                  "value": {
+                    "type": "null"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "payback_months_conservative": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": [
+                      "null",
+                      "number"
+                    ]
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "payback_months_independent": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "readiness": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              },
+              "setup_inr": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "note",
+                  "source",
+                  "value"
+                ]
+              }
+            },
+            "required": [
+              "adoption_pct",
+              "annual_benefit_inr",
+              "annual_running_cost_inr",
+              "benefit_type",
+              "multi_period",
+              "net_conservative",
+              "net_independent",
+              "observed_adoption_pct",
+              "observed_quality_pct",
+              "payback_months_conservative",
+              "payback_months_independent",
+              "readiness",
+              "setup_inr"
+            ]
+          },
+          "ramp_months": {
+            "type": "number"
+          },
+          "readiness": {
+            "type": "string"
+          },
+          "recurring_costs": {
+            "type": "null"
+          },
+          "run": {
+            "type": "number"
+          },
+          "scenarios": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "adoption_pct": {
+                  "type": "number"
+                },
+                "assumptions": {
+                  "type": "object",
+                  "properties": {
+                    "adoption_multiplier": {
+                      "type": "number"
+                    },
+                    "held_at_base": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "multiplies": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "adoption_multiplier",
+                    "held_at_base",
+                    "multiplies"
+                  ]
+                },
+                "net_annual": {
+                  "type": "number"
+                },
+                "payback_months": {
+                  "type": [
+                    "null",
+                    "number"
+                  ]
+                },
+                "realized_benefit": {
+                  "type": "number"
+                },
+                "scenario": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "adoption_pct",
+                "assumptions",
+                "net_annual",
+                "payback_months",
+                "realized_benefit",
+                "scenario"
+              ]
+            }
+          },
+          "setup": {
+            "type": "number"
+          },
+          "stop_rule": {
+            "type": "object",
+            "properties": {
+              "actual": {
+                "type": "null"
+              },
+              "decision": {
+                "type": "string"
+              },
+              "metric": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "threshold": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "actual",
+              "decision",
+              "metric",
+              "reasons",
+              "threshold"
+            ]
+          },
+          "task": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "adoption_pct",
+          "advice",
+          "benefit",
+          "benefit_driver",
+          "benefit_type",
+          "breakeven_adoption_pct",
+          "checkpoint",
+          "conservative",
+          "decision",
+          "delay_months",
+          "description",
+          "economics",
+          "flags",
+          "group",
+          "id",
+          "independent",
+          "money_source",
+          "observed_adoption_pct",
+          "observed_quality_pct",
+          "one_time_costs",
+          "provenance",
+          "ramp_months",
+          "readiness",
+          "recurring_costs",
+          "run",
+          "scenarios",
+          "setup",
+          "stop_rule",
+          "task"
+        ]
+      }
+    },
+    "forecast": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "method_note": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "tokens_per_month": {
+              "type": "number"
+            },
+            "price_per_1m_tokens": {
+              "type": "number"
+            },
+            "ai_fixed_cost_inr_per_year": {
+              "type": "number"
+            },
+            "annual_usage_growth_pct": {
+              "type": "number"
+            },
+            "annual_price_drift_pct": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "ai_fixed_cost_inr_per_year",
+            "annual_price_drift_pct",
+            "annual_usage_growth_pct",
+            "price_per_1m_tokens",
+            "tokens_per_month"
+          ]
+        },
+        "ai_run_cost_inr": {
+          "type": "number"
+        },
+        "next_fy_cost_inr": {
+          "type": "number"
+        },
+        "inflation_flag": {
+          "type": "boolean"
+        },
+        "flags": {
+          "type": "array"
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "monthly_tokens": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "note",
+                "source",
+                "value"
+              ]
+            },
+            "ai_run_cost_inr": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "note",
+                "source",
+                "value"
+              ]
+            },
+            "next_fy_cost_inr": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "note",
+                "source",
+                "value"
+              ]
+            }
+          },
+          "required": [
+            "ai_run_cost_inr",
+            "monthly_tokens",
+            "next_fy_cost_inr"
+          ]
+        }
+      },
+      "required": [
+        "ai_run_cost_inr",
+        "flags",
+        "inflation_flag",
+        "inputs",
+        "method",
+        "method_note",
+        "next_fy_cost_inr",
+        "provenance"
+      ]
+    },
+    "invalid": {
+      "type": "array"
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "tie_break_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "forecast",
+    "invalid",
+    "pilots",
+    "tie_break_order",
+    "warnings"
+  ]
+}

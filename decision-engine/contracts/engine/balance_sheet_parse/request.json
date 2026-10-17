@@ -1,0 +1,14 @@
+{
+  "method": "POST",
+  "path": "/balance-sheet/parse",
+  "body": {
+    "multipart": {
+      "file": [
+        "Account,Amount in INR\nAI software licences,1200000\nRent,25000\nCloud AI platform,350000\n",
+        "bs.csv",
+        "text/csv"
+      ],
+      "data": {}
+    }
+  }
+}

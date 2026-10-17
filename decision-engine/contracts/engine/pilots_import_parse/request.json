@@ -1,0 +1,14 @@
+{
+  "method": "POST",
+  "path": "/pilots/import/parse",
+  "body": {
+    "multipart": {
+      "file": [
+        "id,task,setup_cost_inr,annual_benefit_inr,annual_running_cost_inr,readiness,adoption_pct\nP1,Invoice extraction,200000,180000,60000,high,70\nP2,Ticket triage,150000,120000,,medium,\n",
+        "pilots.csv",
+        "text/csv"
+      ],
+      "data": {}
+    }
+  }
+}

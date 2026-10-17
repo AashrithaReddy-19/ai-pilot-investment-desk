@@ -1,0 +1,34 @@
+{
+  "method": "POST",
+  "path": "/compare",
+  "body": {
+    "proposals": [
+      {
+        "name": "A",
+        "setup_cost_inr": 200000,
+        "annual_benefit_inr": 180000,
+        "ai_running_cost_inr": 60000,
+        "readiness": "high",
+        "adoption_pct": 70,
+        "observed_adoption_pct": 72,
+        "observed_quality_pct": 88,
+        "overlap_group": "finance"
+      },
+      {
+        "name": "B",
+        "setup_cost_inr": 500000,
+        "annual_benefit_inr": 400000,
+        "ai_running_cost_inr": 150000,
+        "readiness": "medium",
+        "overlap_group": "support"
+      },
+      {
+        "name": "C",
+        "setup_cost_inr": 100000,
+        "annual_benefit_inr": 90000,
+        "ai_running_cost_inr": 70000
+      }
+    ],
+    "budget": 700000
+  }
+}

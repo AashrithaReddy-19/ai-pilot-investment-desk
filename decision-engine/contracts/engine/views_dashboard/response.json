@@ -1,0 +1,624 @@
+{
+  "header": {
+    "title": "AI investment decision",
+    "rules_version": "7",
+    "contract_version": 1,
+    "formula_version": "cf-1",
+    "mode": "independent",
+    "horizon_months": 36,
+    "discount_rate": 0.1,
+    "budget": 700000,
+    "proposal_count": 3
+  },
+  "summary": {
+    "headline": "Run A as a limited pilot",
+    "text": "Run A as a limited pilot. Funded set B, A: INR 370,000/yr net savings on INR 700,000 invested.",
+    "read_more": "A ranks first with score 79.04. B recommended: highest net benefit within budget (2.5 L/yr net annual savings, break-even 24.0 months). Funded together with A: total INR 370,000/yr net savings. Horizon 36 months at r = 0.1: ROI and break-even are supporting evidence, not the selector. C dropped: 3-year loss (break-even beyond the horizon). B: Payable on paper, but no decision-driving input is observed or calculated: every number is fixture or team assumption. A: Payable (net INR 120,000/yr, break-even month 20) but the evidence band is low: run a time-boxed limited pilot first. C: Cost competitiveness is uncompetitive (annualised AI cost INR 103,333 ÷ gross benefit INR 90,000): the AI costs more than the work it replaces."
+  },
+  "kpis": [
+    {
+      "key": "total_investment_inr",
+      "label": "Total investment",
+      "value": 700000,
+      "unit": "INR",
+      "source": "Σ setup of the funded set"
+    },
+    {
+      "key": "net_annual_savings_inr",
+      "label": "Net annual savings",
+      "value": 370000,
+      "unit": "INR/yr",
+      "source": "Σ net annual benefit of the funded set (compare selection)"
+    },
+    {
+      "key": "cashable_savings_inr",
+      "label": "Cashable savings",
+      "value": 580000,
+      "unit": "INR/yr",
+      "source": "Σ gross × cashable share"
+    },
+    {
+      "key": "capacity_value_inr",
+      "label": "Capacity value",
+      "value": 0,
+      "unit": "INR/yr",
+      "source": "Σ gross − cashable"
+    },
+    {
+      "key": "profit_inr",
+      "label": "36-month profit",
+      "value": 410000,
+      "unit": "INR",
+      "source": "Σ multi-period profit of the funded set"
+    },
+    {
+      "key": "npv_inr",
+      "label": "NPV",
+      "value": 267120,
+      "unit": "INR",
+      "source": "Σ NPV at r = 0.1"
+    },
+    {
+      "key": "roi_pct",
+      "label": "36-month ROI",
+      "value": 58.6,
+      "unit": "%",
+      "source": "portfolio profit ÷ total investment"
+    },
+    {
+      "key": "breakeven_month",
+      "label": "Portfolio break-even",
+      "value": 23,
+      "unit": "month",
+      "source": "first month the funded set's summed cumulative cash flow is ≥ 0"
+    },
+    {
+      "key": "ai_burn_to_date_inr",
+      "label": "AI burn to date",
+      "value": 1550000,
+      "unit": "INR",
+      "source": "observed (confirmed balance-sheet rows)"
+    },
+    {
+      "key": "next_fy_ai_cost_inr",
+      "label": "Next-FY AI cost",
+      "value": 182000,
+      "unit": "INR",
+      "source": "assumed growth fallback (send usage history to /forecast/usage for a backtested forecast)"
+    }
+  ],
+  "recommendation": {
+    "outcome": "limited_pilot",
+    "best": "A",
+    "contenders": [],
+    "funded": [
+      "B",
+      "A"
+    ],
+    "reasons": [
+      "A ranks first with score 79.04."
+    ],
+    "compare_text": "B recommended: highest net benefit within budget (2.5 L/yr net annual savings, break-even 24.0 months). Funded together with A: total INR 370,000/yr net savings. Horizon 36 months at r = 0.1: ROI and break-even are supporting evidence, not the selector. C dropped: 3-year loss (break-even beyond the horizon)."
+  },
+  "best_proposal": {
+    "id": "A",
+    "state": "recommended",
+    "outcome": "limited_pilot",
+    "score": 79.04,
+    "rank": 1,
+    "funding_rank": 2,
+    "net_annual_inr": 120000,
+    "payback_months": 20.0,
+    "roi_pct": 80.0,
+    "npv_inr": 113447,
+    "breakeven_month": 20,
+    "evidence_band": "low",
+    "budget_status": "within",
+    "competitiveness": "highly_competitive",
+    "reason": "Payable (net INR 120,000/yr, break-even month 20) but the evidence band is low: run a time-boxed limited pilot first."
+  },
+  "proposals": [
+    {
+      "id": "B",
+      "state": "recommended",
+      "outcome": "gather_evidence",
+      "score": 73.5,
+      "rank": 2,
+      "funding_rank": 1,
+      "net_annual_inr": 250000,
+      "payback_months": 24.0,
+      "roi_pct": 50.0,
+      "npv_inr": 153673,
+      "breakeven_month": 24,
+      "evidence_band": "low",
+      "budget_status": "within",
+      "competitiveness": "marginal",
+      "reason": "Payable on paper, but no decision-driving input is observed or calculated: every number is fixture or team assumption."
+    },
+    {
+      "id": "A",
+      "state": "recommended",
+      "outcome": "limited_pilot",
+      "score": 79.04,
+      "rank": 1,
+      "funding_rank": 2,
+      "net_annual_inr": 120000,
+      "payback_months": 20.0,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20,
+      "evidence_band": "low",
+      "budget_status": "within",
+      "competitiveness": "highly_competitive",
+      "reason": "Payable (net INR 120,000/yr, break-even month 20) but the evidence band is low: run a time-boxed limited pilot first."
+    },
+    {
+      "id": "C",
+      "state": "not_viable",
+      "outcome": "renegotiate",
+      "score": 10.0,
+      "rank": 3,
+      "funding_rank": null,
+      "net_annual_inr": 20000,
+      "payback_months": 60.0,
+      "roi_pct": -40.0,
+      "npv_inr": -47231,
+      "breakeven_month": null,
+      "evidence_band": "low",
+      "budget_status": "within",
+      "competitiveness": "uncompetitive",
+      "reason": "Cost competitiveness is uncompetitive (annualised AI cost INR 103,333 ÷ gross benefit INR 90,000): the AI costs more than the work it replaces."
+    }
+  ],
+  "risks": [
+    {
+      "code": "GATE_BREAKEVEN_IN_HORIZON",
+      "message": "fails the BREAKEVEN_IN_HORIZON gate",
+      "ids": [
+        "C"
+      ],
+      "severity": "high"
+    },
+    {
+      "code": "BASELINE_MISSING",
+      "message": "No baseline (today's cost of the process); retained human cost is unknown.",
+      "ids": [
+        "B",
+        "C"
+      ],
+      "severity": "low"
+    },
+    {
+      "code": "OVERLAP_UNKNOWN",
+      "message": "Overlap group unknown; treated as standalone. Confirm with owner.",
+      "ids": [
+        "C"
+      ],
+      "severity": "low"
+    }
+  ],
+  "next_actions": [
+    {
+      "code": "MONEY_ASSUMED",
+      "action": "back one money figure with an invoice, a signed contract or a written vendor quote",
+      "owner_hint": "finance",
+      "expected_test": "a decision-driving money input sourced as observed"
+    },
+    {
+      "code": "NO_OBSERVED_ADOPTION",
+      "action": "run one adoption spot-check batch over the real users",
+      "owner_hint": "org lead",
+      "expected_test": "observed adoption recorded from the batch"
+    },
+    {
+      "code": "BASELINE_MISSING",
+      "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+      "owner_hint": "ops lead",
+      "expected_test": "baseline cost known; retained human cost computed"
+    },
+    {
+      "code": "NO_OBSERVED_QUALITY",
+      "action": "run one quality spot-check on pilot outputs and record it",
+      "owner_hint": "ops lead",
+      "expected_test": "observed quality recorded from the batch"
+    }
+  ],
+  "charts": {
+    "series_order": [
+      "B",
+      "A",
+      "C"
+    ],
+    "cumulative_cash_flow": {
+      "x": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "x_label": "month",
+      "unit": "INR",
+      "series": [
+        {
+          "id": "B",
+          "values": [
+            -479167,
+            -458333,
+            -437500,
+            -416667,
+            -395833,
+            -375000,
+            -354167,
+            -333333,
+            -312500,
+            -291667,
+            -270833,
+            -250000,
+            -229167,
+            -208333,
+            -187500,
+            -166667,
+            -145833,
+            -125000,
+            -104167,
+            -83333,
+            -62500,
+            -41667,
+            -20833,
+            0,
+            20833,
+            41667,
+            62500,
+            83333,
+            104167,
+            125000,
+            145833,
+            166667,
+            187500,
+            208333,
+            229167,
+            250000
+          ]
+        },
+        {
+          "id": "A",
+          "values": [
+            -190000,
+            -180000,
+            -170000,
+            -160000,
+            -150000,
+            -140000,
+            -130000,
+            -120000,
+            -110000,
+            -100000,
+            -90000,
+            -80000,
+            -70000,
+            -60000,
+            -50000,
+            -40000,
+            -30000,
+            -20000,
+            -10000,
+            0,
+            10000,
+            20000,
+            30000,
+            40000,
+            50000,
+            60000,
+            70000,
+            80000,
+            90000,
+            100000,
+            110000,
+            120000,
+            130000,
+            140000,
+            150000,
+            160000
+          ]
+        },
+        {
+          "id": "C",
+          "values": [
+            -98333,
+            -96667,
+            -95000,
+            -93333,
+            -91667,
+            -90000,
+            -88333,
+            -86667,
+            -85000,
+            -83333,
+            -81667,
+            -80000,
+            -78333,
+            -76667,
+            -75000,
+            -73333,
+            -71667,
+            -70000,
+            -68333,
+            -66667,
+            -65000,
+            -63333,
+            -61667,
+            -60000,
+            -58333,
+            -56667,
+            -55000,
+            -53333,
+            -51667,
+            -50000,
+            -48333,
+            -46667,
+            -45000,
+            -43333,
+            -41667,
+            -40000
+          ]
+        }
+      ],
+      "portfolio": [
+        -669167,
+        -638333,
+        -607500,
+        -576667,
+        -545833,
+        -515000,
+        -484167,
+        -453333,
+        -422500,
+        -391667,
+        -360833,
+        -330000,
+        -299167,
+        -268333,
+        -237500,
+        -206667,
+        -175833,
+        -145000,
+        -114167,
+        -83333,
+        -52500,
+        -21667,
+        9167,
+        40000,
+        70833,
+        101667,
+        132500,
+        163333,
+        194167,
+        225000,
+        255833,
+        286667,
+        317500,
+        348333,
+        379167,
+        410000
+      ]
+    },
+    "yearly_savings": {
+      "x": [
+        1,
+        2,
+        3
+      ],
+      "x_label": "year",
+      "unit": "INR",
+      "series": [
+        {
+          "id": "B",
+          "values": [
+            -250000,
+            250000,
+            250000
+          ]
+        },
+        {
+          "id": "A",
+          "values": [
+            -80000,
+            120000,
+            120000
+          ]
+        },
+        {
+          "id": "C",
+          "values": [
+            -80000,
+            20000,
+            20000
+          ]
+        }
+      ],
+      "portfolio": [
+        -330000,
+        370000,
+        370000
+      ]
+    },
+    "roi_breakeven": {
+      "unit": {
+        "roi_pct": "%",
+        "breakeven_month": "month"
+      },
+      "rows": [
+        {
+          "id": "B",
+          "roi_pct": 50.0,
+          "breakeven_month": 24
+        },
+        {
+          "id": "A",
+          "roi_pct": 80.0,
+          "breakeven_month": 20
+        },
+        {
+          "id": "C",
+          "roi_pct": -40.0,
+          "breakeven_month": null
+        }
+      ]
+    },
+    "cash_vs_capacity": {
+      "unit": "INR/yr",
+      "rows": [
+        {
+          "id": "B",
+          "cashable_inr": 400000,
+          "capacity_inr": 0,
+          "running_cost_inr": 150000
+        },
+        {
+          "id": "A",
+          "cashable_inr": 180000,
+          "capacity_inr": 0,
+          "running_cost_inr": 60000
+        },
+        {
+          "id": "C",
+          "cashable_inr": 90000,
+          "capacity_inr": 0,
+          "running_cost_inr": 70000
+        }
+      ]
+    }
+  },
+  "yearly_portfolio": [
+    {
+      "year": 1,
+      "benefit_inr": 580000,
+      "cashable_inr": 580000,
+      "running_cost_inr": 210000,
+      "one_time_inr": 700000,
+      "net_inr": -330000,
+      "cumulative_inr": -330000
+    },
+    {
+      "year": 2,
+      "benefit_inr": 580000,
+      "cashable_inr": 580000,
+      "running_cost_inr": 210000,
+      "one_time_inr": 0,
+      "net_inr": 370000,
+      "cumulative_inr": 40000
+    },
+    {
+      "year": 3,
+      "benefit_inr": 580000,
+      "cashable_inr": 580000,
+      "running_cost_inr": 210000,
+      "one_time_inr": 0,
+      "net_inr": 370000,
+      "cumulative_inr": 410000
+    }
+  ],
+  "budget": {
+    "ids": [
+      "A",
+      "B"
+    ],
+    "status": "at_risk",
+    "contingency_pct": 10,
+    "lines": [
+      {
+        "line": "implementation_inr",
+        "need_inr": 700000,
+        "budget_inr": 800000,
+        "status": "within",
+        "note": "setup ≤ implementation budget"
+      },
+      {
+        "line": "first_year_inr",
+        "need_inr": 910000,
+        "budget_inr": null,
+        "status": "unknown",
+        "note": "setup + 12 months of running cost"
+      },
+      {
+        "line": "recurring_inr_per_year",
+        "need_inr": 210000,
+        "budget_inr": null,
+        "status": "unknown",
+        "note": "annual running cost"
+      },
+      {
+        "line": "total_inr",
+        "need_inr": 1463000,
+        "budget_inr": 1500000,
+        "status": "at_risk",
+        "note": "(setup + running over 36 months) × (1 + 10% contingency)"
+      }
+    ],
+    "total_with_contingency_inr": 1463000
+  },
+  "links": {
+    "decision_report": "/export/decision-report",
+    "yearly_csv": "/export/yearly-csv",
+    "compare": "/compare",
+    "decision": "/decision",
+    "yearly_savings": "/views/yearly-savings"
+  },
+  "consistency": [
+    {
+      "check": "yearly net totals equal multi-period profit for every proposal",
+      "ok": true
+    },
+    {
+      "check": "KPI net annual savings equals Σ funded compare rows",
+      "ok": true
+    },
+    {
+      "check": "KPI profit equals Σ funded yearly net",
+      "ok": true
+    },
+    {
+      "check": "portfolio cumulative series ends at the KPI profit",
+      "ok": true
+    }
+  ],
+  "flags": [
+    {
+      "code": "OVERLAP_UNKNOWN",
+      "message": "Overlap group unknown; treated as standalone. Confirm with owner."
+    }
+  ],
+  "warnings": []
+}

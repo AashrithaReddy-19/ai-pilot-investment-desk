@@ -73,8 +73,58 @@ def validate(proposals: Any) -> list[dict]:
             raise CompareError(f"proposal {i} ({name}): overlap_group must be a string of at most 40 characters.")
         if grp and grp.strip():
             out["overlap_group"] = grp.strip()
+        for key in ("observed_adoption_pct", "observed_quality_pct"):
+            v = p.get(key)
+            if v is None:
+                continue
+            if not _num(v) or not 0 <= v <= 100:
+                raise CompareError(f"proposal {i} ({name}): {key} must be a number in 0-100 or null.")
+            out[key] = v
+        for key in ("one_time_costs", "recurring_costs"):
+            if p.get(key) is not None:
+                if not isinstance(p[key], list):
+                    raise CompareError(f"proposal {i} ({name}): {key} must be an array of cost lines.")
+                out[key] = p[key]          # line-level checks happen in the loader (malformed lines warn)
+        for key in ("benefit_driver", "baseline"):
+            if p.get(key) is not None:
+                if not isinstance(p[key], dict):
+                    raise CompareError(f"proposal {i} ({name}): {key} must be an object.")
+                out[key] = p[key]
+        ms = p.get("money_source", core.PROVENANCE_ASSUMED)
+        if ms not in core.MONEY_SOURCES:
+            raise CompareError(f"proposal {i} ({name}): money_source must be one of {core.MONEY_SOURCES} "
+                               "(observed = invoice- or contract-backed figures).")
+        out["money_source"] = ms
+        cs = p.get("cashable_share_pct")
+        if cs is not None:
+            if not _num(cs) or not 0 <= cs <= 100:
+                raise CompareError(f"proposal {i} ({name}): cashable_share_pct must be a number in 0-100 or null.")
+            out["cashable_share_pct"] = cs
         cleaned.append(out)
     return cleaned
+
+
+def to_pilots(proposals: list[dict], d: dict) -> dict:
+    """Validated proposals -> the engine's loader result ({pilots, invalid, warnings}).
+    Every proposal-based endpoint goes through this one conversion, so all of them score
+    a proposal identically."""
+    fixture, exts = [], []
+    for p in proposals:
+        fixture.append({"id": p["name"], "task": p["name"],
+                        "setup_cost_inr": p["setup_cost_inr"],
+                        "annual_running_cost_inr": p["ai_running_cost_inr"],
+                        "annual_benefit_inr": p["annual_benefit_inr"],
+                        "benefit_type": p["benefit_type"],
+                        **({"overlap_group": p["overlap_group"]} if "overlap_group" in p else {}),
+                        **({"ramp_months": p["ramp_months"]} if p["ramp_months"] else {}),
+                        **({"delay_months": p["delay_months"]} if p["delay_months"] else {}),
+                        **{k: p[k] for k in ("one_time_costs", "recurring_costs", "benefit_driver", "money_source") if k in p}})
+        exts.append({"id": p["name"], "readiness": p["readiness"], "adoption_pct": p["adoption_pct"],
+                     **{k: p[k] for k in ("observed_adoption_pct", "observed_quality_pct") if k in p}})
+    L = core.load_pilots({"records": {"pilots": fixture}}, exts, d)
+    if L["invalid"]:
+        raise CompareError(f"proposal could not be loaded: {L['invalid'][0]['errors']}")
+    return L
 
 
 def run(proposals: list[dict], budget: Any, mode: str, d: dict) -> dict:
@@ -86,20 +136,7 @@ def run(proposals: list[dict], budget: Any, mode: str, d: dict) -> dict:
     Without a budget the surviving set is the funding set. ROI and break-even are reported as
     supporting evidence, never the selector.
     """
-    fixture, exts = [], []
-    for p in proposals:
-        fixture.append({"id": p["name"], "task": p["name"],
-                        "setup_cost_inr": p["setup_cost_inr"],
-                        "annual_running_cost_inr": p["ai_running_cost_inr"],
-                        "annual_benefit_inr": p["annual_benefit_inr"],
-                        "benefit_type": p["benefit_type"],
-                        **({"overlap_group": p["overlap_group"]} if "overlap_group" in p else {}),
-                        **({"ramp_months": p["ramp_months"]} if p["ramp_months"] else {}),
-                        **({"delay_months": p["delay_months"]} if p["delay_months"] else {})})
-        exts.append({"id": p["name"], "readiness": p["readiness"], "adoption_pct": p["adoption_pct"]})
-    L = core.load_pilots({"records": {"pilots": fixture}}, exts, d)
-    if L["invalid"]:
-        raise CompareError(f"proposal could not be loaded: {L['invalid'][0]['errors']}")
+    L = to_pilots(proposals, d)
     warnings = list(L["warnings"])
     mode = mode if mode in ("independent", "conservative") else "independent"
 
@@ -233,7 +270,7 @@ def _recommendation_text(rows: list[dict], selection: dict, pf: Optional[dict], 
     be = f", break-even {first['breakeven_month']:.1f} months" if first["breakeven_month"] is not None else ""
     within = " within budget" if selection["budget"] is not None else ""
     txt = (f"{first['name']} recommended: highest net benefit{within} "
-           f"({first['net_annual_inr'] / 100000:g} L/yr net annual savings{be}).")
+           f"({_lakh(first['net_annual_inr'])} L/yr net annual savings{be}).")
     others = [r["name"] for r in rows if r["id"] in sel and r["id"] != first["id"]]
     if others:
         txt += f" Funded together with {', '.join(others)}: total {_inrupee(selection['total_net_inr'])}/yr net savings."
@@ -249,6 +286,11 @@ def _recommendation_text(rows: list[dict], selection: dict, pf: Optional[dict], 
                 reason = reason[len("Not funded: "):]
             txt += f" {r['name']} not funded: {reason}."
     return txt
+
+
+def _lakh(x: float) -> str:
+    """INR as lakh without scientific notation: 250000 -> '2.5', 12345678 -> '123.46'."""
+    return f"{x / 100000:,.2f}".rstrip("0").rstrip(".")
 
 
 def _inrupee(x: float) -> str:

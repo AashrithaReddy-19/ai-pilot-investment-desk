@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /views/yearly-savings",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string"
+    },
+    "horizon_months": {
+      "type": "number"
+    },
+    "proposals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "matches_profit": {
+            "type": "boolean"
+          },
+          "profit_inr": {
+            "type": "number"
+          },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "benefit_inr": {
+                "type": "number"
+              },
+              "capacity_inr": {
+                "type": "number"
+              },
+              "cashable_inr": {
+                "type": "number"
+              },
+              "net_inr": {
+                "type": "number"
+              },
+              "one_time_inr": {
+                "type": "number"
+              },
+              "running_cost_inr": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "benefit_inr",
+              "capacity_inr",
+              "cashable_inr",
+              "net_inr",
+              "one_time_inr",
+              "running_cost_inr"
+            ]
+          },
+          "years": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "benefit_inr": {
+                  "type": "number"
+                },
+                "capacity_inr": {
+                  "type": "number"
+                },
+                "cashable_inr": {
+                  "type": "number"
+                },
+                "cumulative_inr": {
+                  "type": "number"
+                },
+                "months": {
+                  "type": "number"
+                },
+                "net_inr": {
+                  "type": "number"
+                },
+                "one_time_inr": {
+                  "type": "number"
+                },
+                "running_cost_inr": {
+                  "type": "number"
+                },
+                "year": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "benefit_inr",
+                "capacity_inr",
+                "cashable_inr",
+                "cumulative_inr",
+                "months",
+                "net_inr",
+                "one_time_inr",
+                "running_cost_inr",
+                "year"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "matches_profit",
+          "profit_inr",
+          "totals",
+          "years"
+        ]
+      }
+    },
+    "portfolio": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "years": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "benefit_inr": {
+                "type": "number"
+              },
+              "cashable_inr": {
+                "type": "number"
+              },
+              "cumulative_inr": {
+                "type": "number"
+              },
+              "net_inr": {
+                "type": "number"
+              },
+              "one_time_inr": {
+                "type": "number"
+              },
+              "running_cost_inr": {
+                "type": "number"
+              },
+              "year": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "benefit_inr",
+              "cashable_inr",
+              "cumulative_inr",
+              "net_inr",
+              "one_time_inr",
+              "running_cost_inr",
+              "year"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ids",
+        "years"
+      ]
+    },
+    "formula_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "formula_version",
+    "horizon_months",
+    "mode",
+    "portfolio",
+    "proposals"
+  ]
+}

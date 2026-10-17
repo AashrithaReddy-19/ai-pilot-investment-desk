@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /balance-sheet/confirm",
+  "type": "object",
+  "properties": {
+    "ai_burn_to_date": {
+      "type": "number"
+    },
+    "source": {
+      "type": "string"
+    },
+    "rows_confirmed": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "confirmations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "amount_inr": {
+            "type": "number"
+          },
+          "label": {
+            "type": "string"
+          },
+          "row": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "amount_inr",
+          "label",
+          "row"
+        ]
+      }
+    },
+    "amount_column_used": {
+      "type": "string"
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "multiplier": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "choice",
+        "multiplier",
+        "source",
+        "unit"
+      ]
+    },
+    "next_fy": {
+      "type": "object",
+      "properties": {
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "tokens_per_month": {
+              "type": "number"
+            },
+            "price_per_1m_tokens": {
+              "type": "number"
+            },
+            "ai_fixed_cost_inr_per_year": {
+              "type": "number"
+            },
+            "annual_usage_growth_pct": {
+              "type": "number"
+            },
+            "annual_price_drift_pct": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "ai_fixed_cost_inr_per_year",
+            "annual_price_drift_pct",
+            "annual_usage_growth_pct",
+            "price_per_1m_tokens",
+            "tokens_per_month"
+          ]
+        },
+        "ai_run_cost_inr": {
+          "type": "number"
+        },
+        "next_fy_cost_inr": {
+          "type": "number"
+        },
+        "inflation_flag": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ai_run_cost_inr",
+        "inflation_flag",
+        "inputs",
+        "next_fy_cost_inr"
+      ]
+    },
+    "flags": {
+      "type": "array"
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "ai_burn_annualised_inr": {
+      "type": "number"
+    },
+    "period": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "annualisation_factor": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "annualisation_factor",
+        "choice",
+        "period",
+        "source"
+      ]
+    },
+    "format": {
+      "type": "string"
+    },
+    "findings": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "ai_burn_annualised_inr",
+    "ai_burn_to_date",
+    "amount_column_used",
+    "confirmations",
+    "findings",
+    "flags",
+    "format",
+    "next_fy",
+    "period",
+    "rows_confirmed",
+    "source",
+    "unit",
+    "warnings"
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /pilots/import/confirm",
+  "type": "object",
+  "properties": {
+    "pilots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "annual_benefit_inr": {
+            "type": "number"
+          },
+          "annual_running_cost_inr": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "setup_cost_inr": {
+            "type": "number"
+          },
+          "task": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "annual_benefit_inr",
+          "id",
+          "setup_cost_inr",
+          "task"
+        ]
+      }
+    },
+    "extension_pilots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "adoption_pct": {
+            "type": "number"
+          },
+          "id": {
+            "type": "string"
+          },
+          "readiness": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "readiness"
+        ]
+      }
+    },
+    "flags": {
+      "type": "array"
+    },
+    "warnings": {
+      "type": "array"
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "multiplier": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "choice",
+        "multiplier",
+        "source",
+        "unit"
+      ]
+    },
+    "periods": {
+      "type": "object",
+      "properties": {
+        "annual_running_cost_inr": {
+          "type": "object",
+          "properties": {
+            "column": {
+              "type": "string"
+            },
+            "period": {
+              "type": "string"
+            },
+            "annualisation_factor": {
+              "type": "number"
+            },
+            "source": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "annualisation_factor",
+            "column",
+            "period",
+            "source"
+          ]
+        },
+        "annual_benefit_inr": {
+          "type": "object",
+          "properties": {
+            "column": {
+              "type": "string"
+            },
+            "period": {
+              "type": "string"
+            },
+            "annualisation_factor": {
+              "type": "number"
+            },
+            "source": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "annualisation_factor",
+            "column",
+            "period",
+            "source"
+          ]
+        }
+      },
+      "required": [
+        "annual_benefit_inr",
+        "annual_running_cost_inr"
+      ]
+    },
+    "format": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "extension_pilots",
+    "flags",
+    "format",
+    "periods",
+    "pilots",
+    "unit",
+    "warnings"
+  ]
+}

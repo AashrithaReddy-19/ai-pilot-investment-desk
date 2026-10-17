@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /stoprule/AI1",
+  "type": "object",
+  "properties": {
+    "decision": {
+      "type": "string"
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metric": {
+      "type": "string"
+    },
+    "threshold": {
+      "type": "null"
+    },
+    "actual": {
+      "type": "null"
+    }
+  },
+  "required": [
+    "actual",
+    "decision",
+    "metric",
+    "reasons",
+    "threshold"
+  ]
+}

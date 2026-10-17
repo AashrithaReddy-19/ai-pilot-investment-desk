@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GET /health",
+  "type": "object",
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "rules_version": {
+      "type": "string"
+    },
+    "contract_version": {
+      "type": "number"
+    },
+    "formula_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "contract_version",
+    "formula_version",
+    "ok",
+    "rules_version"
+  ]
+}

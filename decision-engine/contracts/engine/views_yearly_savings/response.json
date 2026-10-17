@@ -1,0 +1,186 @@
+{
+  "mode": "independent",
+  "horizon_months": 36,
+  "proposals": [
+    {
+      "id": "A",
+      "years": [
+        {
+          "year": 1,
+          "months": 12,
+          "benefit_inr": 180000,
+          "cashable_inr": 180000,
+          "capacity_inr": 0,
+          "running_cost_inr": 60000,
+          "one_time_inr": 200000,
+          "net_inr": -80000,
+          "cumulative_inr": -80000
+        },
+        {
+          "year": 2,
+          "months": 12,
+          "benefit_inr": 180000,
+          "cashable_inr": 180000,
+          "capacity_inr": 0,
+          "running_cost_inr": 60000,
+          "one_time_inr": 0,
+          "net_inr": 120000,
+          "cumulative_inr": 40000
+        },
+        {
+          "year": 3,
+          "months": 12,
+          "benefit_inr": 180000,
+          "cashable_inr": 180000,
+          "capacity_inr": 0,
+          "running_cost_inr": 60000,
+          "one_time_inr": 0,
+          "net_inr": 120000,
+          "cumulative_inr": 160000
+        }
+      ],
+      "totals": {
+        "benefit_inr": 540000,
+        "cashable_inr": 540000,
+        "capacity_inr": 0,
+        "running_cost_inr": 180000,
+        "one_time_inr": 200000,
+        "net_inr": 160000
+      },
+      "profit_inr": 160000,
+      "matches_profit": true
+    },
+    {
+      "id": "B",
+      "years": [
+        {
+          "year": 1,
+          "months": 12,
+          "benefit_inr": 400000,
+          "cashable_inr": 400000,
+          "capacity_inr": 0,
+          "running_cost_inr": 150000,
+          "one_time_inr": 500000,
+          "net_inr": -250000,
+          "cumulative_inr": -250000
+        },
+        {
+          "year": 2,
+          "months": 12,
+          "benefit_inr": 400000,
+          "cashable_inr": 400000,
+          "capacity_inr": 0,
+          "running_cost_inr": 150000,
+          "one_time_inr": 0,
+          "net_inr": 250000,
+          "cumulative_inr": 0
+        },
+        {
+          "year": 3,
+          "months": 12,
+          "benefit_inr": 400000,
+          "cashable_inr": 400000,
+          "capacity_inr": 0,
+          "running_cost_inr": 150000,
+          "one_time_inr": 0,
+          "net_inr": 250000,
+          "cumulative_inr": 250000
+        }
+      ],
+      "totals": {
+        "benefit_inr": 1200000,
+        "cashable_inr": 1200000,
+        "capacity_inr": 0,
+        "running_cost_inr": 450000,
+        "one_time_inr": 500000,
+        "net_inr": 250000
+      },
+      "profit_inr": 250000,
+      "matches_profit": true
+    },
+    {
+      "id": "C",
+      "years": [
+        {
+          "year": 1,
+          "months": 12,
+          "benefit_inr": 90000,
+          "cashable_inr": 90000,
+          "capacity_inr": 0,
+          "running_cost_inr": 70000,
+          "one_time_inr": 100000,
+          "net_inr": -80000,
+          "cumulative_inr": -80000
+        },
+        {
+          "year": 2,
+          "months": 12,
+          "benefit_inr": 90000,
+          "cashable_inr": 90000,
+          "capacity_inr": 0,
+          "running_cost_inr": 70000,
+          "one_time_inr": 0,
+          "net_inr": 20000,
+          "cumulative_inr": -60000
+        },
+        {
+          "year": 3,
+          "months": 12,
+          "benefit_inr": 90000,
+          "cashable_inr": 90000,
+          "capacity_inr": 0,
+          "running_cost_inr": 70000,
+          "one_time_inr": 0,
+          "net_inr": 20000,
+          "cumulative_inr": -40000
+        }
+      ],
+      "totals": {
+        "benefit_inr": 270000,
+        "cashable_inr": 270000,
+        "capacity_inr": 0,
+        "running_cost_inr": 210000,
+        "one_time_inr": 100000,
+        "net_inr": -40000
+      },
+      "profit_inr": -40000,
+      "matches_profit": true
+    }
+  ],
+  "portfolio": {
+    "ids": [
+      "B",
+      "A"
+    ],
+    "years": [
+      {
+        "year": 1,
+        "benefit_inr": 580000,
+        "cashable_inr": 580000,
+        "running_cost_inr": 210000,
+        "one_time_inr": 700000,
+        "net_inr": -330000,
+        "cumulative_inr": -330000
+      },
+      {
+        "year": 2,
+        "benefit_inr": 580000,
+        "cashable_inr": 580000,
+        "running_cost_inr": 210000,
+        "one_time_inr": 0,
+        "net_inr": 370000,
+        "cumulative_inr": 40000
+      },
+      {
+        "year": 3,
+        "benefit_inr": 580000,
+        "cashable_inr": 580000,
+        "running_cost_inr": 210000,
+        "one_time_inr": 0,
+        "net_inr": 370000,
+        "cumulative_inr": 410000
+      }
+    ]
+  },
+  "formula_version": "cf-1"
+}

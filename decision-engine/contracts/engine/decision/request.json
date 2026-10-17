@@ -1,0 +1,45 @@
+{
+  "method": "POST",
+  "path": "/decision",
+  "body": {
+    "proposals": [
+      {
+        "name": "A",
+        "setup_cost_inr": 200000,
+        "annual_benefit_inr": 180000,
+        "ai_running_cost_inr": 60000,
+        "readiness": "high",
+        "adoption_pct": 70,
+        "observed_adoption_pct": 72,
+        "observed_quality_pct": 88,
+        "overlap_group": "finance",
+        "baseline": {
+          "volume_per_month": 2000,
+          "minutes_per_unit": 6,
+          "loaded_cost_per_hour": 1000
+        }
+      },
+      {
+        "name": "B",
+        "setup_cost_inr": 500000,
+        "annual_benefit_inr": 400000,
+        "ai_running_cost_inr": 150000,
+        "readiness": "medium",
+        "overlap_group": "support"
+      },
+      {
+        "name": "C",
+        "setup_cost_inr": 100000,
+        "annual_benefit_inr": 90000,
+        "ai_running_cost_inr": 70000
+      }
+    ],
+    "budget": 700000,
+    "budget_set": {
+      "total_inr": 1500000,
+      "implementation_inr": 800000,
+      "contingency_pct": 10
+    },
+    "ai_burn_to_date": 1550000
+  }
+}

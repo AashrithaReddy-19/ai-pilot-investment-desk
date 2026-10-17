@@ -1,0 +1,76 @@
+{
+  "pilot_id": "AI1",
+  "mode": "independent",
+  "overrides_applied": {
+    "observed_adoption_pct": 40
+  },
+  "base": {
+    "benefit_inr": 180000,
+    "net": 120000,
+    "payback_months": 20.0,
+    "profit_inr": 160000,
+    "roi_pct": 80.0,
+    "npv_inr": 113447,
+    "breakeven_month": 20,
+    "verdict": "REVISE",
+    "stop_rule": {
+      "decision": "REVISE",
+      "reasons": [
+        "Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend."
+      ],
+      "metric": "data",
+      "threshold": null,
+      "actual": null
+    },
+    "portfolio": {
+      "selected": [
+        "AI1",
+        "AI4",
+        "AI2"
+      ],
+      "total_net": 360000,
+      "budget_left": 0,
+      "ok": true,
+      "message": "Selected 3 pilot(s), INR 600,000 of 600,000."
+    }
+  },
+  "changed": {
+    "benefit_inr": 180000,
+    "net": 120000,
+    "payback_months": 20.0,
+    "profit_inr": 160000,
+    "roi_pct": 80.0,
+    "npv_inr": 113447,
+    "breakeven_month": 20,
+    "verdict": "REVISE",
+    "stop_rule": {
+      "decision": "REVISE",
+      "reasons": [
+        "Observed adoption or quality not recorded yet; cannot confirm. Collect before further spend."
+      ],
+      "metric": "data",
+      "threshold": null,
+      "actual": null
+    },
+    "portfolio": {
+      "selected": [
+        "AI1",
+        "AI4",
+        "AI2"
+      ],
+      "total_net": 360000,
+      "budget_left": 0,
+      "ok": true,
+      "message": "Selected 3 pilot(s), INR 600,000 of 600,000."
+    }
+  },
+  "deltas": {
+    "benefit_inr": 0,
+    "net": 0,
+    "payback_months": 0.0,
+    "profit_inr": 0,
+    "roi_pct": 0.0,
+    "npv_inr": 0,
+    "breakeven_month": 0
+  }
+}

@@ -16,6 +16,7 @@ DISCOUNT_RATE = 0.10
 DEF = {"horizon_months": HORIZON_MONTHS, "discount_rate": DISCOUNT_RATE}
 
 from . import cashflow, forecast  # noqa: E402  (placed after constants; both modules are pure)
+from .version import FORMULA_VERSION  # noqa: E402
 from .solver import solve as _solve, Item as _Item, MAX_CANDIDATES as _MAX_SOLVER_CANDIDATES  # noqa: E402
 
 # Recognised benefit types and their cash factor. Unknown types are rejected at load time.
@@ -74,11 +75,16 @@ class Pilot:
     benefit_driver: Optional[dict] = None    # {volume_per_month, minutes_saved_per_unit, loaded_cost_per_hour}
     ramp_months: int = 0                     # linear benefit ramp after the delay, default full from day one
     delay_months: int = 0                    # months with no benefit while the pilot is built/rollout waits
+    money_source: str = "fixture (synthetic)"  # provenance of the typed money figures (proposals: assumed (team))
 
 PROVENANCE_FIXTURE = "fixture (synthetic)"
 PROVENANCE_ASSUMED = "assumed (team)"
 PROVENANCE_OBSERVED = "observed"
 PROVENANCE_CALCULATED = "calculated"
+MONEY_SOURCES = [PROVENANCE_FIXTURE, PROVENANCE_ASSUMED, PROVENANCE_OBSERVED]
+
+def _money_note(p: "Pilot", field: str) -> str:
+    return f"{field} from the fixture" if p.money_source == PROVENANCE_FIXTURE else f"{field} as supplied ({p.money_source})"
 
 def _inr(x: float) -> str:
     return f"INR {x:,.0f}"
@@ -88,7 +94,7 @@ def source_of_run(p: Pilot) -> tuple:
         return PROVENANCE_CALCULATED, f"sums {len(p.recurring_costs)} recurring cost line(s) supplied by the user; fixture run figure not used"
     if any(f["code"] == "RUN_COST_ASSUMED" for f in p.flags):
         return PROVENANCE_ASSUMED, "no recurring cost given; assumed 20% of setup (team assumption)"
-    return PROVENANCE_FIXTURE, "annual_running_cost_inr from the fixture"
+    return p.money_source, _money_note(p, "annual_running_cost_inr")
 
 def view(p: Pilot, mode: str, d: Optional[dict] = None) -> dict:
     b = p.benefit if mode == "independent" else realized_benefit(p)
@@ -118,6 +124,26 @@ def multi_period(p: Pilot, mode: str, d: dict) -> dict:
         "breakeven_month": be, "breakeven_beyond_horizon": be is None, "cumulative": [round(v) for v in cum],
         "value_per_1m_tokens": None if tv is None else round(tv, 2),
         "value_vs_price_ratio": None if tv is None or not _num(price) or price <= 0 else round(tv / price, 2),
+        "formula_version": FORMULA_VERSION,
+        "breakdown": breakdown(p, mode, b, int(horizon), r, profit, npv_v, be),
+    }
+
+def breakdown(p: Pilot, mode: str, b: float, horizon: int, r: float, profit: float, npv_v: float, be) -> dict:
+    """Persisted-ready record of one multi-period result: every input, every substituted formula
+    and the formula version, flat enough to store as one JSON column and re-run later."""
+    one = p.setup
+    return {
+        "formula_version": FORMULA_VERSION, "mode": mode,
+        "inputs": {"one_time_inr": one, "annual_benefit_inr": round(b, 2), "annual_running_cost_inr": p.run,
+                   "ramp_months": p.ramp_months, "delay_months": p.delay_months,
+                   "horizon_months": horizon, "discount_rate": r},
+        "formulas": {
+            "net_annual": f"= {_inr(b)} − {_inr(p.run)} = {_inr(b - p.run)}/yr",
+            "profit_loss": f"= Σ {horizon} monthly flows (one-time {_inr(one)} in month 1) = {_inr(profit)}",
+            "roi_pct": None if one <= 0 else f"= {_inr(profit)} ÷ {_inr(one)} × 100 = {profit / one * 100:.1f}%",
+            "npv": f"= Σ flow(t) ÷ (1 + {r})^(t/12) = {_inr(npv_v)}",
+            "breakeven_month": "beyond the horizon" if be is None else f"first month with cumulative ≥ 0 = month {be}",
+        },
     }
 
 def provenance(p: Pilot, d: Optional[dict] = None) -> dict:
@@ -127,19 +153,19 @@ def provenance(p: Pilot, d: Optional[dict] = None) -> dict:
     if p.one_time_costs:
         setup_src, setup_note = PROVENANCE_CALCULATED, f"sums {len(p.one_time_costs)} one-time cost line(s) supplied by the user"
     else:
-        setup_src, setup_note = PROVENANCE_FIXTURE, "setup_cost_inr from the fixture"
+        setup_src, setup_note = p.money_source, _money_note(p, "setup_cost_inr")
     if p.benefit_driver:
         vol, mins, rate = p.benefit_driver.get("volume_per_month"), p.benefit_driver.get("minutes_saved_per_unit"), p.benefit_driver.get("loaded_cost_per_hour")
         ben_src, ben_note = PROVENANCE_CALCULATED, (
             f"driver: {_inr(rate)}/h × {mins} min × {vol} units/month × 12" if all(_num(x) for x in (vol, mins, rate))
             else "benefit driver incomplete; typed fixture figure used")
     else:
-        ben_src, ben_note = PROVENANCE_FIXTURE, "annual_benefit_inr from the fixture"
+        ben_src, ben_note = p.money_source, _money_note(p, "annual_benefit_inr")
     prov = {
         "setup_inr": {"value": p.setup, "source": setup_src, "note": setup_note},
         "annual_running_cost_inr": {"value": p.run, "source": run_src, "note": run_note},
         "annual_benefit_inr": {"value": p.benefit, "source": ben_src, "note": ben_note},
-        "benefit_type": {"value": p.benefit_type, "source": PROVENANCE_FIXTURE, "note":
+        "benefit_type": {"value": p.benefit_type, "source": p.money_source, "note":
                          f"cash factor {cash_factor(p.benefit_type)} by the rulebook"},
         "adoption_pct": {"value": p.adoption_pct, "source": PROVENANCE_ASSUMED, "note": "team-authored extension"},
         "readiness": {"value": p.readiness, "source": PROVENANCE_ASSUMED, "note": "team-authored extension"},
@@ -249,11 +275,15 @@ def load_pilots(raw: Any, ext: list, d: dict) -> dict:
             if _num(v) and 0 <= v <= 120 and float(v).is_integer(): return int(v)
             warnings.append(f"{pid}: {name} ignored (0–120 whole months); default 0 used.")
             return 0
+        ms = p.get("money_source", PROVENANCE_FIXTURE)
+        if ms not in MONEY_SOURCES:
+            warnings.append(f"{pid}: money_source {ms!r} not one of {MONEY_SOURCES}; fixture (synthetic) used.")
+            ms = PROVENANCE_FIXTURE
         ramp, dly = _int0(e.get("ramp_months", p.get("ramp_months")), "ramp_months"), _int0(e.get("delay_months", p.get("delay_months")), "delay_months")
         pilots.append(Pilot(pid, p["task"], e.get("description", ""), setup2, run2, benefit2, bt, grp, ad, rd,
                             e.get("observed_adoption_pct") if _num(e.get("observed_adoption_pct")) else None,
                             e.get("observed_quality_pct") if _num(e.get("observed_quality_pct")) else None, flags,
-                            one_time_costs=one_time, recurring_costs=recurring, benefit_driver=drv, ramp_months=ramp, delay_months=dly))
+                            one_time_costs=one_time, recurring_costs=recurring, benefit_driver=drv, ramp_months=ramp, delay_months=dly, money_source=ms))
     return {"pilots": pilots, "invalid": invalid, "warnings": warnings}
 
 # ---------- Deterministic tie-break ----------
@@ -270,6 +300,7 @@ def _set_key(s: list, mode: str):
 
 # ---------- Portfolio ----------
 OBJECTIVES = ["net", "npv", "risk_adjusted"]
+MAX_EXACT_CANDIDATES = 16   # net objective at or below this count uses the legacy exhaustive search
 
 _OBJECTIVE_CULL = {
     "net": "Net annual benefit <= 0: never pays back.",
@@ -307,7 +338,7 @@ def build_portfolio(pilots: list, budget: Any, mode: str = "independent", object
     if budget < cheapest:
         return {**base, "rejected": rejected + [{"id": p.id, "reason": f"Setup INR {p.setup:,.0f} exceeds budget INR {budget:,.0f}."} for p in cands],
                 "message": f"Budget INR {budget:,.0f} is below the cheapest pilot (INR {cheapest:,.0f}). Empty portfolio."}
-    if objective == "net" and len(cands) <= 16:   # legacy exact search: byte-identical public behaviour
+    if objective == "net" and len(cands) <= MAX_EXACT_CANDIDATES:   # legacy exact search: byte-identical public behaviour
         best, best_key = [], None
         for mask in range(1, 1 << len(cands)):
             s = [p for i, p in enumerate(cands) if mask >> i & 1]
@@ -341,7 +372,7 @@ def check_manual_selection(pilots: list, ids: list, budget: float) -> dict:
     problems = [f"{i} is not a valid pilot." for i in ids if i not in by]
     chosen = [by[i] for i in ids if i in by]
     total = sum(p.setup for p in chosen)
-    if total > budget: problems.append(f"Over budget: INR {total:g} > INR {budget:g}.")
+    if total > budget: problems.append(f"Over budget: INR {total:,.0f} > INR {budget:,.0f}.")
     groups: dict = {}
     for p in chosen: groups.setdefault(p.group, []).append(p.id)
     for g, v in groups.items():
@@ -403,7 +434,10 @@ def forecast_block(d: dict) -> dict:
     run = forecast.ai_run_cost_inr(t, price, fixed)
     nxt = forecast.next_fy_cost_inr(t, price, fixed, d.get("annual_usage_growth_pct"), d.get("annual_price_drift_pct"))
     infl = forecast.inflation_flag(d.get("annual_usage_growth_pct"))
-    return {"inputs": {"tokens_per_month": t, "price_per_1m_tokens": price, "ai_fixed_cost_inr_per_year": fixed,
+    return {"method": "assumed_growth_fallback",
+            "method_note": "one-step assumed usage growth and price drift (linear fallback); send usage history to "
+                           "/forecast/usage for a backtested forecast",
+            "inputs": {"tokens_per_month": t, "price_per_1m_tokens": price, "ai_fixed_cost_inr_per_year": fixed,
                        "annual_usage_growth_pct": d.get("annual_usage_growth_pct"), "annual_price_drift_pct": d.get("annual_price_drift_pct")},
             "ai_run_cost_inr": None if run is None else round(run),
             "next_fy_cost_inr": None if nxt is None else round(nxt),

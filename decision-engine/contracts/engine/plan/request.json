@@ -1,0 +1,8 @@
+{
+  "method": "POST",
+  "path": "/plan",
+  "body": {
+    "pilot_id": "AI1",
+    "owner": "finance ops"
+  }
+}

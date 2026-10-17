@@ -1,0 +1,298 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /compare",
+  "type": "object",
+  "properties": {
+    "proposals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ai_running_cost_inr": {
+            "type": "number"
+          },
+          "annual_benefit_inr": {
+            "type": "number"
+          },
+          "benefit_type": {
+            "type": "string"
+          },
+          "breakeven_beyond_horizon": {
+            "type": "boolean"
+          },
+          "breakeven_month": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "cash_vs_capacity": {
+            "type": "object",
+            "properties": {
+              "capacity_benefit_inr": {
+                "type": "number"
+              },
+              "cash_benefit_inr": {
+                "type": "number"
+              },
+              "cash_share_pct": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "capacity_benefit_inr",
+              "cash_benefit_inr",
+              "cash_share_pct"
+            ]
+          },
+          "cumulative": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "flags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ]
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "net_annual_inr": {
+            "type": "number"
+          },
+          "npv_inr": {
+            "type": "number"
+          },
+          "payback_months": {
+            "type": "number"
+          },
+          "profit_inr": {
+            "type": "number"
+          },
+          "rank": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "reason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "roi_pct": {
+            "type": "number"
+          },
+          "setup_cost_inr": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ai_running_cost_inr",
+          "annual_benefit_inr",
+          "benefit_type",
+          "breakeven_beyond_horizon",
+          "breakeven_month",
+          "cash_vs_capacity",
+          "cumulative",
+          "flags",
+          "id",
+          "name",
+          "net_annual_inr",
+          "npv_inr",
+          "payback_months",
+          "profit_inr",
+          "rank",
+          "reason",
+          "roi_pct",
+          "setup_cost_inr",
+          "status"
+        ]
+      }
+    },
+    "selection": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string"
+        },
+        "budget": {
+          "type": "number"
+        },
+        "selected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "total_net_inr": {
+          "type": "number"
+        },
+        "budget_left": {
+          "type": "number"
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "budget",
+        "budget_left",
+        "message",
+        "mode",
+        "ok",
+        "selected",
+        "total_net_inr"
+      ]
+    },
+    "head_to_head": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "over": {
+            "type": "string"
+          },
+          "under": {
+            "type": "string"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "over",
+          "reasons",
+          "under"
+        ]
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "selected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assumptions": {
+          "type": "object",
+          "properties": {
+            "horizon_months": {
+              "type": "number"
+            },
+            "discount_rate": {
+              "type": "number"
+            },
+            "mode": {
+              "type": "string"
+            },
+            "selector": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "discount_rate",
+            "horizon_months",
+            "mode",
+            "selector"
+          ]
+        }
+      },
+      "required": [
+        "assumptions",
+        "selected",
+        "text"
+      ]
+    },
+    "token_value_vs_price": {
+      "type": "object",
+      "properties": {
+        "net_annual_savings_inr": {
+          "type": "number"
+        },
+        "value_per_1m_tokens": {
+          "type": "number"
+        },
+        "price_per_1m_tokens": {
+          "type": "number"
+        },
+        "value_vs_price_ratio": {
+          "type": "number"
+        },
+        "flags": {
+          "type": "array"
+        }
+      },
+      "required": [
+        "flags",
+        "net_annual_savings_inr",
+        "price_per_1m_tokens",
+        "value_per_1m_tokens",
+        "value_vs_price_ratio"
+      ]
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      }
+    },
+    "warnings": {
+      "type": "array"
+    }
+  },
+  "required": [
+    "flags",
+    "head_to_head",
+    "proposals",
+    "recommendation",
+    "selection",
+    "token_value_vs_price",
+    "warnings"
+  ]
+}

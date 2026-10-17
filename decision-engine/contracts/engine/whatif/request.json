@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/whatif",
+  "body": {
+    "pilot_id": "AI1",
+    "overrides": {
+      "observed_adoption_pct": 40
+    }
+  }
+}

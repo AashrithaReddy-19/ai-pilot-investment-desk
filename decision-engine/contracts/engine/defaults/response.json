@@ -1,0 +1,643 @@
+{
+  "starting_state": {
+    "case_id": "C23",
+    "synthetic": true,
+    "data_version": "v3.2",
+    "currency": "INR unless explicitly stated",
+    "missing_values": "null means unknown, never zero",
+    "records": {
+      "pilots": [
+        {
+          "id": "AI1",
+          "task": "Invoice field extraction",
+          "setup_cost_inr": 200000,
+          "annual_running_cost_inr": 60000,
+          "annual_benefit_inr": 180000,
+          "benefit_type": "cashable assumption",
+          "overlap_group": "finance"
+        },
+        {
+          "id": "AI2",
+          "task": "Order exception triage",
+          "setup_cost_inr": 200000,
+          "annual_running_cost_inr": 60000,
+          "annual_benefit_inr": 180000,
+          "benefit_type": "cashable assumption",
+          "overlap_group": "ops"
+        },
+        {
+          "id": "AI3",
+          "task": "Weekly catalogue review",
+          "setup_cost_inr": 200000,
+          "annual_running_cost_inr": 60000,
+          "annual_benefit_inr": 180000,
+          "benefit_type": "cashable assumption",
+          "overlap_group": "catalog"
+        },
+        {
+          "id": "AI4",
+          "task": "Support reply drafting",
+          "setup_cost_inr": 200000,
+          "annual_running_cost_inr": 60000,
+          "annual_benefit_inr": 180000,
+          "benefit_type": "cashable assumption",
+          "overlap_group": "support"
+        },
+        {
+          "id": "AI5",
+          "task": "Ticket tagging",
+          "setup_cost_inr": 200000,
+          "annual_running_cost_inr": 60000,
+          "annual_benefit_inr": 180000,
+          "benefit_type": "cashable assumption",
+          "overlap_group": "support"
+        }
+      ],
+      "expected_first_pilot_payback_months": 20,
+      "notes": "Inputs are assumptions. Same benefit cannot be counted in two pilots."
+    },
+    "public_checks": [
+      "Pilot costing INR 2 lakh once plus INR 0.6 lakh/year with INR 1.8 lakh/year realized benefit has INR 1.2 lakh annual net benefit and 20-month simple payback, assuming steady benefit from day one.",
+      "Portfolio respects budget and prevents double-counting the same hours/revenue across pilots.",
+      "Low adoption or failed quality threshold causes an explicit revise/stop decision."
+    ],
+    "limit": "Small teaching fixture for a bounded prototype. Market demand, willingness to pay and production performance remain unproven."
+  },
+  "extension": {
+    "_label": "TEAM-AUTHORED ASSUMPTIONS. Not part of the C23 fixture. Synthetic, illustrative, unproven.",
+    "pilot_budget_inr": 600000,
+    "defaults": {
+      "target_adoption_pct": 60,
+      "quality_threshold_pct": 80,
+      "assumed_run_cost_pct_of_setup": 20,
+      "assumed_adoption_pct": 50,
+      "horizon_months": 36,
+      "discount_rate": 0.1,
+      "annual_usage_growth_pct": 20,
+      "annual_price_drift_pct": -10,
+      "tokens_per_month": 50000000,
+      "price_per_1m_tokens": 250,
+      "ai_fixed_cost_inr_per_year": 20000
+    },
+    "pilots": [
+      {
+        "id": "AI1",
+        "description": "Extract invoice fields into the finance ledger instead of manual typing.",
+        "adoption_pct": 70,
+        "readiness": "high",
+        "observed_adoption_pct": null,
+        "observed_quality_pct": null
+      },
+      {
+        "id": "AI2",
+        "description": "Flag and route exceptional orders to the right owner.",
+        "adoption_pct": 60,
+        "readiness": "medium",
+        "observed_adoption_pct": null,
+        "observed_quality_pct": null
+      },
+      {
+        "id": "AI3",
+        "description": "Draft the weekly catalogue quality review.",
+        "adoption_pct": 50,
+        "readiness": "medium",
+        "observed_adoption_pct": null,
+        "observed_quality_pct": null
+      },
+      {
+        "id": "AI4",
+        "description": "Draft first replies for support agents to edit.",
+        "adoption_pct": 65,
+        "readiness": "high",
+        "observed_adoption_pct": null,
+        "observed_quality_pct": null
+      },
+      {
+        "id": "AI5",
+        "description": "Auto-tag incoming support tickets by topic.",
+        "adoption_pct": 40,
+        "readiness": "low",
+        "observed_adoption_pct": null,
+        "observed_quality_pct": null
+      }
+    ]
+  },
+  "pipeline_rules": {
+    "versions": {
+      "rules_version": "7",
+      "contract_version": 1,
+      "formula_version": "cf-1"
+    },
+    "cash_factor_by_type": {
+      "cashable assumption": 1.0,
+      "cashable": 1.0,
+      "time freed": 0.3,
+      "non-cashable": 0.0,
+      "unknown": 0.3
+    },
+    "readiness_factor": {
+      "low": 0.6,
+      "medium": 0.8,
+      "high": 1.0
+    },
+    "tie_break_order": [
+      "higher net benefit",
+      "faster payback",
+      "higher readiness",
+      "higher adoption",
+      "lower setup cost",
+      "lower id"
+    ],
+    "horizon_months": 36,
+    "discount_rate": 0.1,
+    "scenario_multipliers": {
+      "bad": 0.5,
+      "base": 1.0,
+      "good": 1.25
+    },
+    "parse_rules": {
+      "max_upload_bytes": 2000000,
+      "balance_sheet_keywords": [
+        "ai",
+        "software",
+        "cloud",
+        "licence",
+        "license",
+        "token"
+      ],
+      "unit_multipliers": {
+        "rupees": 1,
+        "thousands": 1000,
+        "lakh": 100000,
+        "crore": 10000000
+      },
+      "pilot_csv_columns": {
+        "id": [
+          "id",
+          "pilot_id",
+          "pilot",
+          "proposal_id"
+        ],
+        "task": [
+          "task",
+          "name",
+          "title",
+          "description"
+        ],
+        "setup_cost_inr": [
+          "setup_cost_inr",
+          "setup_inr",
+          "setup_cost",
+          "setup",
+          "one_time_cost_inr",
+          "one_time",
+          "cost"
+        ],
+        "annual_running_cost_inr": [
+          "annual_running_cost_inr",
+          "running_cost_inr",
+          "ai_running_cost_inr",
+          "ai_running_cost",
+          "running_cost",
+          "run_cost",
+          "cost_inr",
+          "monthly_running_cost_inr",
+          "monthly_running_cost",
+          "running_cost_per_month",
+          "quarterly_running_cost_inr",
+          "quarterly_running_cost"
+        ],
+        "annual_benefit_inr": [
+          "annual_benefit_inr",
+          "yearly_savings_inr",
+          "yearly_savings",
+          "savings",
+          "benefit",
+          "monthly_savings_inr",
+          "monthly_savings",
+          "savings_per_month",
+          "quarterly_savings_inr",
+          "quarterly_savings"
+        ],
+        "benefit_type": [
+          "benefit_type",
+          "type",
+          "cash_type"
+        ],
+        "adoption_pct": [
+          "adoption_pct",
+          "adoption"
+        ],
+        "readiness": [
+          "readiness",
+          "data_readiness"
+        ],
+        "ramp_months": [
+          "ramp_months",
+          "ramp"
+        ],
+        "delay_months": [
+          "delay_months",
+          "delay"
+        ],
+        "overlap_group": [
+          "overlap_group",
+          "group",
+          "overlap"
+        ]
+      },
+      "formats": [
+        "csv",
+        "xlsx (first sheet)"
+      ],
+      "xlsx_limits": {
+        "max_uncompressed_bytes": 20000000,
+        "max_rows": 20000
+      },
+      "period_factors": {
+        "annual": 1,
+        "half_year": 2,
+        "quarterly": 4,
+        "monthly": 12
+      },
+      "period_rule": "recurring amounts (savings, running cost, balance-sheet lines) are annualised from the period their column header names; one-time setup is never annualised",
+      "finding_severities": [
+        "error",
+        "warning",
+        "info"
+      ],
+      "possible_duplicate_rule": "different ids with the same task (case-insensitive), setup, benefit and running cost"
+    },
+    "advice_rules": {
+      "input_weights": {
+        "annual_benefit_inr": 3,
+        "annual_running_cost_inr": 2,
+        "setup_cost_inr": 2,
+        "adoption_pct": 2,
+        "quality_pct": 1,
+        "readiness": 1
+      },
+      "band_edges": {
+        "medium": 0.4,
+        "high": 0.75
+      },
+      "outcome_order": [
+        "reject",
+        "insufficient_information",
+        "defer",
+        "stage",
+        "fund"
+      ],
+      "observed_grades": [
+        "observed",
+        "calculated"
+      ],
+      "fixture_cap_rule": "fixture (synthetic) money values cap the evidence band at Low",
+      "next_actions": {
+        "NET_NOT_POSITIVE": {
+          "action": "re-scope the pilot: remove one cost line or grow the benefit before it is proposed again",
+          "owner_hint": "service owner",
+          "expected_test": "net annual benefit > 0"
+        },
+        "NON_CASHABLE": {
+          "action": "restate the benefit with a cash line (budget line, invoice reduction) instead of capacity value",
+          "owner_hint": "service owner",
+          "expected_test": "benefit type with cash factor 1.0 and a stated cash line"
+        },
+        "FIXTURE_ONLY_EVIDENCE": {
+          "action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
+          "owner_hint": "finance + service owner",
+          "expected_test": "no decision-driving input sourced from the fixture"
+        },
+        "MONEY_ASSUMED": {
+          "action": "back one money figure with an invoice, a signed contract or a written vendor quote",
+          "owner_hint": "finance",
+          "expected_test": "a decision-driving money input sourced as observed"
+        },
+        "NO_OBSERVED_ADOPTION": {
+          "action": "run one adoption spot-check batch over the real users",
+          "owner_hint": "org lead",
+          "expected_test": "observed adoption recorded from the batch"
+        },
+        "NO_OBSERVED_QUALITY": {
+          "action": "run one quality spot-check on pilot outputs and record it",
+          "owner_hint": "ops lead",
+          "expected_test": "observed quality recorded from the batch"
+        },
+        "RUN_COST_ASSUMED": {
+          "action": "get written vendor pricing or an invoice trail for the AI running cost",
+          "owner_hint": "finance",
+          "expected_test": "a recurring-cost line replaces the 20%-of-setup assumption"
+        },
+        "ADOPTION_ASSUMED": {
+          "action": "schedule an adoption measurement for week 1-2 of any stage",
+          "owner_hint": "org lead",
+          "expected_test": "observed adoption recorded"
+        },
+        "LOW_OBSERVED_ADOPTION": {
+          "action": "short user-training experiment",
+          "owner_hint": "org lead",
+          "expected_test": "observed adoption >= break-even adoption after the experiment"
+        },
+        "LOW_READINESS": {
+          "action": "clean the data first",
+          "owner_hint": "data engineering",
+          "expected_test": "readiness at medium or higher before funding"
+        },
+        "BREAK_EVEN_BEYOND_HORIZON": {
+          "action": "re-cost with a faster ramp (build and rollout sooner) or re-decide at the next budget cycle",
+          "owner_hint": "finance",
+          "expected_test": "break-even month <= horizon"
+        },
+        "CONSERVATIVE_DIES": {
+          "action": "fund from the training/capacity budget instead of the savings ledger, or convert the benefit to cash",
+          "owner_hint": "finance",
+          "expected_test": "conservative net > 0"
+        }
+      }
+    },
+    "lifecycle_rules": {
+      "checkpoint_outcomes": [
+        "scale",
+        "extend",
+        "revise",
+        "stop",
+        "pending"
+      ],
+      "planned_duration_days": 30,
+      "plan_statuses": [
+        "planned",
+        "active",
+        "revise",
+        "stopped",
+        "completed"
+      ]
+    },
+    "solver": {
+      "objectives": [
+        "net",
+        "npv",
+        "risk_adjusted"
+      ],
+      "max_exact_candidates": 16,
+      "max_candidates": 40,
+      "node_budget": 150000
+    },
+    "whatif_rules": {
+      "pilot_keys": [
+        "adoption_pct",
+        "annual_benefit_inr",
+        "annual_running_cost_inr",
+        "delay_months",
+        "observed_adoption_pct",
+        "observed_quality_pct",
+        "ramp_months",
+        "readiness",
+        "setup_cost_inr"
+      ],
+      "org_keys": [
+        "annual_price_drift_pct",
+        "annual_usage_growth_pct",
+        "budget",
+        "discount_rate",
+        "horizon_months",
+        "mode",
+        "price_per_1m_tokens",
+        "tokens_per_month"
+      ],
+      "sweep_fractions": [
+        0.5,
+        0.75,
+        1.0,
+        1.25,
+        1.5
+      ],
+      "sweep_growth_pct": [
+        -20,
+        -10,
+        0,
+        10,
+        20,
+        30
+      ],
+      "sweep_adoption_steps": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100
+      ],
+      "flip_scan_step_of_base": 0.05,
+      "flip_adoption_step_pct": 1
+    },
+    "compare_rules": {
+      "min_proposals": 2,
+      "max_proposals": 8,
+      "drop_rule": "net annual savings <= 0 or break-even beyond the horizon",
+      "selector": "highest total net annual benefit within budget, overlap counted once"
+    },
+    "economics_rules": {
+      "competitiveness_edges": {
+        "highly_competitive": 0.4,
+        "competitive": 0.7,
+        "marginal": 1.0
+      },
+      "competitiveness_worst": "uncompetitive",
+      "competitiveness_ratio": "annualised AI cost ÷ gross benefit, or AI cost per unit ÷ human cost per unit when the baseline gives volume and per-unit human cost",
+      "annualised_ai_cost": "setup × 12 ÷ horizon_months + annual running cost",
+      "budget_status_order": [
+        "within",
+        "at_risk",
+        "over"
+      ],
+      "default_contingency_pct": 10,
+      "budget_checks": {
+        "implementation_inr": "setup ≤ implementation budget",
+        "first_year_inr": "setup + first-12-month running cost ≤ first-year budget",
+        "recurring_inr_per_year": "annual running cost ≤ recurring budget",
+        "total_inr": "(setup + running cost over the horizon) × (1 + contingency) ≤ total budget"
+      },
+      "at_risk_rule": "fits without contingency but not with it (total), or uses more than 90% of a line",
+      "baseline_fields": [
+        "annual_cost_inr",
+        "volume_per_month",
+        "minutes_per_unit",
+        "loaded_cost_per_hour",
+        "automation_share_pct"
+      ]
+    },
+    "pricing_rules": {
+      "rule_types": [
+        "per_unit",
+        "tiered",
+        "credit",
+        "commitment",
+        "package"
+      ],
+      "modifiers": {
+        "fixed_monthly_inr": "added every month",
+        "minimum_monthly_inr": "bill = max(bill, minimum)"
+      },
+      "tier_modes": {
+        "graduated": "each unit pays its own tier's price",
+        "volume": "every unit pays the price of the tier the total falls in"
+      },
+      "package_rule": "cheapest mix of whole packages (plus overage, if priced) that covers the month's units",
+      "package_limits": {
+        "max_kinds": 4,
+        "max_count_per_kind": 50
+      },
+      "forecast": {
+        "methods": [
+          "naive",
+          "linear_trend",
+          "compound_growth"
+        ],
+        "min_history_months": 4,
+        "holdout_max_months": 3,
+        "selection": "lowest hold-out MAPE; ties by method order",
+        "band": "base × (1 ∓ max(MAPE, 0.1))",
+        "fallback": "assumed_growth_fallback: last known usage × (1 + annual growth)^(m/12), labelled"
+      },
+      "optimiser": "plan with the lowest base-scenario annual cost; also reports the plan with the lowest worst-case (high-scenario) cost and the regret of each plan"
+    },
+    "decision_rules": {
+      "outcome_order": [
+        "reject",
+        "renegotiate",
+        "defer",
+        "gather_evidence",
+        "limited_pilot",
+        "invest"
+      ],
+      "set_outcomes": [
+        "reject",
+        "renegotiate",
+        "defer",
+        "gather_evidence",
+        "limited_pilot",
+        "invest",
+        "no_clear_winner"
+      ],
+      "rules": [
+        "reject: net annual benefit <= 0 and a running-cost cut of more than 30% would be needed, or no part of the benefit is cashable",
+        "renegotiate: net <= 0 but a running-cost cut of at most 30% makes it positive, or the cost competitiveness class is uncompetitive",
+        "defer: break-even beyond the horizon, or the proposal is over budget",
+        "gather_evidence: no decision-driving input is observed or calculated",
+        "limited_pilot: evidence band low, data readiness not ready, or competitiveness marginal",
+        "invest: every gate passes with evidence band medium or high"
+      ],
+      "eligibility_gates": [
+        "NET_POSITIVE",
+        "BREAKEVEN_IN_HORIZON",
+        "BUDGET_FIT",
+        "BENEFIT_HAS_CASH"
+      ],
+      "ranking_weights": {
+        "net_annual": 0.3,
+        "npv": 0.2,
+        "payback": 0.15,
+        "evidence": 0.15,
+        "readiness": 0.1,
+        "cash_share": 0.1
+      },
+      "ranking_scale": "each criterion min-max normalised to 0-100 across the compared set (all equal = 100); score = Σ weight × normalised; ties follow the 6-tier order",
+      "no_clear_winner_margin_points": 5.0,
+      "renegotiate_max_run_cut": 0.3,
+      "data_readiness_edges": {
+        "ready": 0.85,
+        "partial": 0.5
+      },
+      "data_readiness_checks": [
+        "run cost stated",
+        "adoption stated",
+        "readiness stated",
+        "benefit type known",
+        "overlap group known",
+        "baseline supplied",
+        "team data readiness at least medium"
+      ],
+      "reversal": {
+        "fields": [
+          "annual_benefit_inr",
+          "annual_running_cost_inr",
+          "setup_cost_inr"
+        ],
+        "range_x_base": 3.0,
+        "resolution_of_base": 0.005
+      },
+      "actions": {
+        "RENEGOTIATE_RUN_COST": {
+          "action": "renegotiate the AI running cost with the vendor (volume tier, commitment discount)",
+          "owner_hint": "procurement",
+          "expected_test": "net annual benefit > 0 at the quoted price"
+        },
+        "UNCOMPETITIVE_COST": {
+          "action": "re-quote or re-scope: the AI costs more per unit than the work it replaces",
+          "owner_hint": "procurement + service owner",
+          "expected_test": "competitiveness class marginal or better"
+        },
+        "OVER_BUDGET": {
+          "action": "phase the rollout or move it to the next budget cycle",
+          "owner_hint": "finance",
+          "expected_test": "budget status within or at risk"
+        },
+        "DATA_NOT_READY": {
+          "action": "fill the missing inputs (stated run cost, adoption, baseline, overlap group)",
+          "owner_hint": "service owner",
+          "expected_test": "data readiness partial or ready"
+        },
+        "BASELINE_MISSING": {
+          "action": "record today's cost of the process (volume, minutes per unit, loaded hourly cost)",
+          "owner_hint": "ops lead",
+          "expected_test": "baseline cost known; retained human cost computed"
+        },
+        "NO_CLEAR_WINNER": {
+          "action": "run the top contenders as limited pilots side by side and decide on observed adoption",
+          "owner_hint": "steering group",
+          "expected_test": "score gap above the margin after measurement"
+        }
+      }
+    },
+    "view_rules": {
+      "proposal_states": {
+        "recommended": "in the funded set (section-2 rule: highest total net within budget)",
+        "viable": "passes every eligibility gate but is not funded (budget or overlap)",
+        "not_viable": "fails at least one mandatory eligibility gate"
+      },
+      "charts": [
+        "cumulative_cash_flow",
+        "yearly_savings",
+        "roi_breakeven",
+        "cash_vs_capacity"
+      ],
+      "chart_sync": "every chart lists proposals in `series_order` (funding rank, then the rest) so colours and selection stay in step across the four charts",
+      "yearly_rule": "monthly engine flows summed into 12-month years; the sum of yearly net equals profit_inr"
+    },
+    "formulas": {
+      "net_annual": "annual_benefit − annual_running_cost",
+      "cash_flow_t": "benefit × ramp(t) − running cost(t); one-time cost in month 1",
+      "breakeven_month": "first month where cumulative cash flow ≥ 0",
+      "profit_loss": "Σ cash flows over the horizon",
+      "roi": "profit ÷ total one-time cost",
+      "npv": "Σ cashflow(t) ÷ (1+r)^(t/12); r = 0 equals profit/loss",
+      "ai_run_cost": "monthly tokens × 12 × price per 1M ÷ 1,000,000 + fixed annual",
+      "next_fy_cost": "tokens × (1 + usage growth) and price × (1 + price drift); fixed annual unchanged",
+      "token_value": "(net annual savings ÷ annual tokens in millions) ÷ price per 1M tokens",
+      "inflation_flag": "usage growth ≥ 0 carries AI spend into the next FY",
+      "gross_cost_avoidance": "typed annual benefit, or baseline cost × automation share",
+      "cashable_savings": "gross × cashable share (default: the benefit type's cash factor)",
+      "capacity_value": "gross − cashable",
+      "retained_human_cost": "baseline cost − gross (unknown without a baseline)",
+      "weighted_score": "Σ weight × criterion normalised 0-100 across the compared set",
+      "risk_adjusted_value": "net annual × readiness factor (low 0.6 / medium 0.8 / high 1.0)",
+      "evidence_band": "weighted share of decision-driving inputs that are observed or calculated (real user data); ≥ 0.75 high, ≥ 0.40 medium, else low; fixture (synthetic) money values cap the band at Low"
+    }
+  }
+}

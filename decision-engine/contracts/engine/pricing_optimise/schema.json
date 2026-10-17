@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /pricing/optimise",
+  "type": "object",
+  "properties": {
+    "plans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "type": "number"
+          },
+          "high": {
+            "type": "number"
+          },
+          "low": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "regret_base_inr": {
+            "type": "number"
+          },
+          "regret_high_inr": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "base",
+          "high",
+          "low",
+          "name",
+          "regret_base_inr",
+          "regret_high_inr"
+        ]
+      }
+    },
+    "recommended": {
+      "type": "string"
+    },
+    "robust_choice": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "flags": {
+      "type": "array"
+    },
+    "forecast": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "band_pct": {
+          "type": "number"
+        },
+        "base": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "low": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "high": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "band_pct",
+        "base",
+        "high",
+        "low",
+        "method",
+        "note"
+      ]
+    }
+  },
+  "required": [
+    "flags",
+    "forecast",
+    "note",
+    "plans",
+    "recommended",
+    "robust_choice"
+  ]
+}

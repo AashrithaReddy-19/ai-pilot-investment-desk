@@ -8,10 +8,13 @@ from . import core, reports
 from . import compare as cmp_mod
 from . import ingest
 from . import advice, solver, lifecycle
+from . import economics, pricing, decision, views
+from . import whatif as W
+from .version import RULES_VERSION, CONTRACT_VERSION, FORMULA_VERSION
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA, SAVED = ROOT / "data", ROOT / "saved"
-app = FastAPI(title="C23 AI Pilot Investment Decision Desk", version="1.0")
+DATA = ROOT / "data"
+app = FastAPI(title="C23 AI Pilot Investment Decision Desk", version=f"rules-{RULES_VERSION}")
 
 def _defaults():
     return json.loads((DATA / "extension.json").read_text())
@@ -22,6 +25,7 @@ class Scenario(BaseModel):
     extension: Optional[dict] = None   # {pilot_budget_inr, defaults, pilots:[...]}
     budget: Optional[Any] = "__default__"
     mode: str = "independent"
+    budget_set: Optional[dict] = None   # A3 budget lines; only read by the economics/decision blocks
 
 def _ctx(s: Scenario):
     fixture = s.fixture or json.loads((DATA / "starting_state.json").read_text())
@@ -32,7 +36,9 @@ def _ctx(s: Scenario):
     return fixture, ext, d, budget, core.load_pilots(fixture, ext.get("pilots", []), d)
 
 @app.get("/health")
-def health(): return {"ok": True}
+def health():
+    return {"ok": True, "rules_version": RULES_VERSION, "contract_version": CONTRACT_VERSION,
+            "formula_version": FORMULA_VERSION}
 
 @app.get("/defaults")
 def defaults():
@@ -41,6 +47,8 @@ def defaults():
         "extension": _defaults(),
         # Visible engine rules the UI can display (team assumptions are labeled, not invented).
         "pipeline_rules": {
+            "versions": {"rules_version": RULES_VERSION, "contract_version": CONTRACT_VERSION,
+                         "formula_version": FORMULA_VERSION},
             "cash_factor_by_type": core.CASH_FACTOR_BY_TYPE,
             "readiness_factor": core.READINESS_FACTOR,
             "tie_break_order": core.TIE_BREAK_ORDER,
@@ -59,8 +67,19 @@ def defaults():
             "lifecycle_rules": {"checkpoint_outcomes": lifecycle.CHECKPOINT_OUTCOMES,
                                 "planned_duration_days": lifecycle.PLANNED_DURATION_DAYS,
                                 "plan_statuses": lifecycle.PLAN_STATUSES},
-            "solver": {"objectives": core.OBJECTIVES, "max_exact_candidates": 16,
+            "solver": {"objectives": core.OBJECTIVES, "max_exact_candidates": core.MAX_EXACT_CANDIDATES,
                        "max_candidates": solver.MAX_CANDIDATES, "node_budget": solver.NODE_BUDGET},
+            "whatif_rules": {"pilot_keys": sorted(W.PILOT_KEYS), "org_keys": sorted(W.ORG_KEYS),
+                             "sweep_fractions": W.SWEEP_FRACTIONS, "sweep_growth_pct": W.SWEEP_GROWTH_PCT,
+                             "sweep_adoption_steps": list(range(0, 101, 10)),
+                             "flip_scan_step_of_base": W.FLIP_SCAN_STEP, "flip_adoption_step_pct": W.FLIP_ADOPTION_STEP},
+            "compare_rules": {"min_proposals": cmp_mod.MIN_PROPOSALS, "max_proposals": cmp_mod.MAX_PROPOSALS,
+                              "drop_rule": "net annual savings <= 0 or break-even beyond the horizon",
+                              "selector": "highest total net annual benefit within budget, overlap counted once"},
+            "economics_rules": economics.ECONOMICS_RULES,
+            "pricing_rules": pricing.PRICING_RULES,
+            "decision_rules": {**decision.DECISION_RULES, "actions": decision.DECISION_ACTIONS},
+            "view_rules": views.VIEW_RULES,
             "formulas": {
                 "net_annual": "annual_benefit − annual_running_cost",
                 "cash_flow_t": "benefit × ramp(t) − running cost(t); one-time cost in month 1",
@@ -72,6 +91,11 @@ def defaults():
                 "next_fy_cost": "tokens × (1 + usage growth) and price × (1 + price drift); fixed annual unchanged",
                 "token_value": "(net annual savings ÷ annual tokens in millions) ÷ price per 1M tokens",
                 "inflation_flag": "usage growth ≥ 0 carries AI spend into the next FY",
+                "gross_cost_avoidance": "typed annual benefit, or baseline cost × automation share",
+                "cashable_savings": "gross × cashable share (default: the benefit type's cash factor)",
+                "capacity_value": "gross − cashable",
+                "retained_human_cost": "baseline cost − gross (unknown without a baseline)",
+                "weighted_score": "Σ weight × criterion normalised 0-100 across the compared set",
                 "risk_adjusted_value": "net annual × readiness factor (low 0.6 / medium 0.8 / high 1.0)",
                 "evidence_band": "weighted share of decision-driving inputs that are observed or calculated (real user data); "
                                  "≥ 0.75 high, ≥ 0.40 medium, else low; fixture (synthetic) money values cap the band at Low",
@@ -79,15 +103,29 @@ def defaults():
         },
     }
 
+def _pilot_decision(p, d, bs):
+    dec = decision.decision_for(p, d, bs)
+    return dec.pop("economics"), dec
+
+
 @app.post("/pilots")
 def pilots(s: Scenario = Scenario()):
     _, _, d, _, L = _ctx(s)
-    return {"pilots": [{**p.__dict__, "independent": core.view(p, "independent", d), "conservative": core.view(p, "conservative", d),
-                        "provenance": core.provenance(p, d),
-                                                "breakeven_adoption_pct": core.breakeven_adoption_pct(p), "scenarios": core.scenarios(p),
-                        "advice": advice.advice_for(p, d),
-                        "checkpoint": lifecycle.checkpoint(p, d),
-                        "stop_rule": core.evaluate_stop_rule(p, d)} for p in L["pilots"]],
+    try:
+        bs = economics.validate_budget_set(s.budget_set)
+    except economics.EconomicsError as exc:
+        raise HTTPException(422, str(exc))
+    out = []
+    for p in L["pilots"]:
+        econ, dec = _pilot_decision(p, d, bs)
+        out.append({**p.__dict__, "independent": core.view(p, "independent", d), "conservative": core.view(p, "conservative", d),
+                    "provenance": core.provenance(p, d),
+                    "breakeven_adoption_pct": core.breakeven_adoption_pct(p), "scenarios": core.scenarios(p, d),
+                    "advice": advice.advice_for(p, d),
+                    "economics": econ, "decision": dec,
+                    "checkpoint": lifecycle.checkpoint(p, d),
+                    "stop_rule": core.evaluate_stop_rule(p, d)})
+    return {"pilots": out,
             "forecast": core.forecast_block(d),
             "invalid": L["invalid"], "warnings": L["warnings"], "tie_break_order": core.TIE_BREAK_ORDER}
 
@@ -124,7 +162,6 @@ def stoprule(pid: str, s: Obs):
     return core.evaluate_stop_rule(p, d)
 
 # ---------- Phase 3: what-if + sensitivity sweep ----------
-from . import whatif as W
 
 class WhatIfRequest(Scenario):
     pilot_id: Optional[str] = None
@@ -348,16 +385,17 @@ async def _upload(file: UploadFile) -> bytes:
 
 @app.post("/balance-sheet/parse")
 async def balance_sheet_parse(file: UploadFile = File(...), unit: str = Form("auto"),
-                              amount_column: Optional[str] = Form(None)):
+                              amount_column: Optional[str] = Form(None), period: str = Form("auto")):
     try:
-        return ingest.parse_balance_sheet(await _upload(file), unit, amount_column)
+        return ingest.parse_balance_sheet(await _upload(file), unit, amount_column, period)
     except ingest.ParseError as exc:
         raise HTTPException(422, str(exc))
 
 
 @app.post("/balance-sheet/confirm")
 async def balance_sheet_confirm(file: UploadFile = File(...), rows: str = Form(...), unit: str = Form("auto"),
-                                amount_column: Optional[str] = Form(None), defaults: str = Form("")):
+                                amount_column: Optional[str] = Form(None), defaults: str = Form(""),
+                                period: str = Form("auto")):
     raw = await _upload(file)
     try:
         row_ids = [int(x.strip()) for x in rows.split(",") if x.strip()]
@@ -368,25 +406,187 @@ async def balance_sheet_confirm(file: UploadFile = File(...), rows: str = Form(.
     if not isinstance(d, dict):
         raise HTTPException(422, "defaults (when sent) must be a JSON object of token assumptions.")
     try:
-        return ingest.confirm_balance_sheet(raw, row_ids, unit, amount_column, d)
+        return ingest.confirm_balance_sheet(raw, row_ids, unit, amount_column, d, period)
     except ingest.ParseError as exc:
         raise HTTPException(422, str(exc))
 
 
 @app.post("/pilots/import/parse")
-async def pilots_import_parse(file: UploadFile = File(...), unit: str = Form("auto")):
+async def pilots_import_parse(file: UploadFile = File(...), unit: str = Form("auto"), period: str = Form("auto")):
     try:
-        return ingest.parse_pilots_csv(await _upload(file), unit)
+        return ingest.parse_pilots_csv(await _upload(file), unit, period)
     except ingest.ParseError as exc:
         raise HTTPException(422, str(exc))
 
 
 @app.post("/pilots/import/confirm")
-async def pilots_import_confirm(file: UploadFile = File(...), keep: str = Form(...), unit: str = Form("auto")):
+async def pilots_import_confirm(file: UploadFile = File(...), keep: str = Form(...), unit: str = Form("auto"),
+                                period: str = Form("auto")):
     raw = await _upload(file)
     keep_ids = [x.strip() for x in keep.split(",") if x.strip()]
     fixture_ids = [p["id"] for p in json.loads((DATA / "starting_state.json").read_text())["records"]["pilots"]]
     try:
-        return ingest.confirm_pilots_csv(raw, keep_ids, unit, fixture_ids)
+        return ingest.confirm_pilots_csv(raw, keep_ids, unit, fixture_ids, period)
     except ingest.ParseError as exc:
+        raise HTTPException(422, str(exc))
+
+
+# ---------- A3/A6/A7: economics, decision, dashboard and yearly views over a proposal set ----------
+
+_INPUT_ERRORS = (cmp_mod.CompareError, economics.EconomicsError, decision.DecisionError, pricing.PricingError)
+
+
+class ProposalSet(BaseModel):
+    """Proposals in the /compare shape. Omit `proposals` to use the shipped fixture + extension pilots."""
+    proposals: Optional[list[dict]] = None
+    budget: Optional[Any] = "__default__"   # "__default__" = the extension's pilot budget; null = no budget
+    mode: str = "independent"
+    extension: Optional[dict] = None
+    budget_set: Optional[dict] = None
+    weights: Optional[dict] = None
+    ai_burn_to_date: Optional[float] = None
+
+
+def _fixture_proposals() -> list[dict]:
+    fx = json.loads((DATA / "starting_state.json").read_text())["records"]["pilots"]
+    ext = {e["id"]: e for e in _defaults()["pilots"]}
+    out = []
+    for p in fx:
+        e = ext.get(p["id"], {})
+        row = {"name": p["id"], "setup_cost_inr": p["setup_cost_inr"], "annual_benefit_inr": p["annual_benefit_inr"],
+               "ai_running_cost_inr": p.get("annual_running_cost_inr"), "benefit_type": p.get("benefit_type") or "unknown",
+               "readiness": e.get("readiness") or "low", "adoption_pct": e.get("adoption_pct", 100),
+               "observed_adoption_pct": e.get("observed_adoption_pct"), "observed_quality_pct": e.get("observed_quality_pct"),
+               "money_source": core.PROVENANCE_FIXTURE}
+        if p.get("overlap_group"):
+            row["overlap_group"] = p["overlap_group"]
+        out.append(row)
+    return out
+
+
+def _proposal_ctx(s: ProposalSet):
+    if s.mode not in ("independent", "conservative"):
+        raise HTTPException(422, "mode must be independent or conservative.")
+    d = _defaults_block(s.extension)
+    budget = _defaults().get("pilot_budget_inr") if s.budget == "__default__" else s.budget
+    if budget is not None and (not isinstance(budget, (int, float)) or isinstance(budget, bool) or budget < 0):
+        raise HTTPException(422, "budget must be a non-negative number or null (null = no budget constraint).")
+    try:
+        clean = cmp_mod.validate(s.proposals if s.proposals is not None else _fixture_proposals())
+        bs = economics.validate_budget_set(s.budget_set)
+        extras = {}
+        for p in clean:
+            ex = {}
+            if "baseline" in p:
+                ex["baseline"] = economics.validate_baseline(p["baseline"], f"{p['name']}.baseline")
+            if "cashable_share_pct" in p:
+                ex["cashable_share_pct"] = p["cashable_share_pct"]
+            extras[p["name"]] = ex
+        decision.validate_weights(s.weights)
+    except _INPUT_ERRORS as exc:
+        raise HTTPException(422, str(exc))
+    return clean, d, budget, bs, extras
+
+
+@app.post("/economics")
+def economics_v(s: ProposalSet = ProposalSet()):
+    clean, d, _, bs, extras = _proposal_ctx(s)
+    try:
+        L = cmp_mod.to_pilots(clean, d)
+    except _INPUT_ERRORS as exc:
+        raise HTTPException(422, str(exc))
+    rows = [{"id": p.id, **economics.economics_for(p, d, bs, extras[p.id].get("baseline"),
+                                                    extras[p.id].get("cashable_share_pct"))} for p in L["pilots"]]
+    return {"proposals": rows, "portfolio_budget": economics.portfolio_budget(L["pilots"], [p.id for p in L["pilots"]], d, bs),
+            "budget_set": bs, "rules": economics.ECONOMICS_RULES, "warnings": L["warnings"]}
+
+
+@app.post("/decision")
+def decision_v(s: ProposalSet = ProposalSet()):
+    clean, d, _, bs, extras = _proposal_ctx(s)
+    try:
+        L = cmp_mod.to_pilots(clean, d)
+        return {**decision.decide_set(L["pilots"], d, bs, extras, s.weights), "warnings": L["warnings"]}
+    except _INPUT_ERRORS as exc:
+        raise HTTPException(422, str(exc))
+
+
+@app.post("/views/dashboard")
+def dashboard_v(s: ProposalSet = ProposalSet()):
+    clean, d, budget, bs, _ = _proposal_ctx(s)
+    try:
+        return views.dashboard(clean, budget, s.mode, d, bs, s.ai_burn_to_date, s.weights)
+    except _INPUT_ERRORS as exc:
+        raise HTTPException(422, str(exc))
+
+
+def _yearly(s: ProposalSet) -> dict:
+    clean, d, budget, _, extras = _proposal_ctx(s)
+    try:
+        funded = cmp_mod.run(clean, budget, s.mode, d)["selection"]["selected"]
+        return views.yearly_view(cmp_mod.to_pilots(clean, d)["pilots"], d, s.mode, extras, funded)
+    except _INPUT_ERRORS as exc:
+        raise HTTPException(422, str(exc))
+
+
+@app.post("/views/yearly-savings")
+def yearly_v(s: ProposalSet = ProposalSet()):
+    return _yearly(s)
+
+
+@app.post("/export/yearly-csv", response_class=PlainTextResponse)
+def yearly_csv_v(s: ProposalSet = ProposalSet()):
+    return PlainTextResponse(reports.yearly_csv(_yearly(s)), media_type="text/csv; charset=utf-8")
+
+
+@app.post("/export/decision-report", response_class=PlainTextResponse)
+def decision_report_v(s: ProposalSet = ProposalSet()):
+    return PlainTextResponse(reports.decision_report_md(dashboard_v(s)), media_type="text/markdown; charset=utf-8")
+
+
+# ---------- A4: pricing rules, usage forecast, package optimiser ----------
+
+class QuoteRequest(BaseModel):
+    rule: dict
+    units: float
+
+
+@app.post("/pricing/quote")
+def pricing_quote(s: QuoteRequest):
+    try:
+        return pricing.monthly_bill(pricing.validate_rule(s.rule), s.units)
+    except pricing.PricingError as exc:
+        raise HTTPException(422, str(exc))
+
+
+class ForecastRequest(BaseModel):
+    history: Optional[list] = None            # monthly usage, oldest first
+    months: int = 12
+    annual_usage_growth_pct: Optional[float] = None
+    last_known_units: Optional[float] = None
+    rule: Optional[dict] = None               # optional: price the low/base/high usage with this rule
+
+
+@app.post("/forecast/usage")
+def forecast_usage_v(s: ForecastRequest):
+    try:
+        fc = pricing.forecast_usage(s.history, s.months, s.annual_usage_growth_pct, s.last_known_units)
+        if s.rule is not None and fc["base"] is not None:
+            rule = pricing.validate_rule(s.rule)
+            fc["cost"] = {sc: pricing.cost_of(rule, fc[sc]) for sc in ("low", "base", "high")}
+        return fc
+    except pricing.PricingError as exc:
+        raise HTTPException(422, str(exc))
+
+
+class OptimiseRequest(ForecastRequest):
+    plans: list
+
+
+@app.post("/pricing/optimise")
+def pricing_optimise(s: OptimiseRequest):
+    try:
+        fc = pricing.forecast_usage(s.history, s.months, s.annual_usage_growth_pct, s.last_known_units)
+        return {**pricing.optimise(s.plans, fc), "forecast": {k: fc[k] for k in ("method", "note", "band_pct", "base", "low", "high")}}
+    except pricing.PricingError as exc:
         raise HTTPException(422, str(exc))

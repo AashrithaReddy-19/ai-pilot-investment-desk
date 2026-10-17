@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /sweep",
+  "type": "object",
+  "properties": {
+    "parameter": {
+      "type": "string"
+    },
+    "pilot_id": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "benefit_inr": {
+            "type": "number"
+          },
+          "breakeven_month": {
+            "type": "number"
+          },
+          "net": {
+            "type": "number"
+          },
+          "npv_inr": {
+            "type": "number"
+          },
+          "payback_months": {
+            "type": "number"
+          },
+          "profit_inr": {
+            "type": "number"
+          },
+          "roi_pct": {
+            "type": "number"
+          },
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "benefit_inr",
+          "breakeven_month",
+          "net",
+          "npv_inr",
+          "payback_months",
+          "profit_inr",
+          "roi_pct",
+          "value"
+        ]
+      }
+    },
+    "direction": {
+      "type": "string"
+    },
+    "flags": {
+      "type": "array"
+    },
+    "monotonic": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "direction",
+    "flags",
+    "mode",
+    "monotonic",
+    "parameter",
+    "pilot_id",
+    "steps"
+  ]
+}

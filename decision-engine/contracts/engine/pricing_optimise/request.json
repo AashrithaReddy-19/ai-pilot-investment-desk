@@ -1,0 +1,52 @@
+{
+  "method": "POST",
+  "path": "/pricing/optimise",
+  "body": {
+    "history": [
+      40000000.0,
+      43000000.0,
+      47000000.0,
+      50000000.0,
+      52000000.0,
+      57000000.0
+    ],
+    "months": 12,
+    "plans": [
+      {
+        "name": "pay_as_you_go",
+        "rule": {
+          "type": "per_unit",
+          "unit_price": 0.00025
+        }
+      },
+      {
+        "name": "commit_60m",
+        "rule": {
+          "type": "commitment",
+          "committed_units": 60000000.0,
+          "commit_price": 13000,
+          "overage_unit_price": 0.0003
+        }
+      },
+      {
+        "name": "packages",
+        "rule": {
+          "type": "package",
+          "overage_unit_price": 0.0003,
+          "packages": [
+            {
+              "name": "10M",
+              "units": 10000000.0,
+              "price": 2300
+            },
+            {
+              "name": "50M",
+              "units": 50000000.0,
+              "price": 10500
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

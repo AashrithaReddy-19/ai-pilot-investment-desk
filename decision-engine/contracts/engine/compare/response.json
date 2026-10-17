@@ -1,0 +1,245 @@
+{
+  "proposals": [
+    {
+      "id": "B",
+      "name": "B",
+      "setup_cost_inr": 500000,
+      "ai_running_cost_inr": 150000,
+      "annual_benefit_inr": 400000,
+      "benefit_type": "cashable",
+      "cash_vs_capacity": {
+        "cash_benefit_inr": 400000,
+        "capacity_benefit_inr": 0,
+        "cash_share_pct": 100.0
+      },
+      "net_annual_inr": 250000,
+      "payback_months": 24.0,
+      "profit_inr": 250000,
+      "roi_pct": 50.0,
+      "npv_inr": 153673,
+      "breakeven_month": 24,
+      "breakeven_beyond_horizon": false,
+      "cumulative": [
+        -479167,
+        -458333,
+        -437500,
+        -416667,
+        -395833,
+        -375000,
+        -354167,
+        -333333,
+        -312500,
+        -291667,
+        -270833,
+        -250000,
+        -229167,
+        -208333,
+        -187500,
+        -166667,
+        -145833,
+        -125000,
+        -104167,
+        -83333,
+        -62500,
+        -41667,
+        -20833,
+        0,
+        20833,
+        41667,
+        62500,
+        83333,
+        104167,
+        125000,
+        145833,
+        166667,
+        187500,
+        208333,
+        229167,
+        250000
+      ],
+      "flags": [],
+      "rank": 1,
+      "status": "recommended",
+      "reason": null
+    },
+    {
+      "id": "A",
+      "name": "A",
+      "setup_cost_inr": 200000,
+      "ai_running_cost_inr": 60000,
+      "annual_benefit_inr": 180000,
+      "benefit_type": "cashable",
+      "cash_vs_capacity": {
+        "cash_benefit_inr": 180000,
+        "capacity_benefit_inr": 0,
+        "cash_share_pct": 100.0
+      },
+      "net_annual_inr": 120000,
+      "payback_months": 20.0,
+      "profit_inr": 160000,
+      "roi_pct": 80.0,
+      "npv_inr": 113447,
+      "breakeven_month": 20,
+      "breakeven_beyond_horizon": false,
+      "cumulative": [
+        -190000,
+        -180000,
+        -170000,
+        -160000,
+        -150000,
+        -140000,
+        -130000,
+        -120000,
+        -110000,
+        -100000,
+        -90000,
+        -80000,
+        -70000,
+        -60000,
+        -50000,
+        -40000,
+        -30000,
+        -20000,
+        -10000,
+        0,
+        10000,
+        20000,
+        30000,
+        40000,
+        50000,
+        60000,
+        70000,
+        80000,
+        90000,
+        100000,
+        110000,
+        120000,
+        130000,
+        140000,
+        150000,
+        160000
+      ],
+      "flags": [],
+      "rank": 2,
+      "status": "kept",
+      "reason": null
+    },
+    {
+      "id": "C",
+      "name": "C",
+      "setup_cost_inr": 100000,
+      "ai_running_cost_inr": 70000,
+      "annual_benefit_inr": 90000,
+      "benefit_type": "cashable",
+      "cash_vs_capacity": {
+        "cash_benefit_inr": 90000,
+        "capacity_benefit_inr": 0,
+        "cash_share_pct": 100.0
+      },
+      "net_annual_inr": 20000,
+      "payback_months": 60.0,
+      "profit_inr": -40000,
+      "roi_pct": -40.0,
+      "npv_inr": -47231,
+      "breakeven_month": null,
+      "breakeven_beyond_horizon": true,
+      "cumulative": [
+        -98333,
+        -96667,
+        -95000,
+        -93333,
+        -91667,
+        -90000,
+        -88333,
+        -86667,
+        -85000,
+        -83333,
+        -81667,
+        -80000,
+        -78333,
+        -76667,
+        -75000,
+        -73333,
+        -71667,
+        -70000,
+        -68333,
+        -66667,
+        -65000,
+        -63333,
+        -61667,
+        -60000,
+        -58333,
+        -56667,
+        -55000,
+        -53333,
+        -51667,
+        -50000,
+        -48333,
+        -46667,
+        -45000,
+        -43333,
+        -41667,
+        -40000
+      ],
+      "flags": [
+        {
+          "code": "OVERLAP_UNKNOWN",
+          "message": "Overlap group unknown; treated as standalone. Confirm with owner."
+        }
+      ],
+      "rank": null,
+      "status": "dropped",
+      "reason": "3-year loss (break-even beyond the horizon)"
+    }
+  ],
+  "selection": {
+    "mode": "independent",
+    "budget": 700000,
+    "selected": [
+      "B",
+      "A"
+    ],
+    "total_net_inr": 370000,
+    "budget_left": 0,
+    "ok": true,
+    "message": "Selected 2 pilot(s), INR 700,000 of 700,000."
+  },
+  "head_to_head": [
+    {
+      "over": "B",
+      "under": "A",
+      "reasons": [
+        "net annual savings INR 250,000/yr vs INR 120,000/yr (INR 130,000/yr in favour of B)",
+        "payback 24 vs 20 months (4 months faster: A)",
+        "readiness medium vs high"
+      ]
+    }
+  ],
+  "recommendation": {
+    "text": "B recommended: highest net benefit within budget (2.5 L/yr net annual savings, break-even 24.0 months). Funded together with A: total INR 370,000/yr net savings. Horizon 36 months at r = 0.1: ROI and break-even are supporting evidence, not the selector. C dropped: 3-year loss (break-even beyond the horizon).",
+    "selected": [
+      "B",
+      "A"
+    ],
+    "assumptions": {
+      "horizon_months": 36,
+      "discount_rate": 0.1,
+      "mode": "independent",
+      "selector": "highest total net annual benefit; ROI and break-even are evidence"
+    }
+  },
+  "token_value_vs_price": {
+    "net_annual_savings_inr": 370000,
+    "value_per_1m_tokens": 616.67,
+    "price_per_1m_tokens": 250,
+    "value_vs_price_ratio": 2.47,
+    "flags": []
+  },
+  "flags": [
+    {
+      "code": "OVERLAP_UNKNOWN",
+      "message": "Overlap group unknown; treated as standalone. Confirm with owner."
+    }
+  ],
+  "warnings": []
+}

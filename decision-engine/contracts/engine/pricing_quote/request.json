@@ -1,0 +1,23 @@
+{
+  "method": "POST",
+  "path": "/pricing/quote",
+  "body": {
+    "rule": {
+      "type": "package",
+      "overage_unit_price": 0.0003,
+      "packages": [
+        {
+          "name": "10M",
+          "units": 10000000.0,
+          "price": 2300
+        },
+        {
+          "name": "50M",
+          "units": 50000000.0,
+          "price": 10500
+        }
+      ]
+    },
+    "units": 57000000.0
+  }
+}

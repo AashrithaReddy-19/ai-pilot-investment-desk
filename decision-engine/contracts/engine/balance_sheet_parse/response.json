@@ -1,0 +1,50 @@
+{
+  "file_bytes": 87,
+  "rows": 3,
+  "label_column": "Account",
+  "amount_columns": [
+    "Amount in INR"
+  ],
+  "amount_column_used": "Amount in INR",
+  "unit": {
+    "choice": "auto",
+    "unit": "rupees",
+    "multiplier": 1.0,
+    "source": "default (no unit detected)"
+  },
+  "ai_burn_to_date": null,
+  "candidates": [
+    {
+      "row": 2,
+      "label": "AI software licences",
+      "matched": [
+        "ai",
+        "software"
+      ],
+      "raw": "1200000",
+      "amount_inr": 1200000,
+      "annualised_amount_inr": 1200000
+    },
+    {
+      "row": 4,
+      "label": "Cloud AI platform",
+      "matched": [
+        "ai",
+        "cloud"
+      ],
+      "raw": "350000",
+      "amount_inr": 350000,
+      "annualised_amount_inr": 350000
+    }
+  ],
+  "warnings": [],
+  "flags": [],
+  "format": "csv",
+  "period": {
+    "choice": "auto",
+    "period": "annual",
+    "annualisation_factor": 1,
+    "source": "default (no period detected)"
+  },
+  "findings": []
+}

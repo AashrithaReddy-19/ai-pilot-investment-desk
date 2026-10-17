@@ -1,0 +1,15 @@
+{
+  "units": 57000000.0,
+  "total_inr": 12600.0,
+  "lines": [
+    {
+      "label": "1 × package 50M (50,000,000 units)",
+      "amount_inr": 10500.0
+    },
+    {
+      "label": "overage 7,000,000 units × INR 0.0003",
+      "amount_inr": 2100.0
+    }
+  ],
+  "effective_unit_price": 0.000221
+}

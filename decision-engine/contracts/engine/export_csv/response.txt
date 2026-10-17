@@ -1,0 +1,6 @@
+id,task,group,setup_inr,run_inr,benefit_inr,net_independent,payback_mo_independent,net_conservative,payback_mo_conservative,adoption_pct,readiness,flags
+AI1,Invoice field extraction,finance,200000,60000,180000,120000,20.0,66000,36.4,70,high,
+AI2,Order exception triage,ops,200000,60000,180000,120000,20.0,26400,90.9,60,medium,
+AI3,Weekly catalogue review,catalog,200000,60000,180000,120000,20.0,12000,200.0,50,medium,
+AI4,Support reply drafting,support,200000,60000,180000,120000,20.0,57000,42.1,65,high,
+AI5,Ticket tagging,support,200000,60000,180000,120000,20.0,-16800,,40,low,

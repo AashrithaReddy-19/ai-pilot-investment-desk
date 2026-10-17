@@ -1,0 +1,12 @@
+{
+  "pilot_id": "AI1",
+  "objective": "Invoice field extraction",
+  "owner": "finance ops",
+  "adoption_target_pct": 60,
+  "quality_target_pct": 80,
+  "cost_limit_inr": 204932,
+  "cost_limit_note": "setup INR 200,000 + running INR 4,932 for 30 days",
+  "duration_days": 30,
+  "stop_rule": "Stop when observed adoption falls below break-even 33.3% or net <= 0; revise once while adoption stays at or above break-even.",
+  "status": "planned"
+}

@@ -1,0 +1,26 @@
+{
+  "pilot_id": "AI1",
+  "checkpoint": "extend",
+  "reasons": [
+    "Gates pass but the evidence band is low (band capped by fixture (synthetic) values; observed weight 3/11); run the plan longer before scaling."
+  ],
+  "inputs": {
+    "observed_adoption_pct": 72.0,
+    "observed_quality_pct": 85.0,
+    "target_adoption_pct": 60,
+    "quality_threshold_pct": 80,
+    "breakeven_adoption_pct": 33.3,
+    "duration_days": 30,
+    "revised_before": false,
+    "evidence_band": "low"
+  },
+  "stop_rule": {
+    "decision": "GO",
+    "reasons": [
+      "Adoption and quality meet thresholds."
+    ],
+    "metric": "none",
+    "threshold": null,
+    "actual": null
+  }
+}

@@ -19,8 +19,8 @@ def pilots_csv(pilots: list) -> str:
 
 def evidence_md(pilots: list, result: dict, defaults: dict, invalid: list, warnings: list) -> str:
     L = ["# C23 Evidence Report", "", "> Synthetic data. Inputs are assumptions. No claim of live revenue or production readiness.", "",
-         "## Result", f"- Mode: {result['mode']}", f"- Budget: INR {result['budget']:g}", f"- {result['message']}",
-         f"- Selected: {', '.join(result['selected']) or 'none'}", f"- Total net annual benefit: INR {result['total_net']:g}",
+         "## Result", f"- Mode: {result['mode']}", f"- Budget: INR {result['budget']:,.0f}", f"- {result['message']}",
+         f"- Selected: {', '.join(result['selected']) or 'none'}", f"- Total net annual benefit: INR {result['total_net']:,.0f}",
          f"- Tie-break order: {' > '.join(TIE_BREAK_ORDER)}", "", "## Rejected / not funded"]
     L += [f"- {r['id']}: {r['reason']}" for r in result["rejected"]] or ["- none"]
     L += ["", "## Pilot table (observed fixture figures vs team assumptions)", "",
@@ -28,7 +28,7 @@ def evidence_md(pilots: list, result: dict, defaults: dict, invalid: list, warni
     for p in pilots:
         v, be = view(p, "independent"), breakeven_adoption_pct(p)
         pb = "never" if v["payback_months"] is None else f"{v['payback_months']:.1f} mo"
-        L.append(f"| {p.id} {p.task} | {p.setup:g} | {p.run:g} | {p.benefit:g} | {pb} | {p.adoption_pct:g}% | {p.readiness} | "
+        L.append(f"| {p.id} {p.task} | {p.setup:,.0f} | {p.run:,.0f} | {p.benefit:,.0f} | {pb} | {p.adoption_pct:g}% | {p.readiness} | "
                  f"{'n/a' if be is None else f'{be:.1f}%'} | {', '.join(f['code'] for f in p.flags) or '-'} |")
     L += ["", "\\* team-authored assumption, not in the fixture.", "", "## Money over time (multi-period view)",
           "Horizon and discount rate are stated inputs; the one-time cost lands in month 1.", "",
@@ -119,4 +119,54 @@ def memo_md(pilot, defaults: dict, plan: dict = None, checkpoint_out: dict = Non
           f"duration {cp['inputs']['duration_days']} days, revised before: {cp['inputs']['revised_before']}.",
           f"- Tie-break order: {' > '.join(TIE_BREAK_ORDER)}.",
           "- Overrides and hypothesis rejections follow the policy; actuals come from observations, never invented."]
+    return "\n".join(L) + "\n"
+
+
+def yearly_csv(yv: dict) -> str:
+    """Yearly savings view as CSV: one row per proposal-year, then the funded portfolio's years."""
+    buf = io.StringIO(); w = csv.writer(buf)
+    cols = ["benefit_inr", "cashable_inr", "capacity_inr", "running_cost_inr", "one_time_inr", "net_inr", "cumulative_inr"]
+    w.writerow(["id", "year", "months"] + cols)
+    for r in yv["proposals"]:
+        for y in r["years"]:
+            w.writerow([r["id"], y["year"], y["months"]] + [y[c] for c in cols])
+    for y in yv["portfolio"]["years"]:
+        w.writerow(["PORTFOLIO", y["year"], ""] + [y.get(c, "") for c in cols])
+    return buf.getvalue()
+
+
+def decision_report_md(dash: dict) -> str:
+    """Markdown evidence report over the dashboard view. Every figure is copied from the view,
+    so the report, the dashboard and the yearly view cannot disagree."""
+    inr = lambda x: "n/a" if x is None else f"INR {x:,.0f}"
+    h, rec = dash["header"], dash["recommendation"]
+    L = [f"# {h['title']}", "",
+         "> Deterministic engine output. Inputs marked assumed are team assumptions, not measurements.", "",
+         f"Rules version {h['rules_version']} · formula {h['formula_version']} · mode {h['mode']} · "
+         f"horizon {h['horizon_months']} months · r = {h['discount_rate']} · budget {inr(h['budget'])}", "",
+         "## Recommendation", f"**{dash['summary']['headline']}**", "", dash["summary"]["text"], ""]
+    L += [f"- {r}" for r in rec["reasons"]] + [f"- {rec['compare_text']}", ""]
+    L += ["## Key numbers", "", "| KPI | Value | Source |", "|---|---|---|"]
+    for k in dash["kpis"]:
+        v = k["value"]
+        shown = "n/a" if v is None else (inr(v) if k["unit"].startswith("INR") else f"{v:g} {k['unit']}")
+        L.append(f"| {k['label']} | {shown} | {k['source']} |")
+    L += ["", "## Proposals", "",
+          "| Proposal | State | Outcome | Score | Net/yr | Payback | ROI | Break-even | Evidence | Budget |",
+          "|---|---|---|---|---|---|---|---|---|---|"]
+    for p in dash["proposals"]:
+        pb = "never" if p["payback_months"] is None else f"{p['payback_months']:g} mo"
+        roi = "n/a" if p["roi_pct"] is None else f"{p['roi_pct']:g}%"
+        be = "beyond horizon" if p["breakeven_month"] is None else f"month {p['breakeven_month']}"
+        L.append(f"| {p['id']} | {p['state']} | {p['outcome']} | {p['score']:g} | {inr(p['net_annual_inr'])} | {pb} | "
+                 f"{roi} | {be} | {p['evidence_band']} | {p['budget_status']} |")
+    L += ["", "## Yearly savings (funded set)", "", "| Year | Benefit | Running cost | One-time | Net | Cumulative |",
+          "|---|---|---|---|---|---|"]
+    L += [f"| {y['year']} | {inr(y['benefit_inr'])} | {inr(y['running_cost_inr'])} | {inr(y['one_time_inr'])} | "
+          f"{inr(y['net_inr'])} | {inr(y['cumulative_inr'])} |" for y in dash["yearly_portfolio"]] or ["| — | | | | | |"]
+    L += ["", "## Risks"] + ([f"- **{r['severity']}** {r['code']}: {r['message']} ({', '.join(r['ids'])})"
+                              for r in dash["risks"]] or ["- none"])
+    L += ["", "## Next actions"] + ([f"- **{a['code']}**: {a['action']} (owner hint: {a['owner_hint']}; "
+                                     f"expected test: {a['expected_test']})" for a in dash["next_actions"]] or ["- none"])
+    L += ["", "## Consistency checks"] + [f"- {'✓' if c['ok'] else '✗'} {c['check']}" for c in dash["consistency"]]
     return "\n".join(L) + "\n"

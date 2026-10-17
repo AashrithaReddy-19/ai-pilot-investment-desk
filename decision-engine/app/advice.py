@@ -86,6 +86,8 @@ NEXT_ACTIONS: dict[str, dict[str, str]] = {
                      "owner_hint": "service owner", "expected_test": "benefit type with cash factor 1.0 and a stated cash line"},
     "FIXTURE_ONLY_EVIDENCE": {"action": "replace one fixture number with a real one: an invoice-based recurring cost line or a benefit driver from real volumes",
                               "owner_hint": "finance + service owner", "expected_test": "no decision-driving input sourced from the fixture"},
+    "MONEY_ASSUMED": {"action": "back one money figure with an invoice, a signed contract or a written vendor quote",
+                      "owner_hint": "finance", "expected_test": "a decision-driving money input sourced as observed"},
     "NO_OBSERVED_ADOPTION": {"action": "run one adoption spot-check batch over the real users",
                              "owner_hint": "org lead", "expected_test": "observed adoption recorded from the batch"},
     "NO_OBSERVED_QUALITY": {"action": "run one quality spot-check on pilot outputs and record it",
@@ -120,7 +122,7 @@ def _reason_codes(p: "core.Pilot", ev: dict, d: dict) -> list[str]:
         codes.append("NO_OBSERVED_ADOPTION")
     if p.observed_quality_pct is None:
         codes.append("NO_OBSERVED_QUALITY")
-    if observed_ado := p.observed_adoption_pct:
+    if (observed_ado := p.observed_adoption_pct) is not None:
         be = core.breakeven_adoption_pct(p)
         if be is not None and observed_ado < be:
             codes.append("LOW_OBSERVED_ADOPTION")
@@ -131,6 +133,9 @@ def _reason_codes(p: "core.Pilot", ev: dict, d: dict) -> list[str]:
         codes.append("BREAK_EVEN_BEYOND_HORIZON")
     if any(r["source"] == core.PROVENANCE_FIXTURE for r in ev["inputs"] if r["input"] in MONEY_INPUTS):
         codes.append("FIXTURE_ONLY_EVIDENCE")
+    if any(r["source"] == core.PROVENANCE_ASSUMED for r in ev["inputs"] if r["input"] in MONEY_INPUTS
+           and not (r["input"] == "annual_running_cost_inr" and "RUN_COST_ASSUMED" in codes)):
+        codes.append("MONEY_ASSUMED")   # user-stated proposal money: a claim, not yet evidence
     return codes
 
 

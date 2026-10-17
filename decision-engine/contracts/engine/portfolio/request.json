@@ -1,0 +1,8 @@
+{
+  "method": "POST",
+  "path": "/portfolio",
+  "body": {
+    "budget": 600000,
+    "mode": "conservative"
+  }
+}
