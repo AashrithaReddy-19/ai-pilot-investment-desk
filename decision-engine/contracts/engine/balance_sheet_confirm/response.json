@@ -36,6 +36,17 @@
     "next_fy_cost_inr": 182000,
     "inflation_flag": true
   },
+  "observed_forecast": {
+    "basis": "confirmed_rows",
+    "ai_run_cost_inr": 1550000,
+    "next_fy_cost_inr": 1674000,
+    "inflation_flag": true,
+    "inputs": {
+      "annual_usage_growth_pct": 20,
+      "annual_price_drift_pct": -10
+    },
+    "note": "AI run cost = the confirmed rows, annualised from the period their column names; next FY = that × (1 + usage growth) × (1 + price drift). The whole cost moves, including licences and other fixed lines."
+  },
   "flags": [],
   "warnings": [],
   "ai_burn_annualised_inr": 1550000,

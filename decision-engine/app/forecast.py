@@ -30,6 +30,18 @@ def next_fy_cost_inr(tokens_per_month, price_per_1m_tokens, fixed_annual_inr, us
     return tokens_per_month * (1 + g) * 12 * price_per_1m_tokens * (1 + p) / 1_000_000 + (_num(fixed_annual_inr) and fixed_annual_inr or 0)
 
 
+def observed_next_fy_cost_inr(annual_cost_inr, usage_growth_pct, price_drift_pct) -> Optional[float]:
+    """Next FY from an observed annual AI cost (the balance-sheet rows the user confirmed):
+    cost × (1 + usage growth) × (1 + price drift). The rows cannot be split into usage-driven and fixed
+    parts, so the whole cost moves; unknown growth or drift counts as none, as in next_fy_cost_inr.
+    None when the observed cost itself is unknown (never invents)."""
+    if not _num(annual_cost_inr):
+        return None
+    g = (usage_growth_pct if _num(usage_growth_pct) else 0.0) / 100
+    p = (price_drift_pct if _num(price_drift_pct) else 0.0) / 100
+    return annual_cost_inr * (1 + g) * (1 + p)
+
+
 def inflation_flag(usage_growth_pct) -> Optional[bool]:
     """Note A: same or higher usage carries AI spend into the next FY plan. None when growth itself is unknown."""
     if not _num(usage_growth_pct):

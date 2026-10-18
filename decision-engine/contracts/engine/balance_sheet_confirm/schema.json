@@ -110,6 +110,49 @@
         "next_fy_cost_inr"
       ]
     },
+    "observed_forecast": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "type": "string"
+        },
+        "ai_run_cost_inr": {
+          "type": "number"
+        },
+        "next_fy_cost_inr": {
+          "type": "number"
+        },
+        "inflation_flag": {
+          "type": "boolean"
+        },
+        "inputs": {
+          "type": "object",
+          "properties": {
+            "annual_usage_growth_pct": {
+              "type": "number"
+            },
+            "annual_price_drift_pct": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "annual_price_drift_pct",
+            "annual_usage_growth_pct"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ai_run_cost_inr",
+        "basis",
+        "inflation_flag",
+        "inputs",
+        "next_fy_cost_inr",
+        "note"
+      ]
+    },
     "flags": {
       "type": "array"
     },
@@ -158,6 +201,7 @@
     "flags",
     "format",
     "next_fy",
+    "observed_forecast",
     "period",
     "rows_confirmed",
     "source",

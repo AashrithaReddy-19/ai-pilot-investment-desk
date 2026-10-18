@@ -4,6 +4,16 @@ Every change to a published engine response, newest first. Additive changes keep
 version and bump `RULES_VERSION`; a rename, removal or type change bumps `CONTRACT_VERSION`
 (both in `app/version.py`) and needs both owners to approve.
 
+## 1.0 — rules version 10 (2026-10-18)
+
+Additive:
+
+- `POST /balance-sheet/confirm` gains `observed_forecast`: the AI run cost from the rows the user confirmed
+  (annualised from the period their column names) and the next-FY plan from it, × (1 + usage growth) ×
+  (1 + price drift) from the team assumptions, with `inflation_flag`, `inputs`, `basis` (`confirmed_rows`) and
+  a `note`. Both are `null` when no confirmed row has an amount. `next_fy` is unchanged: it is still the
+  token-assumption estimate and does not read the statement.
+
 ## 1.0 — rules version 9 (2026-10-18)
 
 Additive, for annual reports and the gateway's AI reader:

@@ -124,7 +124,7 @@
   },
   "pipeline_rules": {
     "versions": {
-      "rules_version": "9",
+      "rules_version": "10",
       "contract_version": 1,
       "formula_version": "cf-1"
     },

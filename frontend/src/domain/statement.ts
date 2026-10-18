@@ -1,4 +1,4 @@
-import type { BalanceCandidate, Extraction, Flag, ParseFinding, StatementFormat, StatementSource } from '../api/types'
+import type { BalanceCandidate, BalanceSheetConfirm, Extraction, Flag, ParseFinding, StatementFormat, StatementSource } from '../api/types'
 
 /** What the balance-sheet upload accepts. The gateway checks the bytes again; this only gives instant feedback. */
 export const STATEMENT_ACCEPT = '.pdf,.xlsx,.xls,.csv,application/pdf,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -67,4 +67,26 @@ export function readSummary(x: Extraction | undefined): string {
 export function sheetOptionLabel(s: { name: string; hidden: boolean; usable: boolean; suggested: boolean }): string {
   const tags = [s.hidden ? 'hidden' : '', s.suggested ? 'suggested' : '', s.usable ? '' : 'no table found'].filter(Boolean)
   return tags.length ? `${s.name} (${tags.join(', ')})` : s.name
+}
+
+const pct = (v: number | null | undefined) => (v === null || v === undefined ? null : `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v)}%`)
+
+/** The AI plan to show after confirming: from the confirmed rows when the engine sends it, otherwise (an
+ *  older engine) the token-assumption estimate, labelled as such. */
+export function aiPlan(r: BalanceSheetConfirm): { run: number | null; next: number | null; runSub: string; nextSub?: string; fromStatement: boolean } {
+  const o = r.observed_forecast
+  if (o) {
+    const g = pct(o.inputs.annual_usage_growth_pct), d = pct(o.inputs.annual_price_drift_pct)
+    const moves = [g && `${g} usage`, d && `${d} price`].filter(Boolean).join(', ')
+    return {
+      run: o.ai_run_cost_inr, next: o.next_fy_cost_inr, fromStatement: true,
+      runSub: o.ai_run_cost_inr === null ? 'no confirmed row has an amount' : 'confirmed rows, annualised',
+      nextSub: o.next_fy_cost_inr === null ? undefined : `this year ${moves ? `with ${moves}` : 'unchanged'}${o.inflation_flag ? ' · spend carries into next FY' : ''}`,
+    }
+  }
+  return {
+    run: r.next_fy.ai_run_cost_inr, next: r.next_fy.next_fy_cost_inr, fromStatement: false,
+    runSub: r.next_fy.ai_run_cost_inr === null ? 'tokens or price not recorded' : 'token assumptions, not the statement',
+    nextSub: r.next_fy.inflation_flag === null ? undefined : (r.next_fy.inflation_flag ? 'inflation: spend carries into next FY' : 'usage falls; no inflation'),
+  }
 }

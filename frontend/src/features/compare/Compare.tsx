@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { api } from '../../api/client'
 import type { BalanceSheetConfirm, CompareProposalRow, CompareResponse, Mode, PilotsImportParse } from '../../api/types'
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
+import { aiPlan } from '../../domain/statement'
 import { BalancePanel } from './BalancePanel'
 import { Stat, inr } from './shared'
 import { SelectField, TextField } from '../../components/ui/Fields'
@@ -246,8 +247,7 @@ function CompareResult({ res, burn }: { res: CompareResponse; burn: BalanceSheet
             {burn ? (
               <div className="row" style={{ flexWrap: 'wrap', gap: 4 }}>
                 <Stat label="AI burned to date" value={`₹ ${inr(burn.ai_burn_to_date)}`} sub="confirmed from the balance sheet" />
-                <Stat label="Next-FY AI plan" value={burn.next_fy.next_fy_cost_inr === null ? 'unknown' : `₹ ${inr(burn.next_fy.next_fy_cost_inr)}`}
-                  sub={burn.next_fy.inflation_flag ? 'inflation applied' : undefined} />
+                <Stat label="Next-FY AI plan" value={aiPlan(burn).next === null ? 'unknown' : `₹ ${inr(aiPlan(burn).next!)}`} sub={aiPlan(burn).nextSub} />
               </div>
             ) : (
               <p className="caption">Confirm rows in the balance-sheet card above to place the money already burned on AI beside this recommendation.</p>

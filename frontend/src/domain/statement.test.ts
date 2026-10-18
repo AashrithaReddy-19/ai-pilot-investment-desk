@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { describeSource, extraFindings, readSummary, sheetOptionLabel, statementFormat, unitSummary, validateStatementFile, visibleWarnings, whyFlagged } from './statement'
+import { aiPlan, describeSource, extraFindings, readSummary, sheetOptionLabel, statementFormat, unitSummary, validateStatementFile, visibleWarnings, whyFlagged } from './statement'
 
 describe('statementFormat', () => {
   it('recognises the four formats whatever the case', () => {
@@ -64,5 +64,23 @@ describe('what the reviewer reads', () => {
     expect(sheetOptionLabel({ name: 'Cover', hidden: false, usable: false, suggested: false })).toBe('Cover (no table found)')
     expect(sheetOptionLabel({ name: 'Calc', hidden: true, usable: false, suggested: false })).toBe('Calc (hidden, no table found)')
     expect(sheetOptionLabel({ name: 'Plain', hidden: false, usable: true, suggested: false })).toBe('Plain')
+  })
+})
+
+describe('aiPlan', () => {
+  const base = {
+    ai_burn_to_date: 4_000_000, source: 'observed', rows_confirmed: [12], confirmations: [], amount_column_used: 'Amount',
+    unit: { choice: 'auto', unit: 'rupees', multiplier: 1, source: 'default' }, warnings: [], flags: [],
+    next_fy: { inputs: {}, ai_run_cost_inr: 170_000, next_fy_cost_inr: 182_000, inflation_flag: true },
+  }
+  it('plans from the confirmed rows when the engine sends them', () => {
+    const p = aiPlan({ ...base, observed_forecast: { basis: 'confirmed_rows', ai_run_cost_inr: 4_000_000, next_fy_cost_inr: 4_320_000, inflation_flag: true,
+      inputs: { annual_usage_growth_pct: 20, annual_price_drift_pct: -10 }, note: '' } })
+    expect(p).toMatchObject({ run: 4_000_000, next: 4_320_000, fromStatement: true, runSub: 'confirmed rows, annualised' })
+    expect(p.nextSub).toBe('this year with +20% usage, −10% price · spend carries into next FY')
+  })
+  it('falls back to the token estimate, labelled, for an older engine', () => {
+    const p = aiPlan(base)
+    expect(p).toMatchObject({ run: 170_000, next: 182_000, fromStatement: false, runSub: 'token assumptions, not the statement' })
   })
 })

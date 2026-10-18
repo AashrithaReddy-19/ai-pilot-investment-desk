@@ -324,12 +324,29 @@ def confirm_balance_sheet(raw: bytes, selected_rows: list[int], unit: str = "aut
             burn += c["amount_inr"]
         per_row.append({"row": c["row"], "label": c["label"], "amount_inr": c["amount_inr"],
                         **({"original_amount_inr": c["original_amount_inr"], "corrected": True} if r in corrected else {})})
-    from . import core  # local import keeps ingest standalone of the decision core
-    nxt = core.forecast_block(d or {})
+    from . import core, forecast  # local import keeps ingest standalone of the decision core
+    d = d or {}
+    nxt = core.forecast_block(d)
+    # The plan from what the statement shows: the confirmed rows, annualised, moved by the team's growth and
+    # drift. next_fy (above) stays the token-assumption estimate; it does not read the statement.
+    counted = any(c["amount_inr"] is not None for c in per_row)
+    annual = round(burn * parsed["period"]["annualisation_factor"]) if counted else None
+    growth, drift = d.get("annual_usage_growth_pct"), d.get("annual_price_drift_pct")
+    obs_next = forecast.observed_next_fy_cost_inr(annual, growth, drift)
+    observed = {
+        "basis": "confirmed_rows",
+        "ai_run_cost_inr": annual,
+        "next_fy_cost_inr": None if obs_next is None else round(obs_next),
+        "inflation_flag": forecast.inflation_flag(growth),
+        "inputs": {"annual_usage_growth_pct": growth, "annual_price_drift_pct": drift},
+        "note": "AI run cost = the confirmed rows, annualised from the period their column names; next FY = that × "
+                "(1 + usage growth) × (1 + price drift). The whole cost moves, including licences and other fixed lines.",
+    }
     return {
         "ai_burn_to_date": round(burn), "source": "observed", "rows_confirmed": sorted(selected_rows),
         "confirmations": per_row, "amount_column_used": parsed["amount_column_used"], "unit": parsed["unit"],
         "next_fy": {k: nxt[k] for k in ("inputs", "ai_run_cost_inr", "next_fy_cost_inr", "inflation_flag")},
+        "observed_forecast": observed,
         "flags": flags, "warnings": warnings,
         "ai_burn_annualised_inr": round(burn * parsed["period"]["annualisation_factor"]),
         "period": parsed["period"], "format": parsed["format"],

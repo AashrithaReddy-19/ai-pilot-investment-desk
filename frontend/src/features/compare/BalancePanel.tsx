@@ -4,7 +4,7 @@ import type { AIAssistInfo, BalanceSheetConfirm, BalanceSheetParse, BalanceUnit,
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
 import { SelectField, TextField } from '../../components/ui/Fields'
 import {
-  FORMAT_LABEL, MAX_STATEMENT_MB, STATEMENT_ACCEPT, describeSource, extraFindings, readSummary, sheetOptionLabel,
+  FORMAT_LABEL, MAX_STATEMENT_MB, STATEMENT_ACCEPT, aiPlan, describeSource, extraFindings, readSummary, sheetOptionLabel,
   statementFormat, unitSummary, validateStatementFile, visibleWarnings, whyFlagged,
 } from '../../domain/statement'
 import { Stat, inr } from './shared'
@@ -71,6 +71,7 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
   const findings = parse ? extraFindings(parse.findings, parse.warnings) : []
   const unit = parse ? unitSummary(parse.unit) : null
   const format = file ? statementFormat(file.name) : null
+  const plan = res ? aiPlan(res) : null
 
   return (
     <div className="panel">
@@ -183,10 +184,8 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
         <>
           <div className="row" style={{ flexWrap: 'wrap', gap: 8 }}>
             <Stat label="AI burn to date (observed)" value={`₹ ${inr(res.ai_burn_to_date)}`} sub={`rows ${res.rows_confirmed.join(', ')}`} />
-            <Stat label="AI run cost this year" value={res.next_fy.ai_run_cost_inr === null ? 'unknown' : `₹ ${inr(res.next_fy.ai_run_cost_inr)}`}
-              sub={res.next_fy.ai_run_cost_inr === null ? 'tokens or price not recorded' : 'from token assumptions'} />
-            <Stat label="Next-FY AI plan" value={res.next_fy.next_fy_cost_inr === null ? 'unknown' : `₹ ${inr(res.next_fy.next_fy_cost_inr)}`}
-              sub={res.next_fy.inflation_flag === null ? undefined : (res.next_fy.inflation_flag ? 'inflation: spend carries into next FY' : 'usage falls; no inflation')} />
+            <Stat label="AI run cost this year" value={plan!.run === null ? 'unknown' : `₹ ${inr(plan!.run)}`} sub={plan!.runSub} />
+            <Stat label="Next-FY AI plan" value={plan!.next === null ? 'unknown' : `₹ ${inr(plan!.next)}`} sub={plan!.nextSub} />
           </div>
           {res.confirmations.length > 0 && (
             <div className="tbl-wrap"><table className="tbl">
@@ -202,7 +201,11 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
           )}
         </>
       )}
-      {res && res.next_fy.ai_run_cost_inr === null && (
+      {res && plan?.fromStatement && res.next_fy.ai_run_cost_inr !== null && (
+        <p className="hint">Token-based estimate from the team assumptions in /defaults (not from this statement): ₹ {inr(res.next_fy.ai_run_cost_inr)} this year
+          {res.next_fy.next_fy_cost_inr !== null && <>, ₹ {inr(res.next_fy.next_fy_cost_inr)} next FY</>}. Record your organisation's real token usage and price to make it meaningful.</p>
+      )}
+      {res && !plan?.fromStatement && res.next_fy.ai_run_cost_inr === null && (
         <p className="hint">Record monthly token usage and the price per 1M tokens (team assumptions in /defaults) to see the next-FY plan; it is never guessed as zero.</p>
       )}
     </div>

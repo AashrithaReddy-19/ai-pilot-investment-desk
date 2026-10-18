@@ -477,6 +477,16 @@ export interface BalanceSheetConfirm {
     next_fy_cost_inr: number | null
     inflation_flag: boolean | null
   }
+  /** The plan from the statement: the confirmed rows, annualised, moved by usage growth and price drift.
+   *  next_fy above is the token-assumption estimate, which does not read the statement. */
+  observed_forecast?: {
+    basis: 'confirmed_rows'
+    ai_run_cost_inr: number | null
+    next_fy_cost_inr: number | null
+    inflation_flag: boolean | null
+    inputs: { annual_usage_growth_pct?: number | null; annual_price_drift_pct?: number | null }
+    note: string
+  }
   warnings: string[]
   flags: Flag[]
   extraction?: Extraction

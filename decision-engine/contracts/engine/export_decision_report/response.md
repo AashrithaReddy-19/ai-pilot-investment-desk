@@ -2,7 +2,7 @@
 
 > Deterministic engine output. Inputs marked assumed are team assumptions, not measurements.
 
-Rules version 9 · formula cf-1 · mode independent · horizon 36 months · r = 0.1 · budget INR 700,000
+Rules version 10 · formula cf-1 · mode independent · horizon 36 months · r = 0.1 · budget INR 700,000
 
 ## Recommendation
 **Run A as a limited pilot**

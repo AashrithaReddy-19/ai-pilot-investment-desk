@@ -228,3 +228,29 @@ def test_propose_all_makes_every_described_row_a_candidate():
     assert c.post("/balance-sheet/confirm", files={"file": ("bs.csv", rows.encode(), "text/csv")},
                   data={"rows": "3"}).status_code == 422
     assert bal(rows, propose="everything").status_code == 422
+
+
+# ---- the plan from the statement, not only from token assumptions ----
+
+def test_confirm_plans_next_fy_from_the_confirmed_rows():
+    rows = "Account,Amount in INR\nPlatform licence,\"1,20,00,000\"\nPrivate-cloud hosting,\"60,00,000\"\nRent,10\n"
+    r = c.post("/balance-sheet/confirm", files={"file": ("bs.csv", rows.encode(), "text/csv")}, data={"rows": "2,3"})
+    j = r.json()
+    assert j["ai_burn_to_date"] == 18_000_000
+    o = j["observed_forecast"]
+    assert o["basis"] == "confirmed_rows" and o["ai_run_cost_inr"] == 18_000_000
+    assert o["next_fy_cost_inr"] == 19_440_000            # × 1.20 usage growth × 0.90 price drift (shipped)
+    assert o["inflation_flag"] is True
+    assert j["next_fy"]["ai_run_cost_inr"] == 170_000     # the token estimate is unchanged and separate
+    # a different statement gives a different plan
+    r2 = c.post("/balance-sheet/confirm", files={"file": ("bs.csv", rows.encode(), "text/csv")}, data={"rows": "3"})
+    assert r2.json()["observed_forecast"]["next_fy_cost_inr"] == 6_480_000
+
+
+def test_monthly_rows_are_annualised_and_missing_amounts_give_no_plan():
+    rows = "Account,Monthly cost (INR)\nCloud hosting,50000\n"
+    o = c.post("/balance-sheet/confirm", files={"file": ("bs.csv", rows.encode(), "text/csv")}, data={"rows": "2"}).json()["observed_forecast"]
+    assert o["ai_run_cost_inr"] == 600_000 and o["next_fy_cost_inr"] == 648_000
+    rows = "Account,Amount\nAI tools,n/a\nRent,100\n"          # only the row without an amount is confirmed
+    o = c.post("/balance-sheet/confirm", files={"file": ("bs.csv", rows.encode(), "text/csv")}, data={"rows": "2"}).json()["observed_forecast"]
+    assert o["ai_run_cost_inr"] is None and o["next_fy_cost_inr"] is None   # missing is never zero
