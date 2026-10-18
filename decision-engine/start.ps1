@@ -1,7 +1,7 @@
 # ==============================================================================
 # Decision Engine Startup Script (Windows PowerShell)
 # Performs pre-flight checks, dependency installs, .env verification,
-# and starts the service: uvicorn app.main:app --reload --port 8000
+# and starts the service: uvicorn app.main:app on HOST:PORT from .env (reload when RELOAD=true)
 # ==============================================================================
 
 [CmdletBinding()]
@@ -37,7 +37,14 @@ if (-not $PythonBin) {
 } else {
     try {
         $PyVer = & $PythonBin -c "import sys; print('.'.join(map(str, sys.version_info[:3])))" 2>$null
-        $CheckSummary += @{ Status = "PASS"; Message = "Python Runtime: $PythonBin (v$PyVer)" }
+        & $PythonBin -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            $CheckSummary += @{ Status = "PASS"; Message = "Python Runtime: $PythonBin (v$PyVer)" }
+        } else {
+            $CheckSummary += @{ Status = "FAIL"; Message = "Python Runtime: $PythonBin v$PyVer is too old (3.10+ required)" }
+            $FailedItems += "Python 3.10+ is required"
+            $WhatToInstall += "Install Python 3.10 or newer (winget install Python.Python.3.12)"
+        }
     } catch {
         $CheckSummary += @{ Status = "PASS"; Message = "Python Runtime: $PythonBin" }
     }
@@ -63,6 +70,27 @@ RELOAD=true
         Copy-Item -Path ".env.example" -Destination ".env"
         $CheckSummary += @{ Status = "PASS"; Message = "Environment File: Generated default .env from .env.example" }
     }
+}
+
+# Read PORT / HOST / RELOAD from .env (real environment variables win)
+$EnvValues = @{}
+if (Test-Path ".env") {
+    Get-Content ".env" | ForEach-Object {
+        $line = $_.Trim()
+        if ($line -and -not $line.StartsWith("#")) {
+            $parts = $line -split "=", 2
+            if ($parts.Length -eq 2) { $EnvValues[$parts[0].Trim()] = $parts[1].Trim() }
+        }
+    }
+}
+$AppPort = if ($env:PORT) { $env:PORT } elseif ($EnvValues["PORT"]) { $EnvValues["PORT"] } else { "8000" }
+$AppHost = if ($env:HOST) { $env:HOST } elseif ($EnvValues["HOST"]) { $EnvValues["HOST"] } else { "0.0.0.0" }
+$AppReload = if ($env:RELOAD) { $env:RELOAD } elseif ($EnvValues["RELOAD"]) { $EnvValues["RELOAD"] } else { "true" }
+if ($AppPort -notmatch '^\d+$') {
+    $CheckSummary += @{ Status = "FAIL"; Message = "Port: PORT='$AppPort' is not a number" }
+    $FailedItems += "PORT is invalid"
+    $WhatToInstall += "Set PORT to a number in decision-engine\.env (default 8000)"
+    $AppPort = "8000"
 }
 
 # ------------------------------------------------------------------------------
@@ -122,7 +150,8 @@ if ($VenvDir) {
 if ($VenvPython -and (Test-Path $VenvPython)) {
     $DepsInstalled = $false
     try {
-        & $VenvPython -c "import fastapi, uvicorn, httpx, pytest" 2>$null
+        # python-multipart serves the CSV/XLSX upload endpoints (XLSX itself is read with the stdlib)
+        & $VenvPython -c "import fastapi, uvicorn, httpx, pytest, importlib.util as u; assert u.find_spec('python_multipart') or u.find_spec('multipart')" 2>$null
         if ($LASTEXITCODE -eq 0) {
             $DepsInstalled = $true
         }
@@ -144,7 +173,7 @@ if ($VenvPython -and (Test-Path $VenvPython)) {
         } else {
             $CheckSummary += @{ Status = "FAIL"; Message = "Dependencies: requirements.txt is missing" }
             $FailedItems += "requirements.txt missing"
-            $WhatToInstall += "Create requirements.txt with: fastapi, uvicorn, httpx, pytest"
+            $WhatToInstall += "Create requirements.txt with: fastapi, uvicorn, python-multipart, pytest, httpx"
         }
     } else {
         $CheckSummary += @{ Status = "PASS"; Message = "Dependencies: All required packages installed" }
@@ -157,12 +186,12 @@ if ($VenvPython -and (Test-Path $VenvPython)) {
 }
 
 # ------------------------------------------------------------------------------
-# 5. Check Port 8000 availability
+# 5. Check port availability
 # ------------------------------------------------------------------------------
 $PortInUse = $false
 try {
     $Socket = New-Object System.Net.Sockets.TcpClient
-    $AsyncResult = $Socket.BeginConnect("127.0.0.1", 8000, $null, $null)
+    $AsyncResult = $Socket.BeginConnect("127.0.0.1", [int]$AppPort, $null, $null)
     $Wait = $AsyncResult.AsyncWaitHandle.WaitOne(800, $false)
     if ($Wait -and $Socket.Connected) {
         $PortInUse = $true
@@ -174,9 +203,22 @@ try {
 }
 
 if ($PortInUse) {
-    $CheckSummary += @{ Status = "WARN"; Message = "Port 8000: Port 8000 is currently in use (may conflict with uvicorn)" }
+    $CheckSummary += @{ Status = "WARN"; Message = "Port $AppPort`: Port $AppPort is currently in use (may conflict with uvicorn)" }
 } else {
-    $CheckSummary += @{ Status = "PASS"; Message = "Port 8000: Available" }
+    $CheckSummary += @{ Status = "PASS"; Message = "Port $AppPort`: Available" }
+}
+
+# ------------------------------------------------------------------------------
+# 6. Engine versions (reported on GET /health; the gateway's cache key follows rules_version)
+# ------------------------------------------------------------------------------
+if (Test-Path "app\version.py") {
+    $verText = Get-Content "app\version.py" -Raw
+    $Rv = if ($verText -match 'RULES_VERSION = "([^"]+)"') { $Matches[1] } else { "?" }
+    $Cv = if ($verText -match 'CONTRACT_VERSION = (\d+)') { $Matches[1] } else { "?" }
+    $CheckSummary += @{ Status = "PASS"; Message = "Engine version: rules $Rv, contract $Cv (examples in contracts\engine\)" }
+    if ((Test-Path "contracts\VERSION") -and ((Get-Content "contracts\VERSION" -Raw).Trim() -ne $Cv)) {
+        $CheckSummary += @{ Status = "WARN"; Message = "Contracts: contracts\VERSION differs from CONTRACT_VERSION; run: python scripts\build_contracts.py" }
+    }
 }
 
 # ------------------------------------------------------------------------------
@@ -216,8 +258,10 @@ if ($FailedItems.Count -gt 0) {
 Write-Host "=======================================================" -ForegroundColor Green
 Write-Host "        ALL CHECKS PASSED - STARTING APP               " -ForegroundColor Green
 Write-Host "=======================================================" -ForegroundColor Green
-Write-Host "Command: uvicorn app.main:app --reload --port 8000" -ForegroundColor White
-Write-Host "API Docs: http://localhost:8000/docs" -ForegroundColor Cyan
+$UvicornArgs = @("app.main:app", "--host", $AppHost, "--port", $AppPort)
+if ($AppReload -eq "true") { $UvicornArgs += "--reload" }
+Write-Host "Command: uvicorn $($UvicornArgs -join ' ')" -ForegroundColor White
+Write-Host "API Docs: http://localhost:$AppPort/docs" -ForegroundColor Cyan
 Write-Host ""
 
 # Activate virtualenv if script exists and execute uvicorn
@@ -226,7 +270,7 @@ if (Test-Path "$VenvDir\Scripts\Activate.ps1") {
 }
 
 if ($VenvUvicorn -and (Test-Path $VenvUvicorn)) {
-    & $VenvUvicorn app.main:app --reload --port 8000
+    & $VenvUvicorn @UvicornArgs
 } else {
-    & $VenvPython -m uvicorn app.main:app --reload --port 8000
+    & $VenvPython -m uvicorn @UvicornArgs
 }

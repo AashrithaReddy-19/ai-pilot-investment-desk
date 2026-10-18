@@ -2,7 +2,8 @@
 # ==============================================================================
 # Frontend Startup Script (Linux/macOS)
 # Performs pre-flight checks, installs dependencies, and starts the Vite dev
-# server on :5173, proxying /api, /health and /ready to the Go gateway on :8080.
+# server on :5173, proxying /api, /health and /ready to the Go gateway
+# (VITE_PROXY_TARGET, default http://127.0.0.1:8080).
 # ==============================================================================
 
 set -uo pipefail
@@ -77,12 +78,30 @@ if command -v npm &>/dev/null; then
 fi
 
 # ------------------------------------------------------------------------------
-# 3. Gateway reachability (the Vite proxy target)
+# 3. Gateway reachability (the Vite proxy target: VITE_PROXY_TARGET, default http://127.0.0.1:8080)
 # ------------------------------------------------------------------------------
-if check_tcp_port "127.0.0.1" 8080; then
-    CHECK_SUMMARY+=("${GREEN}[PASS] Go gateway:${RESET} Reachable on :8080 (proxy target)")
+PROXY_TARGET="${VITE_PROXY_TARGET:-}"
+for f in .env.local .env; do
+    if [ -z "$PROXY_TARGET" ] && [ -f "$f" ]; then
+        PROXY_TARGET=$(grep -E '^VITE_PROXY_TARGET=' "$f" | tail -1 | cut -d '=' -f2- | tr -d '\r"')
+    fi
+done
+PROXY_TARGET="${PROXY_TARGET:-http://127.0.0.1:8080}"
+GW_HOST="127.0.0.1"; GW_PORT="8080"
+if [[ "$PROXY_TARGET" =~ //([^:/]+) ]]; then GW_HOST="${BASH_REMATCH[1]}"; [ "$GW_HOST" = "localhost" ] && GW_HOST="127.0.0.1"; fi
+if [[ "$PROXY_TARGET" =~ :([0-9]+) ]]; then GW_PORT="${BASH_REMATCH[1]}"; fi
+
+if check_tcp_port "$GW_HOST" "$GW_PORT"; then
+    GW_HEALTH=""
+    command -v curl &>/dev/null && GW_HEALTH=$(curl -s --max-time 2 "$PROXY_TARGET/health" || true)
+    GW_AUTH=$(echo "$GW_HEALTH" | sed -n 's/.*"auth_mode": *"\([^"]*\)".*/\1/p')
+    GW_RULES=$(echo "$GW_HEALTH" | sed -n 's/.*"rules_version": *"\([^"]*\)".*/\1/p')
+    CHECK_SUMMARY+=("${GREEN}[PASS] Go gateway:${RESET} Reachable at $PROXY_TARGET (proxy target)${GW_RULES:+, engine rules version $GW_RULES}")
+    if [ "$GW_AUTH" = "required" ]; then
+        CHECK_SUMMARY+=("${YELLOW}[WARN] Sign-in:${RESET} The gateway runs with AUTH_MODE=required; these screens do not send a token yet, so API calls will answer 401. Use AUTH_MODE=off for local UI work.")
+    fi
 else
-    CHECK_SUMMARY+=("${YELLOW}[WARN] Go gateway:${RESET} Not running on :8080 yet (start it in another terminal: cd ../backend && ./start.sh). Pages will show a connection notice until it is up.")
+    CHECK_SUMMARY+=("${YELLOW}[WARN] Go gateway:${RESET} Not running at $PROXY_TARGET yet (start it in another terminal: cd ../backend && ./start.sh). Pages will show a connection notice until it is up.")
 fi
 
 # ------------------------------------------------------------------------------

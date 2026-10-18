@@ -1,7 +1,8 @@
 # ==============================================================================
 # Backend Startup Script (Windows PowerShell)
 # Performs pre-flight checks, dependency downloads, .env verification,
-# starts Redis, checks PostgreSQL, and runs: go run ./cmd/api
+# starts Redis, checks PostgreSQL, applies pending migrations ($env:SKIP_MIGRATE = "1" to skip),
+# checks the rules engine and its rules_version, and runs: go run ./cmd/api
 # ==============================================================================
 
 [CmdletBinding()]
@@ -48,11 +49,17 @@ $GoCmd = Get-Command go -ErrorAction SilentlyContinue
 if (-not $GoCmd) {
     $CheckSummary += @{ Status = "FAIL"; Message = "Go Runtime: Not found in PATH" }
     $FailedItems += "Go compiler is missing"
-    $WhatToInstall += "Install Go (Run: winget install GoLang.Go or download from https://go.dev/dl/)"
+    $WhatToInstall += "Install Go 1.25+ (Run: winget install GoLang.Go or download from https://go.dev/dl/)"
 } else {
     try {
         $GoVer = (go version).Split(' ')[2]
-        $CheckSummary += @{ Status = "PASS"; Message = "Go Runtime: $GoVer" }
+        if ($GoVer -match '^go1\.(\d+)' -and [int]$Matches[1] -lt 25) {
+            $CheckSummary += @{ Status = "FAIL"; Message = "Go Runtime: $GoVer is too old (go.mod needs 1.25+)" }
+            $FailedItems += "Go 1.25+ is required"
+            $WhatToInstall += "Upgrade Go to 1.25+ (winget upgrade GoLang.Go or https://go.dev/dl/)"
+        } else {
+            $CheckSummary += @{ Status = "PASS"; Message = "Go Runtime: $GoVer" }
+        }
     } catch {
         $CheckSummary += @{ Status = "PASS"; Message = "Go Runtime: Available" }
     }
@@ -79,6 +86,10 @@ $Port = 8080
 $DatabaseUrl = ""
 $RedisUrl = "redis://localhost:6379/0"
 $RulesEngineUrl = "http://localhost:8000"
+$AuthMode = "off"
+$AutoMigrate = "false"
+$WorkerEnabled = "true"
+$RateLimitPerMinute = "600"
 
 if (Test-Path ".env") {
     Get-Content ".env" | ForEach-Object {
@@ -93,6 +104,10 @@ if (Test-Path ".env") {
                     "DATABASE_URL" { $DatabaseUrl = $val }
                     "REDIS_URL" { $RedisUrl = $val }
                     "RULES_ENGINE_URL" { $RulesEngineUrl = $val }
+                    "AUTH_MODE" { $AuthMode = $val.ToLower() }
+                    "AUTO_MIGRATE" { $AutoMigrate = $val }
+                    "WORKER_ENABLED" { $WorkerEnabled = $val }
+                    "RATE_LIMIT_PER_MINUTE" { $RateLimitPerMinute = $val }
                 }
             }
         }
@@ -221,17 +236,79 @@ if ($DbRunning) {
 }
 
 # ------------------------------------------------------------------------------
-# 6. Check Decision Engine (Rules Engine URL)
+# 5b. Apply pending database migrations (00001-00012: workspaces, uploads, snapshots ...)
 # ------------------------------------------------------------------------------
+if ($env:SKIP_MIGRATE -eq "1") {
+    $CheckSummary += @{ Status = "INFO"; Message = "Migrations: Skipped (SKIP_MIGRATE=1); run: go run ./cmd/api migrate up" }
+} elseif ($AutoMigrate -eq "true") {
+    $CheckSummary += @{ Status = "INFO"; Message = "Migrations: AUTO_MIGRATE=true: the gateway applies them when it starts" }
+} elseif ($DbRunning -and $DatabaseUrl -and $GoCmd) {
+    Write-Host "[INFO] Checking database migrations ..." -ForegroundColor Blue
+    $statusOut = go run ./cmd/api migrate status 2>$null
+    $pending = @($statusOut | Where-Object { $_ -match "pending" }).Count
+    if ($pending -gt 0) {
+        Write-Host "[INFO] Applying $pending pending migration(s) ..." -ForegroundColor Blue
+        $migOut = go run ./cmd/api migrate up 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            $CheckSummary += @{ Status = "PASS"; Message = "Migrations: Applied $pending pending migration(s)" }
+        } else {
+            $CheckSummary += @{ Status = "FAIL"; Message = "Migrations: migrate up failed: $(@($migOut)[-1])" }
+            $FailedItems += "Database migrations failed"
+            $WhatToInstall += "Run: go run ./cmd/api migrate up (in backend\) and fix the reported error"
+        }
+    } else {
+        $CheckSummary += @{ Status = "PASS"; Message = "Migrations: Database schema is up to date" }
+    }
+}
+
+# ------------------------------------------------------------------------------
+# 6. Check Decision Engine (Rules Engine URL) and the rules_version it reports
+# ------------------------------------------------------------------------------
+$DeHost = "127.0.0.1"
 $DePort = 8000
+if ($RulesEngineUrl -match "//([^:/]+)") {
+    $DeHost = $Matches[1]
+    if ($DeHost -eq "localhost") { $DeHost = "127.0.0.1" }
+}
 if ($RulesEngineUrl -match ":(\d+)") {
     $DePort = [int]$Matches[1]
 }
 
-if (Test-TcpPort -ComputerName "127.0.0.1" -Port $DePort) {
-    $CheckSummary += @{ Status = "PASS"; Message = "Decision Engine: Reachable on port $DePort" }
+if (Test-TcpPort -ComputerName $DeHost -Port $DePort) {
+    $DeVersion = $null
+    try {
+        $DeVersion = (Invoke-RestMethod -Uri "$RulesEngineUrl/health" -TimeoutSec 2 -ErrorAction Stop).rules_version
+    } catch {}
+    if ($DeVersion) {
+        $CheckSummary += @{ Status = "PASS"; Message = "Decision Engine: Reachable on port $DePort (rules version $DeVersion; the cache key follows it)" }
+    } else {
+        $CheckSummary += @{ Status = "WARN"; Message = "Decision Engine: Reachable on port $DePort but reports no rules_version (older engine? update decision-engine\)" }
+    }
 } else {
     $CheckSummary += @{ Status = "INFO"; Message = "Decision Engine: Not running on port $DePort (Start in another terminal: cd ..\decision-engine; .\start.ps1)" }
+}
+
+# ------------------------------------------------------------------------------
+# 6b. Security and upload worker settings
+# ------------------------------------------------------------------------------
+switch ($AuthMode) {
+    "required" { $CheckSummary += @{ Status = "INFO"; Message = "Sign-in: AUTH_MODE=required (bearer tokens). First admin + token: go run ./cmd/api bootstrap -email you@example.com -workspace `"Finance`"" } }
+    "off" { $CheckSummary += @{ Status = "INFO"; Message = "Sign-in: AUTH_MODE=off (single default workspace, no tokens; for local use only)" } }
+    default {
+        $CheckSummary += @{ Status = "FAIL"; Message = "Sign-in: AUTH_MODE='$AuthMode' (must be off or required)" }
+        $FailedItems += "AUTH_MODE is invalid"
+        $WhatToInstall += "Set AUTH_MODE=off or AUTH_MODE=required in backend\.env"
+    }
+}
+if ($RateLimitPerMinute -eq "0") {
+    $CheckSummary += @{ Status = "WARN"; Message = "Rate limit: Disabled (RATE_LIMIT_PER_MINUTE=0)" }
+} else {
+    $CheckSummary += @{ Status = "PASS"; Message = "Rate limit: $RateLimitPerMinute requests/minute per client IP" }
+}
+if ($WorkerEnabled -eq "false") {
+    $CheckSummary += @{ Status = "WARN"; Message = "Upload worker: WORKER_ENABLED=false (stored uploads stay queued unless another gateway runs the worker)" }
+} else {
+    $CheckSummary += @{ Status = "PASS"; Message = "Upload worker: Runs inside the gateway (parses stored uploads, retries with backoff)" }
 }
 
 # ------------------------------------------------------------------------------
@@ -281,7 +358,7 @@ Write-Host "=======================================================" -Foreground
 Write-Host "        ALL CHECKS PASSED - STARTING APP               " -ForegroundColor Green
 Write-Host "=======================================================" -ForegroundColor Green
 Write-Host "Command: go run ./cmd/api" -ForegroundColor White
-Write-Host "Backend API URL: http://localhost:$Port" -ForegroundColor Cyan
+Write-Host "Backend API URL: http://localhost:$Port  (sign-in: $AuthMode)" -ForegroundColor Cyan
 Write-Host ""
 
 # Execute backend

@@ -2,7 +2,8 @@
 # ==============================================================================
 # Backend Startup Script (Linux/macOS)
 # Performs pre-flight checks, dependency downloads, .env verification,
-# starts Redis, checks PostgreSQL, and runs: go run ./cmd/api
+# starts Redis, checks PostgreSQL, applies pending migrations (SKIP_MIGRATE=1 to skip),
+# checks the rules engine and its rules_version, and runs: go run ./cmd/api
 # ==============================================================================
 
 set -uo pipefail
@@ -57,10 +58,17 @@ check_tcp_port() {
 if ! command -v go &>/dev/null; then
     CHECK_SUMMARY+=("${RED}[FAIL] Go Runtime:${RESET} Not found in PATH")
     FAILED_ITEMS+=("Go runtime is missing")
-    WHAT_TO_INSTALL+=("Install Go 1.22+ (Ubuntu/Debian: sudo apt update && sudo apt install -y golang-go, or download from https://go.dev/dl/)")
+    WHAT_TO_INSTALL+=("Install Go 1.25+ (download from https://go.dev/dl/; distro packages are often older)")
 else
     GO_VERSION=$(go version | awk '{print $3}')
-    CHECK_SUMMARY+=("${GREEN}[PASS] Go Runtime:${RESET} $GO_VERSION")
+    GO_MINOR=$(echo "$GO_VERSION" | sed -E 's/^go1\.([0-9]+).*/\1/')
+    if [[ "$GO_MINOR" =~ ^[0-9]+$ ]] && [ "$GO_MINOR" -lt 25 ]; then
+        CHECK_SUMMARY+=("${RED}[FAIL] Go Runtime:${RESET} $GO_VERSION is too old (go.mod needs 1.25+)")
+        FAILED_ITEMS+=("Go 1.25+ is required")
+        WHAT_TO_INSTALL+=("Upgrade Go to 1.25+ (https://go.dev/dl/)")
+    else
+        CHECK_SUMMARY+=("${GREEN}[PASS] Go Runtime:${RESET} $GO_VERSION")
+    fi
 fi
 
 # ------------------------------------------------------------------------------
@@ -84,6 +92,10 @@ PORT="8080"
 DATABASE_URL=""
 REDIS_URL="redis://localhost:6379/0"
 RULES_ENGINE_URL="http://localhost:8000"
+AUTH_MODE="off"
+AUTO_MIGRATE="false"
+WORKER_ENABLED="true"
+RATE_LIMIT_PER_MINUTE="600"
 
 if [ -f ".env" ]; then
     # Read variables without evaluating commands
@@ -97,6 +109,10 @@ if [ -f ".env" ]; then
             DATABASE_URL) DATABASE_URL="$val" ;;
             REDIS_URL) REDIS_URL="$val" ;;
             RULES_ENGINE_URL) RULES_ENGINE_URL="$val" ;;
+            AUTH_MODE) AUTH_MODE=$(echo "$val" | tr '[:upper:]' '[:lower:]') ;;
+            AUTO_MIGRATE) AUTO_MIGRATE="$val" ;;
+            WORKER_ENABLED) WORKER_ENABLED="$val" ;;
+            RATE_LIMIT_PER_MINUTE) RATE_LIMIT_PER_MINUTE="$val" ;;
         esac
     done < ".env"
 
@@ -241,18 +257,85 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 6. Check Decision Engine (Rules Engine URL)
+# 5b. Apply pending database migrations (00001-00012: workspaces, uploads, snapshots ...)
+# ------------------------------------------------------------------------------
+DB_UP=false
+if check_tcp_port "$DB_HOST" "$DB_PORT" || (command -v pg_isready &>/dev/null && pg_isready -h "$DB_HOST" -p "$DB_PORT" &>/dev/null); then
+    DB_UP=true
+fi
+if [ "${SKIP_MIGRATE:-}" = "1" ]; then
+    CHECK_SUMMARY+=("${BLUE}[INFO] Migrations:${RESET} Skipped (SKIP_MIGRATE=1); run: go run ./cmd/api migrate up")
+elif [ "$AUTO_MIGRATE" = "true" ]; then
+    CHECK_SUMMARY+=("${BLUE}[INFO] Migrations:${RESET} AUTO_MIGRATE=true: the gateway applies them when it starts")
+elif [ "$DB_UP" = true ] && [ -n "$DATABASE_URL" ] && command -v go &>/dev/null; then
+    echo -e "${BLUE}[INFO] Checking database migrations ...${RESET}"
+    PENDING=$(go run ./cmd/api migrate status 2>/dev/null | grep -ci "pending" || true)
+    if [ "$PENDING" -gt 0 ] 2>/dev/null; then
+        echo -e "${BLUE}[INFO] Applying $PENDING pending migration(s) ...${RESET}"
+        if MIG_OUT=$(go run ./cmd/api migrate up 2>&1); then
+            CHECK_SUMMARY+=("${GREEN}[PASS] Migrations:${RESET} Applied $PENDING pending migration(s)")
+        else
+            CHECK_SUMMARY+=("${RED}[FAIL] Migrations:${RESET} migrate up failed: $(echo "$MIG_OUT" | tail -1)")
+            FAILED_ITEMS+=("Database migrations failed")
+            WHAT_TO_INSTALL+=("Run: go run ./cmd/api migrate up (in backend/) and fix the reported error")
+        fi
+    else
+        CHECK_SUMMARY+=("${GREEN}[PASS] Migrations:${RESET} Database schema is up to date")
+    fi
+fi
+
+# ------------------------------------------------------------------------------
+# 6. Check Decision Engine (Rules Engine URL) and the rules_version it reports
 # ------------------------------------------------------------------------------
 DE_HOST="127.0.0.1"
 DE_PORT="8000"
+if [[ "$RULES_ENGINE_URL" =~ //([^:/]+) ]]; then
+    DE_HOST="${BASH_REMATCH[1]}"
+    [ "$DE_HOST" = "localhost" ] && DE_HOST="127.0.0.1"
+fi
 if [[ "$RULES_ENGINE_URL" =~ :([0-9]+) ]]; then
     DE_PORT="${BASH_REMATCH[1]}"
 fi
 
 if check_tcp_port "$DE_HOST" "$DE_PORT"; then
-    CHECK_SUMMARY+=("${GREEN}[PASS] Decision Engine:${RESET} Reachable on port $DE_PORT")
+    DE_VERSION=""
+    if command -v curl &>/dev/null; then
+        DE_VERSION=$(curl -s --max-time 2 "$RULES_ENGINE_URL/health" | sed -n 's/.*"rules_version": *"\([^"]*\)".*/\1/p')
+    fi
+    if [ -n "$DE_VERSION" ]; then
+        CHECK_SUMMARY+=("${GREEN}[PASS] Decision Engine:${RESET} Reachable on port $DE_PORT (rules version $DE_VERSION; the cache key follows it)")
+    else
+        CHECK_SUMMARY+=("${YELLOW}[WARN] Decision Engine:${RESET} Reachable on port $DE_PORT but reports no rules_version (older engine? update decision-engine/)")
+    fi
 else
     CHECK_SUMMARY+=("${BLUE}[INFO] Decision Engine:${RESET} Not running on port $DE_PORT (Start it in another terminal: cd ../decision-engine && ./start.sh)")
+fi
+
+# ------------------------------------------------------------------------------
+# 6b. Security and upload worker settings
+# ------------------------------------------------------------------------------
+case "$AUTH_MODE" in
+    required)
+        CHECK_SUMMARY+=("${BLUE}[INFO] Sign-in:${RESET} AUTH_MODE=required (bearer tokens). First admin + token: go run ./cmd/api bootstrap -email you@example.com -workspace \"Finance\"")
+        ;;
+    off)
+        CHECK_SUMMARY+=("${BLUE}[INFO] Sign-in:${RESET} AUTH_MODE=off (single default workspace, no tokens; for local use only)")
+        ;;
+    *)
+        CHECK_SUMMARY+=("${RED}[FAIL] Sign-in:${RESET} AUTH_MODE='$AUTH_MODE' (must be off or required)")
+        FAILED_ITEMS+=("AUTH_MODE is invalid")
+        WHAT_TO_INSTALL+=("Set AUTH_MODE=off or AUTH_MODE=required in backend/.env")
+        ;;
+esac
+if [ "$RATE_LIMIT_PER_MINUTE" = "0" ]; then
+    CHECK_SUMMARY+=("${YELLOW}[WARN] Rate limit:${RESET} Disabled (RATE_LIMIT_PER_MINUTE=0)")
+else
+    CHECK_SUMMARY+=("${GREEN}[PASS] Rate limit:${RESET} $RATE_LIMIT_PER_MINUTE requests/minute per client IP")
+fi
+if [ "$WORKER_ENABLED" = "false" ]; then
+    CHECK_SUMMARY+=("${YELLOW}[WARN] Upload worker:${RESET} WORKER_ENABLED=false (stored uploads stay queued unless another gateway runs the worker)")
+else
+    CHECK_SUMMARY+=("${GREEN}[PASS] Upload worker:${RESET} Runs inside the gateway (parses stored uploads, retries with backoff)")
 fi
 
 # ------------------------------------------------------------------------------
@@ -296,7 +379,7 @@ echo -e "${BOLD}${GREEN}=======================================================$
 echo -e "${BOLD}${GREEN}        ALL CHECKS PASSED - STARTING APP               ${RESET}"
 echo -e "${BOLD}${GREEN}=======================================================${RESET}"
 echo -e "Command: ${BOLD}go run ./cmd/api${RESET}"
-echo -e "Backend API URL: ${CYAN}http://localhost:${PORT}${RESET}"
+echo -e "Backend API URL: ${CYAN}http://localhost:${PORT}${RESET}  (sign-in: ${AUTH_MODE})"
 echo ""
 
 # Execute backend

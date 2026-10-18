@@ -1,7 +1,8 @@
 # ==============================================================================
 # Frontend Startup Script (Windows PowerShell)
 # Performs pre-flight checks, installs dependencies, and starts the Vite dev
-# server on :5173, proxying /api, /health and /ready to the Go gateway on :8080.
+# server on :5173, proxying /api, /health and /ready to the Go gateway
+# (VITE_PROXY_TARGET, default http://127.0.0.1:8080).
 # ==============================================================================
 
 [CmdletBinding()]
@@ -62,20 +63,38 @@ if (Get-Command npm -ErrorAction SilentlyContinue) {
 }
 
 # ------------------------------------------------------------------------------
-# 3. Gateway reachability (the Vite proxy target)
+# 3. Gateway reachability (the Vite proxy target: VITE_PROXY_TARGET, default http://127.0.0.1:8080)
 # ------------------------------------------------------------------------------
+$ProxyTarget = $env:VITE_PROXY_TARGET
+foreach ($f in @(".env.local", ".env")) {
+    if (-not $ProxyTarget -and (Test-Path $f)) {
+        $line = Get-Content $f | Where-Object { $_ -match '^VITE_PROXY_TARGET=' } | Select-Object -Last 1
+        if ($line) { $ProxyTarget = ($line -split "=", 2)[1].Trim().Trim('"') }
+    }
+}
+if (-not $ProxyTarget) { $ProxyTarget = "http://127.0.0.1:8080" }
+$GwHost = "127.0.0.1"; $GwPort = 8080
+if ($ProxyTarget -match "//([^:/]+)") { $GwHost = $Matches[1]; if ($GwHost -eq "localhost") { $GwHost = "127.0.0.1" } }
+if ($ProxyTarget -match ":(\d+)") { $GwPort = [int]$Matches[1] }
+
 $GatewayOk = $false
 try {
     $tcp = New-Object Net.Sockets.TcpClient
-    $tcp.Connect("127.0.0.1", 8080)
+    $tcp.Connect($GwHost, $GwPort)
     $GatewayOk = $tcp.Connected
     $tcp.Close()
 } catch { $GatewayOk = $false }
 
 if ($GatewayOk) {
-    $CheckSummary += @{ Status = "PASS"; Message = "Go gateway: Reachable on :8080 (proxy target)" }
+    $GwHealth = $null
+    try { $GwHealth = Invoke-RestMethod -Uri "$ProxyTarget/health" -TimeoutSec 2 -ErrorAction Stop } catch {}
+    $rulesNote = if ($GwHealth -and $GwHealth.rules_version) { ", engine rules version $($GwHealth.rules_version)" } else { "" }
+    $CheckSummary += @{ Status = "PASS"; Message = "Go gateway: Reachable at $ProxyTarget (proxy target)$rulesNote" }
+    if ($GwHealth -and $GwHealth.auth_mode -eq "required") {
+        $CheckSummary += @{ Status = "WARN"; Message = "Sign-in: The gateway runs with AUTH_MODE=required; these screens do not send a token yet, so API calls will answer 401. Use AUTH_MODE=off for local UI work." }
+    }
 } else {
-    $CheckSummary += @{ Status = "WARN"; Message = "Go gateway: Not running on :8080 yet (start it in another terminal: cd ..\backend; .\start.ps1). Pages will show a connection notice until it is up." }
+    $CheckSummary += @{ Status = "WARN"; Message = "Go gateway: Not running at $ProxyTarget yet (start it in another terminal: cd ..\backend; .\start.ps1). Pages will show a connection notice until it is up." }
 }
 
 # ------------------------------------------------------------------------------

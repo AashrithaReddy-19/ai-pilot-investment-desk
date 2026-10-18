@@ -2,7 +2,7 @@
 # ==============================================================================
 # Decision Engine Startup Script (Linux/macOS)
 # Performs pre-flight checks, dependency installs, .env verification,
-# and starts the service: uvicorn app.main:app --reload --port 8000
+# and starts the service: uvicorn app.main:app on HOST:PORT from .env (reload when RELOAD=true)
 # ==============================================================================
 
 set -uo pipefail
@@ -53,7 +53,13 @@ if [ -z "$PYTHON_BIN" ]; then
     WHAT_TO_INSTALL+=("Install Python 3 (Ubuntu/Debian: sudo apt update && sudo apt install -y python3 python3-venv python3-pip)")
 else
     PY_VERSION=$("$PYTHON_BIN" -c "import sys; print('.'.join(map(str, sys.version_info[:3])))" 2>/dev/null || echo "unknown")
-    CHECK_SUMMARY+=("${GREEN}[PASS] Python Runtime:${RESET} $PYTHON_BIN (v$PY_VERSION)")
+    if "$PYTHON_BIN" -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" 2>/dev/null; then
+        CHECK_SUMMARY+=("${GREEN}[PASS] Python Runtime:${RESET} $PYTHON_BIN (v$PY_VERSION)")
+    else
+        CHECK_SUMMARY+=("${RED}[FAIL] Python Runtime:${RESET} $PYTHON_BIN v$PY_VERSION is too old (3.10+ required)")
+        FAILED_ITEMS+=("Python 3.10+ is required")
+        WHAT_TO_INSTALL+=("Install Python 3.10 or newer (Ubuntu/Debian: sudo apt install -y python3 python3-venv)")
+    fi
 fi
 
 # ------------------------------------------------------------------------------
@@ -76,6 +82,30 @@ EOF
         cp ".env.example" ".env"
         CHECK_SUMMARY+=("${GREEN}[PASS] Environment File:${RESET} Generated default .env from .env.example")
     fi
+fi
+
+# Read PORT / HOST / RELOAD from .env (real environment variables win)
+ENV_PORT=""; ENV_HOST=""; ENV_RELOAD=""
+if [ -f ".env" ]; then
+    while IFS='=' read -r key val || [ -n "$key" ]; do
+        key=$(echo "$key" | tr -d ' \r\t')
+        [[ "$key" =~ ^#.*$ ]] && continue
+        val=$(echo "$val" | sed -e 's/^[ \t]*//' -e 's/[ \t]*$//' -e 's/\r$//')
+        case "$key" in
+            PORT) ENV_PORT="$val" ;;
+            HOST) ENV_HOST="$val" ;;
+            RELOAD) ENV_RELOAD="$val" ;;
+        esac
+    done < ".env"
+fi
+APP_PORT="${PORT:-${ENV_PORT:-8000}}"
+APP_HOST="${HOST:-${ENV_HOST:-0.0.0.0}}"
+APP_RELOAD="${RELOAD:-${ENV_RELOAD:-true}}"
+if ! [[ "$APP_PORT" =~ ^[0-9]+$ ]]; then
+    CHECK_SUMMARY+=("${RED}[FAIL] Port:${RESET} PORT='$APP_PORT' is not a number")
+    FAILED_ITEMS+=("PORT is invalid")
+    WHAT_TO_INSTALL+=("Set PORT to a number in decision-engine/.env (default 8000)")
+    APP_PORT=8000
 fi
 
 # ------------------------------------------------------------------------------
@@ -113,7 +143,8 @@ if [ -n "$VENV_DIR" ] && [ -f "$VENV_DIR/bin/python" ]; then
 
     # Check if required packages are importable
     DEPS_OK=true
-    if ! "$VENV_PYTHON" -c "import fastapi, uvicorn, httpx, pytest" &>/dev/null; then
+    # python-multipart serves the CSV/XLSX upload endpoints (no other new dependency: XLSX is read with the stdlib)
+    if ! "$VENV_PYTHON" -c "import fastapi, uvicorn, httpx, pytest, importlib.util as u; assert u.find_spec('python_multipart') or u.find_spec('multipart')" &>/dev/null; then
         DEPS_OK=false
     fi
 
@@ -130,7 +161,7 @@ if [ -n "$VENV_DIR" ] && [ -f "$VENV_DIR/bin/python" ]; then
         else
             CHECK_SUMMARY+=("${RED}[FAIL] Dependencies:${RESET} requirements.txt missing")
             FAILED_ITEMS+=("requirements.txt missing")
-            WHAT_TO_INSTALL+=("Create requirements.txt with: fastapi, uvicorn, httpx, pytest")
+            WHAT_TO_INSTALL+=("Create requirements.txt with: fastapi, uvicorn, python-multipart, pytest, httpx")
         fi
     else
         CHECK_SUMMARY+=("${GREEN}[PASS] Dependencies:${RESET} All required packages installed")
@@ -143,7 +174,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 5. Check Port 8000 availability
+# 5. Check port availability
 # ------------------------------------------------------------------------------
 PORT_IN_USE=false
 if [ -n "$PYTHON_BIN" ]; then
@@ -151,7 +182,7 @@ if [ -n "$PYTHON_BIN" ]; then
 import socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
-    s.bind(('127.0.0.1', 8000))
+    s.bind(('127.0.0.1', $APP_PORT))
     s.close()
     print('free')
 except OSError:
@@ -160,11 +191,23 @@ except OSError:
 fi
 
 if [ "$PORT_IN_USE" = "in_use" ]; then
-    CHECK_SUMMARY+=("${YELLOW}[WARN] Port 8000:${RESET} Port 8000 is currently in use. (May conflict with uvicorn)")
+    CHECK_SUMMARY+=("${YELLOW}[WARN] Port $APP_PORT:${RESET} Port $APP_PORT is currently in use. (May conflict with uvicorn)")
 elif [ "$PORT_IN_USE" = "free" ]; then
-    CHECK_SUMMARY+=("${GREEN}[PASS] Port 8000:${RESET} Available")
+    CHECK_SUMMARY+=("${GREEN}[PASS] Port $APP_PORT:${RESET} Available")
 else
-    CHECK_SUMMARY+=("${BLUE}[INFO] Port 8000:${RESET} Check skipped")
+    CHECK_SUMMARY+=("${BLUE}[INFO] Port $APP_PORT:${RESET} Check skipped")
+fi
+
+# ------------------------------------------------------------------------------
+# 6. Engine versions (reported on GET /health; the gateway's cache key follows rules_version)
+# ------------------------------------------------------------------------------
+if [ -f "app/version.py" ]; then
+    RV=$(sed -n 's/^RULES_VERSION = "\(.*\)"/\1/p' app/version.py)
+    CV=$(sed -n 's/^CONTRACT_VERSION = \(.*\)/\1/p' app/version.py)
+    CHECK_SUMMARY+=("${GREEN}[PASS] Engine version:${RESET} rules $RV · contract $CV (examples in contracts/engine/)")
+    if [ -f "contracts/VERSION" ] && [ "$(tr -d '[:space:]' < contracts/VERSION)" != "$CV" ]; then
+        CHECK_SUMMARY+=("${YELLOW}[WARN] Contracts:${RESET} contracts/VERSION differs from CONTRACT_VERSION; run: python scripts/build_contracts.py")
+    fi
 fi
 
 # ------------------------------------------------------------------------------
@@ -198,10 +241,12 @@ fi
 echo -e "${BOLD}${GREEN}=======================================================${RESET}"
 echo -e "${BOLD}${GREEN}        ALL CHECKS PASSED - STARTING APP               ${RESET}"
 echo -e "${BOLD}${GREEN}=======================================================${RESET}"
-echo -e "Command: ${BOLD}uvicorn app.main:app --reload --port 8000${RESET}"
-echo -e "API Docs: ${CYAN}http://localhost:8000/docs${RESET}"
+RELOAD_FLAG=""
+[ "$APP_RELOAD" = "true" ] && RELOAD_FLAG="--reload"
+echo -e "Command: ${BOLD}uvicorn app.main:app $RELOAD_FLAG --host $APP_HOST --port $APP_PORT${RESET}"
+echo -e "API Docs: ${CYAN}http://localhost:$APP_PORT/docs${RESET}"
 echo ""
 
-# Activate virtualenv and run the exact command requested
+# Activate virtualenv and run the engine with the configured host, port and reload setting
 source "$VENV_DIR/bin/activate"
-exec uvicorn app.main:app --reload --port 8000
+exec uvicorn app.main:app $RELOAD_FLAG --host "$APP_HOST" --port "$APP_PORT"
