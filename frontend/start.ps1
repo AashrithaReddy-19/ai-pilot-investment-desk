@@ -49,12 +49,14 @@ if (Get-Command npm -ErrorAction SilentlyContinue) {
         $CheckSummary += @{ Status = "PASS"; Message = "Dependencies: node_modules present (vite installed)" }
     } else {
         Write-Host "[INFO] Installing npm dependencies ..." -ForegroundColor Blue
-        if (npm install) {
-            $CheckSummary += @{ Status = "PASS"; Message = "Dependencies: npm install completed" }
+        # npm ci installs exactly what package-lock.json pins and never rewrites the tracked lockfile
+        npm ci
+        if ($LASTEXITCODE -eq 0) {
+            $CheckSummary += @{ Status = "PASS"; Message = "Dependencies: npm ci completed" }
         } else {
-            $CheckSummary += @{ Status = "FAIL"; Message = "Dependencies: npm install failed" }
-            $FailedItems += "npm install failed"
-            $WhatToInstall += "Run: npm install in frontend/ (check network or proxy)"
+            $CheckSummary += @{ Status = "FAIL"; Message = "Dependencies: npm ci failed" }
+            $FailedItems += "npm ci failed"
+            $WhatToInstall += "Run: npm ci in frontend/ (check network or proxy)"
         }
     }
 }

@@ -37,9 +37,21 @@ variable "public_key" {
 }
 
 variable "allowed_ssh_cidr" {
-  description = "CIDR block allowed to SSH into the instance"
+  description = "CIDR blocks allowed to SSH into the instance, e.g. [\"203.0.113.4/32\"]. Empty (default) = no SSH ingress."
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = []
+}
+
+variable "decision_engine_public_cidr" {
+  description = "CIDR blocks allowed to call the decision engine directly. Empty (default) = engine reachable only from the instance itself."
+  type        = list(string)
+  default     = []
+}
+
+variable "allowed_origins" {
+  description = "Comma-separated exact browser origins allowed by the gateway's CORS (e.g. \"https://desk.example.com\"). Wildcards are not supported. Empty = same-origin only."
+  type        = string
+  default     = ""
 }
 
 variable "app_port" {

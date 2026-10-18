@@ -29,7 +29,7 @@ output "ready_check_url" {
 }
 
 output "decision_engine_url" {
-  description = "Base URL of the Python FastAPI Decision Engine"
+  description = "Base URL of the Python FastAPI Decision Engine (reachable only from CIDRs in decision_engine_public_cidr)"
   value       = "http://${aws_instance.app.public_ip}:${var.decision_engine_port}"
 }
 
@@ -39,6 +39,6 @@ output "decision_engine_docs" {
 }
 
 output "ssh_command" {
-  description = "Command to SSH into the instance"
+  description = "Command to SSH into the instance (works only from CIDRs in allowed_ssh_cidr)"
   value       = "ssh ubuntu@${aws_instance.app.public_ip}"
 }

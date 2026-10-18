@@ -72,13 +72,16 @@ resource "aws_security_group" "app" {
   description = "Security group for C23 Decision Desk EC2 instance"
   vpc_id      = data.aws_vpc.default.id
 
-  # Inbound SSH
-  ingress {
-    description = "SSH Access"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_ssh_cidr
+  # Inbound SSH: only for the CIDRs listed in allowed_ssh_cidr (closed by default)
+  dynamic "ingress" {
+    for_each = length(var.allowed_ssh_cidr) > 0 ? [1] : []
+    content {
+      description = "SSH Access"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = var.allowed_ssh_cidr
+    }
   }
 
   # Inbound Backend API Gateway
@@ -90,13 +93,17 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Inbound Decision Engine
-  ingress {
-    description = "Python FastAPI Decision Engine"
-    from_port   = var.decision_engine_port
-    to_port     = var.decision_engine_port
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  # Inbound Decision Engine: the gateway reaches it on localhost, so it is closed
+  # unless decision_engine_public_cidr lists who may call it directly
+  dynamic "ingress" {
+    for_each = length(var.decision_engine_public_cidr) > 0 ? [1] : []
+    content {
+      description = "Python FastAPI Decision Engine"
+      from_port   = var.decision_engine_port
+      to_port     = var.decision_engine_port
+      protocol    = "tcp"
+      cidr_blocks = var.decision_engine_public_cidr
+    }
   }
 
   # Outbound All Traffic
@@ -213,8 +220,8 @@ resource "aws_instance" "app" {
     DATABASE_URL=postgres://c23:${var.db_password}@localhost:5432/c23?sslmode=disable
     REDIS_URL=redis://localhost:6379/0
     RULES_ENGINE_URL=http://localhost:${var.decision_engine_port}
-    RULES_VERSION=1
-    ALLOWED_ORIGINS=*
+    RULES_VERSION=6
+    ALLOWED_ORIGINS=${var.allowed_origins}
     REQUEST_TIMEOUT_SECONDS=5
     CACHE_TTL_SECONDS=1800
     MAX_BODY_BYTES=1048576

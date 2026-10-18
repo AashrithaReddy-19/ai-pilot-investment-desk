@@ -65,12 +65,13 @@ if command -v npm &>/dev/null; then
         CHECK_SUMMARY+=("${GREEN}[PASS] Dependencies:${RESET} node_modules present (vite installed)")
     else
         echo -e "${BLUE}[INFO] Installing npm dependencies ...${RESET}"
-        if npm install; then
-            CHECK_SUMMARY+=("${GREEN}[PASS] Dependencies:${RESET} npm install completed")
+        # npm ci installs exactly what package-lock.json pins and never rewrites the tracked lockfile
+        if npm ci; then
+            CHECK_SUMMARY+=("${GREEN}[PASS] Dependencies:${RESET} npm ci completed")
         else
-            CHECK_SUMMARY+=("${RED}[FAIL] Dependencies:${RESET} npm install failed")
-            FAILED_ITEMS+=("npm install failed")
-            WHAT_TO_INSTALL+=("Run: npm install in frontend/ (check network or proxy)")
+            CHECK_SUMMARY+=("${RED}[FAIL] Dependencies:${RESET} npm ci failed")
+            FAILED_ITEMS+=("npm ci failed")
+            WHAT_TO_INSTALL+=("Run: npm ci in frontend/ (check network or proxy)")
         fi
     fi
 fi
