@@ -24,6 +24,18 @@ provider "aws" {
 }
 
 # ------------------------------------------------------------------------------
+# Single-instance layout: everything runs on one EC2 host.
+#
+#   browser ──:80──> nginx ─┬─ /            built React app (frontend/dist)
+#                           └─ /api /health /ready ──> Go gateway   127.0.0.1:app_port
+#                                                        ├─> decision engine 127.0.0.1:decision_engine_port
+#                                                        ├─> PostgreSQL       127.0.0.1:5432
+#                                                        └─> Redis            127.0.0.1:6379
+#
+# Only nginx (and SSH, when allowed_ssh_cidr is set) is reachable from outside.
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
 # Networking: Default VPC & Subnets
 # ------------------------------------------------------------------------------
 data "aws_vpc" "default" {
@@ -65,14 +77,22 @@ resource "aws_key_pair" "deployer" {
 }
 
 # ------------------------------------------------------------------------------
-# Security Group
+# Security Group: HTTP to nginx, SSH only when asked for. Gateway, engine,
+# PostgreSQL and Redis listen on localhost and are never opened.
 # ------------------------------------------------------------------------------
 resource "aws_security_group" "app" {
   name        = "${var.project_name}-sg"
-  description = "Security group for C23 Decision Desk EC2 instance"
+  description = "C23 Decision Desk single EC2 host"
   vpc_id      = data.aws_vpc.default.id
 
-  # Inbound SSH: only for the CIDRs listed in allowed_ssh_cidr (closed by default)
+  ingress {
+    description = "HTTP (nginx: frontend and API)"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_http_cidr
+  }
+
   dynamic "ingress" {
     for_each = length(var.allowed_ssh_cidr) > 0 ? [1] : []
     content {
@@ -84,29 +104,6 @@ resource "aws_security_group" "app" {
     }
   }
 
-  # Inbound Backend API Gateway
-  ingress {
-    description = "Go Backend API Gateway"
-    from_port   = var.app_port
-    to_port     = var.app_port
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Inbound Decision Engine: the gateway reaches it on localhost, so it is closed
-  # unless decision_engine_public_cidr lists who may call it directly
-  dynamic "ingress" {
-    for_each = length(var.decision_engine_public_cidr) > 0 ? [1] : []
-    content {
-      description = "Python FastAPI Decision Engine"
-      from_port   = var.decision_engine_port
-      to_port     = var.decision_engine_port
-      protocol    = "tcp"
-      cidr_blocks = var.decision_engine_public_cidr
-    }
-  }
-
-  # Outbound All Traffic
   egress {
     description = "Allow all outbound traffic"
     from_port   = 0
@@ -121,8 +118,27 @@ resource "aws_security_group" "app" {
 }
 
 # ------------------------------------------------------------------------------
-# EC2 Instance & Automated Deployment
+# EC2 Instance & Automated Deployment (user_data.sh.tftpl)
 # ------------------------------------------------------------------------------
+locals {
+  user_data = templatefile("${path.module}/user_data.sh.tftpl", {
+    repo_url              = var.repo_url
+    git_ref               = var.git_ref
+    git_token             = var.git_token
+    go_version            = var.go_version
+    node_major            = var.node_major
+    swap_gb               = var.swap_gb
+    app_port              = var.app_port
+    engine_port           = var.decision_engine_port
+    db_name               = var.db_name
+    db_user               = var.db_user
+    db_password           = var.db_password
+    allowed_origins       = var.allowed_origins
+    auth_mode             = var.auth_mode
+    rate_limit_per_minute = var.rate_limit_per_minute
+  })
+}
+
 resource "aws_instance" "app" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
@@ -131,137 +147,24 @@ resource "aws_instance" "app" {
   associate_public_ip_address = true
   key_name                    = var.public_key != "" ? aws_key_pair.deployer[0].key_name : (var.key_name != "" ? var.key_name : null)
 
+  # Compressed so the rendered script stays well under EC2's 16 KB user_data limit
+  user_data_base64            = base64gzip(local.user_data)
+  user_data_replace_on_change = true
+
+  metadata_options {
+    http_tokens   = "required"
+    http_endpoint = "enabled"
+  }
+
   root_block_device {
-    volume_size           = 20
+    volume_size           = var.root_volume_gb
     volume_type           = "gp3"
+    encrypted             = true
     delete_on_termination = true
     tags = {
       Name = "${var.project_name}-root-disk"
     }
   }
-
-  user_data = <<-EOF
-    #!/usr/bin/env bash
-    set -euxo pipefail
-
-    exec > >(tee -a /var/log/user-data.log) 2>&1
-    echo "=== Starting C23 Deployment on AWS EC2 ==="
-
-    # 1. System Updates & Core Packages
-    export DEBIAN_FRONTEND=noninteractive
-    apt-get update -y
-    apt-get install -y --no-install-recommends \
-      golang-go python3 python3-venv python3-pip \
-      postgresql postgresql-contrib redis-server \
-      git curl jq ca-certificates
-
-    # 2. Configure & Start Redis
-    systemctl enable redis-server
-    systemctl restart redis-server
-
-    # 3. Configure & Start PostgreSQL
-    systemctl enable postgresql
-    systemctl restart postgresql
-
-    sudo -u postgres psql -c "DO \$\$
-    BEGIN
-      IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'c23') THEN
-        CREATE ROLE c23 LOGIN PASSWORD '${var.db_password}';
-      ELSE
-        ALTER ROLE c23 WITH PASSWORD '${var.db_password}';
-      END IF;
-    END
-    \$\$;"
-
-    sudo -u postgres psql -c "SELECT 'CREATE DATABASE c23 OWNER c23' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'c23')\gexec"
-    sudo -u postgres psql -c "SELECT 'CREATE DATABASE c23_test OWNER c23' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'c23_test')\gexec"
-    sudo -u postgres psql -d c23 -c "GRANT ALL ON SCHEMA public TO c23;"
-    sudo -u postgres psql -d c23_test -c "GRANT ALL ON SCHEMA public TO c23;"
-
-    # 4. Clone Repository
-    mkdir -p /opt/c23
-    if [ ! -d "/opt/c23/.git" ]; then
-      git clone "${var.repo_url}" /opt/c23
-    else
-      cd /opt/c23 && git pull origin main
-    fi
-    cd /opt/c23
-
-    # 5. Set up Python Decision Engine
-    cd /opt/c23/decision-engine
-    python3 -m venv venv
-    ./venv/bin/pip install --upgrade pip
-    ./venv/bin/pip install -r requirements.txt
-
-    cat << 'SERVICE_DE' > /etc/systemd/system/c23-decision-engine.service
-    [Unit]
-    Description=C23 Decision Engine (FastAPI)
-    After=network.target
-
-    [Service]
-    Type=simple
-    User=root
-    WorkingDirectory=/opt/c23/decision-engine
-    ExecStart=/opt/c23/decision-engine/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port ${var.decision_engine_port}
-    Restart=always
-    RestartSec=5
-
-    [Install]
-    WantedBy=multi-user.target
-    SERVICE_DE
-
-    systemctl daemon-reload
-    systemctl enable c23-decision-engine
-    systemctl restart c23-decision-engine
-
-    # 6. Set up Go Backend API Gateway
-    cat << ENV_BACKEND > /opt/c23/backend/.env
-    PORT=${var.app_port}
-    DATABASE_URL=postgres://c23:${var.db_password}@localhost:5432/c23?sslmode=disable
-    REDIS_URL=redis://localhost:6379/0
-    RULES_ENGINE_URL=http://localhost:${var.decision_engine_port}
-    ALLOWED_ORIGINS=${var.allowed_origins}
-    AUTH_MODE=${var.auth_mode}
-    RATE_LIMIT_PER_MINUTE=${var.rate_limit_per_minute}
-    WORKER_ENABLED=true
-    REQUEST_TIMEOUT_SECONDS=5
-    CACHE_TTL_SECONDS=1800
-    MAX_BODY_BYTES=1048576
-    AUTO_MIGRATE=true
-    GIN_MODE=release
-    ENV_BACKEND
-
-    cd /opt/c23/backend
-    mkdir -p bin
-    go build -o bin/api ./cmd/api
-
-    # Run initial migrations
-    ./bin/api migrate up
-
-    cat << 'SERVICE_BE' > /etc/systemd/system/c23-backend.service
-    [Unit]
-    Description=C23 Backend API Gateway (Go Gin)
-    After=network.target postgresql.service redis-server.service c23-decision-engine.service
-
-    [Service]
-    Type=simple
-    User=root
-    WorkingDirectory=/opt/c23/backend
-    ExecStart=/opt/c23/backend/bin/api
-    Restart=always
-    RestartSec=5
-    EnvironmentFile=/opt/c23/backend/.env
-
-    [Install]
-    WantedBy=multi-user.target
-    SERVICE_BE
-
-    systemctl daemon-reload
-    systemctl enable c23-backend
-    systemctl restart c23-backend
-
-    echo "=== C23 Deployment Completed Successfully ==="
-  EOF
 
   tags = {
     Name = "${var.project_name}-server"

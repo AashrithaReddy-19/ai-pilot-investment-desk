@@ -1,5 +1,12 @@
 # ==============================================================================
-# OpenTofu Variables Configuration (Copy to tofu.tfvars)
+# OpenTofu Variables Configuration
+#   cp tofu.tfvars.example tofu.tfvars
+#   tofu plan  -var-file=tofu.tfvars
+#   tofu apply -var-file=tofu.tfvars
+# (tofu.tfvars is not loaded automatically; pass it with -var-file)
+#
+# Everything (nginx + frontend, Go gateway, Python engine, PostgreSQL, Redis)
+# runs on one EC2 instance. Only port 80 (and 22 when allowed) is opened.
 # ==============================================================================
 
 # AWS Region to deploy resources into
@@ -10,31 +17,45 @@ aws_region = "us-east-1"
 # aws_access_key = "YOUR_AWS_ACCESS_KEY_ID"
 # aws_secret_key = "YOUR_AWS_SECRET_ACCESS_KEY"
 
-# EC2 Instance Type (t3.small: 2 vCPUs, 2 GB RAM)
+# EC2 Instance Type (t3.small: 2 vCPUs, 2 GB RAM; a 2 GB swap file is added for the builds)
 instance_type = "t3.small"
+# root_volume_gb = 20
+# swap_gb        = 2
 
 # SSH Key Setup (Optional: paste your public key to enable SSH access as user 'ubuntu')
 # public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... user@example.com"
 # SSH is closed unless you list your own address here (use /32 for a single IP)
 # allowed_ssh_cidr = ["203.0.113.4/32"]
 
-# The decision engine is reached by the gateway on localhost; open it to others only if needed
-# decision_engine_public_cidr = ["203.0.113.4/32"]
+# Who may open the app on port 80 (default: everyone)
+# allowed_http_cidr = ["203.0.113.4/32"]
 
-# Exact browser origins allowed to call the gateway cross-origin (comma-separated, no wildcards)
-# allowed_origins = "https://desk.example.com"
-
-# Gateway sign-in. "required" (default) needs a bearer token per request: after deploy, SSH in and run
-#   cd /opt/c23/backend && ./bin/api bootstrap -email you@example.com -workspace "Finance"
-# to create the first admin and print their token. "off" runs without sign-in (demos only).
-# auth_mode = "required"
+# Gateway sign-in. "off" (default) is what the bundled frontend needs: it has no sign-in screen.
+# "required" protects the API with bearer tokens for API clients; create the first admin with
+#   cd /opt/c23/backend && sudo -u c23 ./bin/api bootstrap -email you@example.com -workspace "Finance"
+# auth_mode = "off"
+# Requests per minute per client IP, enforced by nginx (0 disables)
 # rate_limit_per_minute = 600
 
-# Application Database Password for role 'c23'
-db_password = "c23SecurePassword123"
+# Only needed for a frontend hosted on another origin: "*" for any origin,
+# or comma-separated exact origins
+# allowed_origins = "https://desk.example.com"
 
-# Git Repository URL to deploy on the EC2 instance
+# PostgreSQL on the instance. Defaults match backend/.env.example
+# (postgres://c23:CHANGE_ME@localhost:5432/c23). The database listens on localhost only.
+db_name     = "c23"
+db_user     = "c23"
+db_password = "CHANGE_ME"
+
+# Git Repository and branch/tag to deploy on the EC2 instance
 repo_url = "https://github.com/AashrithaReddy-19/ai-pilot-investment-desk.git"
+git_ref  = "main"
+# Private repository: a fine-grained GitHub token limited to this repo, Contents: Read-only
+# git_token = "github_pat_..."
+
+# Build toolchains
+# go_version = "1.26.4"
+# node_major = 24
 
 # Project Tagging
 project_name = "c23-pilot-desk"

@@ -241,9 +241,10 @@ fynd/
 │   ├── graph.json                      # GraphRAG dataset (1,359 nodes, 3,722 edges, 69 communities)
 │   └── GRAPH_REPORT.md                 # Knowledge graph report & community detection audit
 │
-├── main.tf                             # OpenTofu root configuration (AWS EC2 & automated deploy)
+├── main.tf                             # OpenTofu root configuration (single AWS EC2 host)
+├── user_data.sh.tftpl                  # First-boot script: installs, builds and starts every service on the host
 ├── variables.tf                        # OpenTofu input variables definition
-├── outputs.tf                          # OpenTofu output endpoints (IP, API URLs, SSH)
+├── outputs.tf                          # OpenTofu output endpoints (app URL, health, SSH)
 ├── tofu.tfvars.example                 # OpenTofu variables configuration template
 ├── .gitignore                          # Git ignore rules
 ├── LICENSE                             # License file
@@ -508,20 +509,31 @@ Automated testing is orchestrated via [`.github/workflows/ci.yml`](.github/workf
 
 ## AWS Deployment with OpenTofu
 
-The repository includes complete OpenTofu Infrastructure-as-Code to provision an AWS EC2 instance and automatically deploy the full C23 platform (Go Gin Backend, Python Decision Engine, PostgreSQL, and Redis).
+The repository includes OpenTofu Infrastructure-as-Code that provisions **one** AWS EC2 instance and deploys the whole C23 platform onto it: the React frontend, the Go Gin gateway, the Python decision engine, PostgreSQL and Redis. No other AWS services (RDS, ElastiCache, S3, load balancers) are used.
 
 ### Architecture Overview
 
+```
+browser ──:80──> nginx ─┬─ /                      built React app (/var/www/c23)
+                        └─ /api /health /ready ──> Go gateway   127.0.0.1:8080
+                                                     ├─> decision engine 127.0.0.1:8000
+                                                     ├─> PostgreSQL       127.0.0.1:5432
+                                                     └─> Redis            127.0.0.1:6379
+```
+
 OpenTofu provisions:
-- **Compute**: An EC2 instance (Ubuntu 24.04 LTS, `t3.small` with 20 GB gp3 storage).
-- **Networking & Security**: A dedicated security group opening port `8080` (Go Gin API Gateway). Port `22` (SSH) opens only for the CIDRs in `allowed_ssh_cidr`, and port `8000` (FastAPI Decision Engine) only for the CIDRs in `decision_engine_public_cidr`. Both default to closed: the gateway reaches the engine on `localhost`.
-- **Automated Cloud-Init (`user_data`)**:
-  - Automatically installs Go, Python 3, PostgreSQL, and Redis on boot.
-  - Configures PostgreSQL role `c23` and databases `c23` & `c23_test`.
-  - Clones the repository to `/opt/c23`.
-  - Sets up the Python virtual environment and enables systemd service `c23-decision-engine.service`.
-  - Compiles the Go binary, applies Goose database migrations, and enables `c23-backend.service`.
-  - Restarts and monitors all services with systemd.
+- **Compute**: An EC2 instance (Ubuntu 24.04 LTS, `t3.small` with a 20 GB encrypted gp3 disk and a 2 GB swap file for the builds; IMDSv2 required).
+- **Networking & Security**: A security group opening only port `80` (nginx, limited to `allowed_http_cidr`, default everyone) and port `22` for the CIDRs in `allowed_ssh_cidr` (closed by default). The gateway, engine, PostgreSQL and Redis listen on `localhost` only.
+- **Automated Cloud-Init (`user_data.sh.tftpl`, rendered by `templatefile`)**:
+  - Installs Python 3, PostgreSQL, Redis and nginx from Ubuntu, Go from go.dev (`go_version`, since Ubuntu's Go is older than `go.mod` needs) and Node.js from nodejs.org (`node_major`, checksum verified).
+  - Creates PostgreSQL role `db_user` and database `db_name`. Defaults match `backend/.env.example`: user `c23`, password `CHANGE_ME`, database `c23`.
+  - Clones `repo_url` at `git_ref` to `/opt/c23` and runs everything as the unprivileged `c23` user.
+  - Sets up the engine virtual environment and `c23-decision-engine.service` (uvicorn on `127.0.0.1`).
+  - Writes `backend/.env`, compiles the gateway, applies the database migrations and enables `c23-backend.service`.
+  - Builds the frontend for same-origin API calls (`VITE_API_BASE` empty) and serves it from nginx, with client-side routes falling back to `index.html`.
+  - nginx proxies `/api`, `/health` and `/ready` to the gateway and enforces `rate_limit_per_minute` per client IP (behind the proxy the gateway would see every caller as `127.0.0.1`, so its own limiter is set to `0`).
+  - Logs everything to `/var/log/c23-deploy.log`. First boot takes several minutes.
+- Changing the deploy script or its variables replaces the instance (`user_data_replace_on_change`), which also replaces the database: back it up first.
 
 ### Deployment Steps
 
@@ -530,7 +542,7 @@ OpenTofu provisions:
    ```bash
    cp tofu.tfvars.example tofu.tfvars
    ```
-   Optionally configure your SSH public key, preferred AWS region, or database password.
+   Optionally configure your SSH public key, preferred AWS region, or database password. `tofu.tfvars` is not loaded automatically: pass it with `-var-file` as below.
 
 2. **Provide AWS Credentials**:
    Export your AWS credentials via environment variables or configure via AWS CLI:
@@ -543,8 +555,8 @@ OpenTofu provisions:
 3. **Initialize and Deploy**:
    ```bash
    tofu init
-   tofu plan
-   tofu apply
+   tofu plan  -var-file=tofu.tfvars
+   tofu apply -var-file=tofu.tfvars
    ```
 
 4. **Access the Application**:
@@ -552,16 +564,19 @@ OpenTofu provisions:
    ```bash
    tofu output
    ```
-   - **Backend API**: `http://<PUBLIC_IP>:8080/health`
-   - **Readiness Check**: `http://<PUBLIC_IP>:8080/ready`
-   - **Decision Engine API Docs**: `http://<PUBLIC_IP>:8000/docs` (only when `decision_engine_public_cidr` includes your IP)
-   - **SSH Access**: `ssh ubuntu@<PUBLIC_IP>` (only when `allowed_ssh_cidr` includes your IP)
-   - **Browser origins**: set `allowed_origins` (comma-separated, exact origins) when a frontend on another origin calls the gateway
+   - **App (frontend)**: `http://<PUBLIC_IP>/`
+   - **Backend API**: `http://<PUBLIC_IP>/api/v1/...`
+   - **Health / Readiness**: `http://<PUBLIC_IP>/health`, `http://<PUBLIC_IP>/ready`
+   - **Decision Engine API Docs**: through an SSH tunnel, `ssh -L 8000:127.0.0.1:8000 ubuntu@<PUBLIC_IP>`, then `http://localhost:8000/docs`
+   - **SSH Access**: `ssh ubuntu@<PUBLIC_IP>` (only when `allowed_ssh_cidr` includes your IP); follow the first boot with `sudo tail -f /var/log/c23-deploy.log`
+   - **Sign-in**: `auth_mode` defaults to `off` because the bundled frontend has no sign-in screen. `required` protects the API for token-carrying API clients only; create the first admin with `cd /opt/c23/backend && sudo -u c23 ./bin/api bootstrap -email you@example.com -workspace "Finance"`
+   - **Browser origins**: the bundled frontend is same-origin and needs no CORS; set `allowed_origins` only for a frontend hosted elsewhere, either `"*"` (any origin, CORS headers added by nginx) or comma-separated exact origins (matched by the gateway)
+   - There is no TLS: the app is served over plain HTTP on port 80
 
 5. **Teardown**:
    To destroy all provisioned AWS resources and stop charges:
    ```bash
-   tofu destroy
+   tofu destroy -var-file=tofu.tfvars
    ```
 
 ---
@@ -847,7 +862,7 @@ Documents are kept, not just parsed: the gateway validates the file (`.csv` UTF-
 | `DOCUMENT_CONCURRENCY` | `2` | Documents read at the same time; more get a `429` and are asked to retry. |
 | `AUTO_MIGRATE` | `false` | If `true`, applies pending Goose migrations on server startup. |
 | `GIN_MODE` | `release` | Gin server mode (`release` or `debug`). |
-| `AUTH_MODE` | `off` | `off`: no sign-in, default workspace. `required`: bearer tokens, workspaces and roles (the OpenTofu deployment defaults to `required`). |
+| `AUTH_MODE` | `off` | `off`: no sign-in, default workspace. `required`: bearer tokens, workspaces and roles (the OpenTofu deployment also defaults to `off`, since the bundled frontend has no sign-in screen). |
 | `RATE_LIMIT_PER_MINUTE` | `600` | Requests per minute per client IP; `0` disables rate limiting. |
 | `RATE_LIMIT_BURST` | `120` | Requests allowed at once above the per-minute rate. |
 | `UPLOAD_MAX_BYTES` | `2000000` | Largest stored upload (the engine parses at most 2 MB). |

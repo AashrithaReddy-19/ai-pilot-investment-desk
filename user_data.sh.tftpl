@@ -1,0 +1,272 @@
+#!/usr/bin/env bash
+# Rendered by OpenTofu (templatefile in main.tf) and run once by cloud-init on first boot.
+# Installs, builds and starts the whole platform on this one instance:
+#   nginx :80 -> frontend/dist, and /api /health /ready -> Go gateway 127.0.0.1:${app_port}
+#   gateway   -> decision engine 127.0.0.1:${engine_port}, PostgreSQL 127.0.0.1:5432, Redis 127.0.0.1:6379
+# Log: /var/log/c23-deploy.log
+set -euxo pipefail
+touch /var/log/c23-deploy.log
+chmod 600 /var/log/c23-deploy.log
+exec > >(tee -a /var/log/c23-deploy.log) 2>&1
+echo "=== C23 single-host deployment started ==="
+
+APP_DIR=/opt/c23
+APP_USER=c23
+APP_HOME=/var/lib/c23
+WEB_ROOT=/var/www/c23
+export DEBIAN_FRONTEND=noninteractive
+export PATH=/usr/local/go/bin:/usr/local/node/bin:$PATH
+
+# Run a command as the unprivileged service user, with its own HOME for pip/npm/go caches
+as_app() { runuser -u "$APP_USER" -- env HOME="$APP_HOME" PATH="$PATH" "$@"; }
+
+# ------------------------------------------------------------------------------
+# 1. Swap (the Go and Vite builds need more than 2 GB RAM at peak)
+# ------------------------------------------------------------------------------
+if [ "${swap_gb}" -gt 0 ] && ! swapon --show | grep -q /swapfile; then
+  fallocate -l ${swap_gb}G /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+
+# ------------------------------------------------------------------------------
+# 2. System packages: Python, PostgreSQL, Redis, nginx
+# ------------------------------------------------------------------------------
+apt-get update -y
+apt-get install -y --no-install-recommends \
+  python3 python3-venv python3-pip \
+  postgresql postgresql-contrib redis-server nginx \
+  git curl jq ca-certificates xz-utils
+
+# ------------------------------------------------------------------------------
+# 3. Toolchains: Go from go.dev (go.mod needs >= 1.25), Node.js from nodejs.org
+# ------------------------------------------------------------------------------
+if [ "$(go version 2>/dev/null | awk '{print $3}')" != "go${go_version}" ]; then
+  curl -fsSL "https://go.dev/dl/go${go_version}.linux-amd64.tar.gz" -o /tmp/go.tgz
+  rm -rf /usr/local/go
+  tar -C /usr/local -xzf /tmp/go.tgz
+  rm -f /tmp/go.tgz
+fi
+go version
+
+NODE_DIST="https://nodejs.org/dist/latest-v${node_major}.x"
+curl -fsSL "$NODE_DIST/SHASUMS256.txt" -o /tmp/node-shasums.txt
+NODE_TAR=$(awk '$2 ~ /-linux-x64\.tar\.xz$/ {print $2}' /tmp/node-shasums.txt)
+curl -fsSL "$NODE_DIST/$NODE_TAR" -o "/tmp/$NODE_TAR"
+(cd /tmp && awk -v f="$NODE_TAR" '$2 == f' node-shasums.txt | sha256sum -c -)
+rm -rf /usr/local/node
+mkdir -p /usr/local/node
+tar -C /usr/local/node --strip-components=1 -xJf "/tmp/$NODE_TAR"
+rm -f "/tmp/$NODE_TAR" /tmp/node-shasums.txt
+node --version
+
+# ------------------------------------------------------------------------------
+# 4. Redis and PostgreSQL (both listen on localhost only by Ubuntu default)
+# ------------------------------------------------------------------------------
+systemctl enable --now redis-server
+systemctl enable --now postgresql
+
+DB_PASSWORD=$(echo '${base64encode(db_password)}' | base64 -d)
+runuser -u postgres -- psql -v ON_ERROR_STOP=1 \
+  -v role_name='${db_user}' -v role_pw="$DB_PASSWORD" -v db_name='${db_name}' <<'SQL'
+SELECT format('CREATE ROLE %I LOGIN', :'role_name')
+  WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = :'role_name')\gexec
+SELECT format('ALTER ROLE %I WITH LOGIN PASSWORD %L', :'role_name', :'role_pw')\gexec
+SELECT format('CREATE DATABASE %I OWNER %I', :'db_name', :'role_name')
+  WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = :'db_name')\gexec
+SQL
+runuser -u postgres -- psql -v ON_ERROR_STOP=1 -d '${db_name}' -c 'GRANT ALL ON SCHEMA public TO "${db_user}";'
+
+# ------------------------------------------------------------------------------
+# 5. Service user and source code
+# ------------------------------------------------------------------------------
+id -u "$APP_USER" &>/dev/null || useradd --system --create-home --home-dir "$APP_HOME" --shell /usr/sbin/nologin "$APP_USER"
+mkdir -p "$APP_DIR"
+chown "$APP_USER:$APP_USER" "$APP_DIR"
+# A private repo is read with git_token, sent as a header so it is never written to .git/config
+set +x
+GIT_AUTH=()
+%{ if git_token != "" ~}
+GIT_AUTH=(-c "http.extraHeader=Authorization: Basic ${base64encode("x-access-token:${git_token}")}")
+%{ endif ~}
+if [ -d "$APP_DIR/.git" ]; then
+  as_app git "$${GIT_AUTH[@]}" -C "$APP_DIR" fetch --depth 1 origin '${git_ref}'
+  as_app git -C "$APP_DIR" reset --hard FETCH_HEAD
+else
+  as_app git "$${GIT_AUTH[@]}" clone --depth 1 --branch '${git_ref}' '${repo_url}' "$APP_DIR"
+fi
+unset GIT_AUTH
+set -x
+as_app git -C "$APP_DIR" log -1 --oneline
+
+# ------------------------------------------------------------------------------
+# 6. Decision engine (FastAPI): venv + systemd, bound to localhost
+# ------------------------------------------------------------------------------
+as_app python3 -m venv "$APP_DIR/decision-engine/venv"
+as_app "$APP_DIR/decision-engine/venv/bin/pip" install --upgrade pip
+as_app "$APP_DIR/decision-engine/venv/bin/pip" install -r "$APP_DIR/decision-engine/requirements.txt"
+
+cat > /etc/systemd/system/c23-decision-engine.service <<UNIT
+[Unit]
+Description=C23 Decision Engine (FastAPI)
+After=network.target
+
+[Service]
+Type=simple
+User=$APP_USER
+WorkingDirectory=$APP_DIR/decision-engine
+ExecStart=$APP_DIR/decision-engine/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port ${engine_port} --workers 2
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+# ------------------------------------------------------------------------------
+# 7. Go gateway: .env, build, migrations, systemd
+# ------------------------------------------------------------------------------
+# Rate limiting is done per client IP in nginx (step 9): behind the proxy the gateway
+# sees every request as coming from 127.0.0.1, so its own limiter is turned off.
+cat > "$APP_DIR/backend/.env" <<ENV
+PORT=${app_port}
+DATABASE_URL=postgres://${db_user}:${urlencode(db_password)}@127.0.0.1:5432/${db_name}?sslmode=disable
+REDIS_URL=redis://127.0.0.1:6379/0
+RULES_ENGINE_URL=http://127.0.0.1:${engine_port}
+RULES_VERSION_POLL_SECONDS=30
+ALLOWED_ORIGINS=${allowed_origins}
+REQUEST_TIMEOUT_SECONDS=5
+CACHE_TTL_SECONDS=1800
+MAX_BODY_BYTES=1048576
+AUTO_MIGRATE=true
+GIN_MODE=release
+AUTH_MODE=${auth_mode}
+RATE_LIMIT_PER_MINUTE=0
+RATE_LIMIT_BURST=120
+UPLOAD_MAX_BYTES=2000000
+WORKER_ENABLED=true
+WORKER_POLL_MS=1000
+DOCUMENT_MAX_BYTES=26214400
+DOCUMENT_MAX_PAGES=500
+DOCUMENT_TIMEOUT_SECONDS=60
+DOCUMENT_CONCURRENCY=2
+ENV
+chown "$APP_USER:$APP_USER" "$APP_DIR/backend/.env"
+chmod 600 "$APP_DIR/backend/.env"
+
+as_app bash -c "cd '$APP_DIR/backend' && mkdir -p bin && go build -trimpath -o bin/api ./cmd/api"
+as_app bash -c "cd '$APP_DIR/backend' && ./bin/api migrate up"
+
+cat > /etc/systemd/system/c23-backend.service <<UNIT
+[Unit]
+Description=C23 Backend API Gateway (Go Gin)
+After=network.target postgresql.service redis-server.service c23-decision-engine.service
+Wants=postgresql.service redis-server.service c23-decision-engine.service
+
+[Service]
+Type=simple
+User=$APP_USER
+WorkingDirectory=$APP_DIR/backend
+EnvironmentFile=$APP_DIR/backend/.env
+ExecStart=$APP_DIR/backend/bin/api
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+systemctl daemon-reload
+systemctl enable c23-decision-engine c23-backend
+systemctl restart c23-decision-engine
+systemctl restart c23-backend
+
+# ------------------------------------------------------------------------------
+# 8. Frontend: same-origin build (VITE_API_BASE empty), copied to the web root
+# ------------------------------------------------------------------------------
+as_app bash -c "cd '$APP_DIR/frontend' && npm ci --no-audit --no-fund && VITE_API_BASE= npm run build"
+rm -rf "$WEB_ROOT"
+cp -r "$APP_DIR/frontend/dist" "$WEB_ROOT"
+chmod -R a+rX "$WEB_ROOT"
+
+# ------------------------------------------------------------------------------
+# 9. nginx: serves the frontend, proxies the API to the gateway
+# ------------------------------------------------------------------------------
+cat > /etc/nginx/sites-available/c23 <<'NGINX'
+%{ if rate_limit_per_minute > 0 ~}
+limit_req_zone $binary_remote_addr zone=c23_api:10m rate=${rate_limit_per_minute}r/m;
+%{ endif ~}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+
+    root /var/www/c23;
+    index index.html;
+
+    # Balance-sheet documents may be up to 25 MiB (DOCUMENT_MAX_BYTES) plus multipart overhead
+    client_max_body_size 30m;
+
+    location ~ ^/(api/|health$|ready$) {
+%{ if rate_limit_per_minute > 0 ~}
+        limit_req zone=c23_api burst=120 nodelay;
+        limit_req_status 429;
+%{ endif ~}
+%{ if allowed_origins == "*" ~}
+        # allowed_origins = "*": any site may call the API from a browser. The gateway only matches
+        # exact origins, so nginx answers preflights and adds the headers. No cookies are used, so "*" is valid.
+        if ($request_method = OPTIONS) {
+            add_header Access-Control-Allow-Origin "*" always;
+            add_header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS" always;
+            add_header Access-Control-Allow-Headers "Content-Type, X-Request-ID, Authorization, X-Workspace-ID" always;
+            add_header Access-Control-Max-Age 600 always;
+            return 204;
+        }
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Expose-Headers "X-Request-ID, X-Cache, Content-Disposition, Retry-After" always;
+%{ endif ~}
+        proxy_pass http://127.0.0.1:${app_port};
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 90s;
+        proxy_send_timeout 90s;
+    }
+
+    # Vite puts content-hashed files under /assets
+    location /assets/ {
+        try_files $uri =404;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Client-side routes (BrowserRouter) fall back to index.html
+    location / {
+        try_files $uri $uri/ /index.html;
+        add_header Cache-Control "no-cache";
+    }
+}
+NGINX
+ln -sf /etc/nginx/sites-available/c23 /etc/nginx/sites-enabled/c23
+rm -f /etc/nginx/sites-enabled/default
+nginx -t
+systemctl enable nginx
+systemctl reload nginx || systemctl restart nginx
+
+# ------------------------------------------------------------------------------
+# 10. Smoke check through nginx (logged, never fails the boot)
+# ------------------------------------------------------------------------------
+for i in $(seq 1 30); do
+  if curl -fsS http://127.0.0.1/ready; then echo; echo "ready after $i tries"; break; fi
+  sleep 2
+done
+curl -fsS -o /dev/null -w 'frontend: HTTP %%{http_code}\n' http://127.0.0.1/ || true
+
+echo "=== C23 single-host deployment completed ==="
