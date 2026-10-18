@@ -4,6 +4,17 @@ Every change to a published engine response, newest first. Additive changes keep
 version and bump `RULES_VERSION`; a rename, removal or type change bumps `CONTRACT_VERSION`
 (both in `app/version.py`) and needs both owners to approve.
 
+## 1.0 — rules version 8 (2026-10-18)
+
+Additive, for the gateway's stored-upload review (B4):
+
+- `POST /balance-sheet/confirm` accepts an optional `overrides` form field, a JSON object
+  `{"<row>": amount_inr}` of reviewer corrections. Corrected rows carry `original_amount_inr` and
+  `corrected: true`, and the flag `CORRECTED_BY_REVIEWER` is raised. The burn is still summed by the engine.
+- `POST /pilots/import/confirm` accepts `overrides` as `{"<id>": {field: value}}` for task, money,
+  benefit type, overlap group, ramp/delay, adoption and readiness. The response always carries a
+  `corrections` list (empty when nothing was corrected).
+
 ## 1.0 — rules version 7 (2026-10-18)
 
 First published contract. Everything below is additive over rules version 6: no existing field

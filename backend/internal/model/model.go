@@ -143,6 +143,7 @@ type EvaluationIn struct {
 	Conservative    json.RawMessage
 	ProposalID      *string // optional: the proposal this evaluation was run for
 	ProposalVersion *int    // that proposal's inputs version at the time
+	RulesVersion    *string // engine rules_version that answered
 }
 
 // EvaluationSummary is one row of the evaluations audit log (no bodies).

@@ -1,0 +1,4 @@
+# Code owners: all three maintainers own every path, so any one of them can approve a change.
+# GitHub enforces this when branch protection requires code-owner review.
+
+*   @aarushchaudhary @Kayde9 @AashrithaReddy-19

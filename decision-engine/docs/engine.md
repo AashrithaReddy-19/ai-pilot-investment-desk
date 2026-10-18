@@ -4,8 +4,8 @@ The Python FastAPI rules engine in `decision-engine/`. It is **stateless and det
 same request always gives the same answer, nothing is stored, and no LLM touches a number. The Go
 gateway persists results and forwards requests; it may treat engine JSON as opaque.
 
-- Run: `./start.sh` (port 8000, Swagger at `/docs`). Tests: `./venv/bin/python -m pytest -q` (220).
-- Versions (`app/version.py`, reported by `GET /health`): `rules_version` **7**, `contract_version`
+- Run: `./start.sh` (port 8000, Swagger at `/docs`). Tests: `./venv/bin/python -m pytest -q` (222).
+- Versions (`app/version.py`, reported by `GET /health`): `rules_version` **8**, `contract_version`
   **1**, `formula_version` **cf-1**. The gateway should put `rules_version` in its cache key.
 - Contracts: `contracts/engine/<endpoint>/{request.json, response.*, schema.json}` for every
   endpoint, indexed in `contracts/engine/INDEX.md`; changes listed in `contracts/CHANGELOG.md`.

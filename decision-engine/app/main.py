@@ -395,7 +395,7 @@ async def balance_sheet_parse(file: UploadFile = File(...), unit: str = Form("au
 @app.post("/balance-sheet/confirm")
 async def balance_sheet_confirm(file: UploadFile = File(...), rows: str = Form(...), unit: str = Form("auto"),
                                 amount_column: Optional[str] = Form(None), defaults: str = Form(""),
-                                period: str = Form("auto")):
+                                period: str = Form("auto"), overrides: str = Form("")):
     raw = await _upload(file)
     try:
         row_ids = [int(x.strip()) for x in rows.split(",") if x.strip()]
@@ -406,7 +406,7 @@ async def balance_sheet_confirm(file: UploadFile = File(...), rows: str = Form(.
     if not isinstance(d, dict):
         raise HTTPException(422, "defaults (when sent) must be a JSON object of token assumptions.")
     try:
-        return ingest.confirm_balance_sheet(raw, row_ids, unit, amount_column, d, period)
+        return ingest.confirm_balance_sheet(raw, row_ids, unit, amount_column, d, period, overrides)
     except ingest.ParseError as exc:
         raise HTTPException(422, str(exc))
 
@@ -421,12 +421,12 @@ async def pilots_import_parse(file: UploadFile = File(...), unit: str = Form("au
 
 @app.post("/pilots/import/confirm")
 async def pilots_import_confirm(file: UploadFile = File(...), keep: str = Form(...), unit: str = Form("auto"),
-                                period: str = Form("auto")):
+                                period: str = Form("auto"), overrides: str = Form("")):
     raw = await _upload(file)
     keep_ids = [x.strip() for x in keep.split(",") if x.strip()]
     fixture_ids = [p["id"] for p in json.loads((DATA / "starting_state.json").read_text())["records"]["pilots"]]
     try:
-        return ingest.confirm_pilots_csv(raw, keep_ids, unit, fixture_ids, period)
+        return ingest.confirm_pilots_csv(raw, keep_ids, unit, fixture_ids, period, overrides)
     except ingest.ParseError as exc:
         raise HTTPException(422, str(exc))
 

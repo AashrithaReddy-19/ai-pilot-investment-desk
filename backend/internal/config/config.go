@@ -15,12 +15,20 @@ type Config struct {
 	DatabaseURL    string
 	RedisURL       string // empty = cache disabled
 	RulesEngineURL string
-	RulesVersion   string // part of every cache key
+	RulesVersion   string // fallback cache-key version, used only while the engine has not reported its own
 	AllowedOrigins []string
 	RequestTimeout time.Duration
 	CacheTTL       time.Duration // 0 = cache disabled
 	MaxBodyBytes   int64
 	AutoMigrate    bool
+
+	AuthMode        string // off (single default workspace, no sign-in) | required (bearer tokens + workspaces)
+	RateLimitPerMin int    // requests per minute per client IP; 0 disables
+	RateLimitBurst  int    // bucket size: short bursts above the per-minute rate
+	UploadMaxBytes  int64  // largest stored upload (the engine parses at most 2 MB)
+	WorkerEnabled   bool   // run the upload processing worker in this process
+	WorkerPoll      time.Duration
+	VersionPoll     time.Duration // how often the engine's rules_version is re-read
 }
 
 // Load reads and validates the environment. All problems are reported together.
@@ -30,10 +38,47 @@ func Load() (Config, error) {
 		DatabaseURL:    os.Getenv("DATABASE_URL"),
 		RedisURL:       os.Getenv("REDIS_URL"),
 		RulesEngineURL: strings.TrimRight(env("RULES_ENGINE_URL", "http://localhost:8000"), "/"),
-		RulesVersion:   env("RULES_VERSION", "6"),
+		RulesVersion:   env("RULES_VERSION", "fallback"),
 		AllowedOrigins: splitCSV(env("ALLOWED_ORIGINS", "http://localhost:5173")),
+		AuthMode:       strings.ToLower(env("AUTH_MODE", "off")),
+		WorkerEnabled:  true,
 	}
 	var errs []error
+	if cfg.AuthMode != "off" && cfg.AuthMode != "required" {
+		errs = append(errs, fmt.Errorf("AUTH_MODE must be off or required, got %q", cfg.AuthMode))
+	}
+	if n, err := intEnv("RATE_LIMIT_PER_MINUTE", 600, 0, 1_000_000); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.RateLimitPerMin = n
+	}
+	if n, err := intEnv("RATE_LIMIT_BURST", 120, 1, 1_000_000); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.RateLimitBurst = n
+	}
+	if n, err := intEnv("UPLOAD_MAX_BYTES", 2_000_000, 1024, 2_000_000); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.UploadMaxBytes = int64(n)
+	}
+	if n, err := intEnv("WORKER_POLL_MS", 1000, 100, 60_000); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.WorkerPoll = time.Duration(n) * time.Millisecond
+	}
+	if n, err := intEnv("RULES_VERSION_POLL_SECONDS", 30, 5, 3600); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.VersionPoll = time.Duration(n) * time.Second
+	}
+	if v := os.Getenv("WORKER_ENABLED"); v != "" {
+		b, err := strconv.ParseBool(v)
+		if err != nil {
+			errs = append(errs, fmt.Errorf("WORKER_ENABLED must be true or false, got %q", v))
+		}
+		cfg.WorkerEnabled = b
+	}
 	if cfg.DatabaseURL == "" {
 		errs = append(errs, errors.New("DATABASE_URL is required"))
 	}

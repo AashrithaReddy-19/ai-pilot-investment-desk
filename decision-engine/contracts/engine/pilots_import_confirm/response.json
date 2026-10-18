@@ -47,5 +47,6 @@
       "source": "column header"
     }
   },
-  "format": "csv"
+  "format": "csv",
+  "corrections": []
 }

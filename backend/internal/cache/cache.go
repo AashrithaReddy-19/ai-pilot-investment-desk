@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"sync/atomic"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -23,7 +24,7 @@ const opTimeout = 150 * time.Millisecond
 type Cache struct {
 	rdb     *redis.Client // nil when disabled
 	ttl     time.Duration
-	version string
+	version atomic.Value // string: the engine's rules_version (fallback until the engine reports one)
 	sf      singleflight.Group
 	log     *slog.Logger
 }
@@ -33,7 +34,8 @@ func New(redisURL string, ttl time.Duration, version string, log *slog.Logger) (
 	if log == nil {
 		log = slog.Default()
 	}
-	c := &Cache{ttl: ttl, version: version, log: log}
+	c := &Cache{ttl: ttl, log: log}
+	c.version.Store(version)
 	if redisURL == "" || ttl <= 0 {
 		return c, nil
 	}
@@ -50,6 +52,27 @@ func New(redisURL string, ttl time.Duration, version string, log *slog.Logger) (
 }
 
 func (c *Cache) Enabled() bool { return c != nil && c.rdb != nil }
+
+// SetVersion switches the key namespace to the engine's reported rules_version. Answers cached under
+// another version are never read again (they expire with their TTL), so an engine upgrade can never
+// serve a stale answer and nobody edits a shared version number by hand.
+func (c *Cache) SetVersion(v string) {
+	if c == nil || v == "" {
+		return
+	}
+	if old, _ := c.version.Load().(string); old != v {
+		c.version.Store(v)
+		if c.log != nil {
+			c.log.Info("cache namespace follows the rules engine", "rules_version", v, "previous", old)
+		}
+	}
+}
+
+// Version is the rules_version currently in the cache key.
+func (c *Cache) Version() string {
+	v, _ := c.version.Load().(string)
+	return v
+}
 
 func (c *Cache) Ping(ctx context.Context) error {
 	if !c.Enabled() {
@@ -115,7 +138,7 @@ func (c *Cache) key(endpoint string, body []byte) (string, error) {
 		}
 	}
 	sum := sha256.Sum256(canon)
-	return fmt.Sprintf("c23:rules:v%s:%s:%x", c.version, endpoint, sum), nil
+	return fmt.Sprintf("c23:rules:v%s:%s:%x", c.Version(), endpoint, sum), nil
 }
 
 func (c *Cache) get(ctx context.Context, key string) ([]byte, bool) {

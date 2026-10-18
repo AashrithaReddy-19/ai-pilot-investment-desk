@@ -58,9 +58,9 @@ func (s *Store) SavePortfolio(ctx context.Context, in model.PortfolioIn) (*model
 
 	var id string
 	err = tx.QueryRow(ctx, `
-		INSERT INTO portfolios (name, mode, budget_inr, horizon_months, discount_rate_pct, starting_state, negotiated_scope, final_evidence)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-		ON CONFLICT (name) DO UPDATE SET
+		INSERT INTO portfolios (name, mode, budget_inr, horizon_months, discount_rate_pct, starting_state, negotiated_scope, final_evidence, workspace_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		ON CONFLICT (workspace_id, name) DO UPDATE SET
 			mode = EXCLUDED.mode,
 			budget_inr = EXCLUDED.budget_inr,
 			horizon_months = EXCLUDED.horizon_months,
@@ -70,6 +70,7 @@ func (s *Store) SavePortfolio(ctx context.Context, in model.PortfolioIn) (*model
 			final_evidence = EXCLUDED.final_evidence
 		RETURNING id::text`,
 		in.Name, in.Mode, in.BudgetINR, in.HorizonMonths, in.DiscountRatePct, []byte(in.StartingState), []byte(in.NegotiatedScope), []byte(in.FinalEvidence),
+		model.WorkspaceID(ctx),
 	).Scan(&id)
 	if err != nil {
 		return nil, fmt.Errorf("upsert portfolio: %w", err)
@@ -105,7 +106,7 @@ func (s *Store) GetPortfolio(ctx context.Context, name string) (*model.Portfolio
 	var p model.Portfolio
 	err := s.pool.QueryRow(ctx, `
 		SELECT id::text, name, mode, budget_inr, horizon_months, discount_rate_pct, starting_state, negotiated_scope, final_evidence, created_at, updated_at
-		FROM portfolios WHERE name = $1`, name,
+		FROM portfolios WHERE name = $1 AND workspace_id = $2`, name, model.WorkspaceID(ctx),
 	).Scan(&p.ID, &p.Name, &p.Mode, &p.BudgetINR, &p.HorizonMonths, &p.DiscountRatePct, &p.StartingState, &p.NegotiatedScope, &p.FinalEvidence, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
@@ -136,7 +137,7 @@ func (s *Store) ListPortfolios(ctx context.Context) ([]model.PortfolioSummary, e
 		SELECT p.id::text, p.name, p.mode, p.budget_inr,
 		       (SELECT count(*) FROM portfolio_pilots pp WHERE pp.portfolio_id = p.id AND pp.selected),
 		       p.horizon_months, p.created_at, p.updated_at
-		FROM portfolios p ORDER BY p.updated_at DESC LIMIT 200`)
+		FROM portfolios p WHERE p.workspace_id = $1 ORDER BY p.updated_at DESC LIMIT 200`, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +154,7 @@ func (s *Store) ListPortfolios(ctx context.Context) ([]model.PortfolioSummary, e
 }
 
 func (s *Store) DeletePortfolio(ctx context.Context, name string) error {
-	tag, err := s.pool.Exec(ctx, `DELETE FROM portfolios WHERE name = $1`, name)
+	tag, err := s.pool.Exec(ctx, `DELETE FROM portfolios WHERE name = $1 AND workspace_id = $2`, name, model.WorkspaceID(ctx))
 	if err != nil {
 		return err
 	}
@@ -173,23 +174,29 @@ func (s *Store) AddObservation(ctx context.Context, o model.ObservationIn, d mod
 		return nil, nil, err
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
+	ws := model.WorkspaceID(ctx)
+	if o.ProposalID != nil {
+		if err := proposalInWorkspace(ctx, tx, *o.ProposalID, ws); err != nil {
+			return nil, nil, err
+		}
+	}
 
 	var obs model.Observation
 	err = tx.QueryRow(ctx, `
-		INSERT INTO observations (pilot_id, proposal_id, adoption_pct, quality_pct, source)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO observations (pilot_id, proposal_id, adoption_pct, quality_pct, source, workspace_id)
+		VALUES ($1, $2, $3, $4, $5, $6)
 		RETURNING id, pilot_id, proposal_id::text, adoption_pct, quality_pct, to_char(observed_on, 'YYYY-MM-DD'), source, created_at`,
-		o.PilotID, o.ProposalID, o.AdoptionPct, o.QualityPct, o.Source,
+		o.PilotID, o.ProposalID, o.AdoptionPct, o.QualityPct, o.Source, ws,
 	).Scan(&obs.ID, &obs.PilotID, &obs.ProposalID, &obs.AdoptionPct, &obs.QualityPct, &obs.ObservedOn, &obs.Source, &obs.CreatedAt)
 	if err != nil {
 		return nil, nil, fmt.Errorf("insert observation: %w", err)
 	}
 	var dec model.Decision
 	err = tx.QueryRow(ctx, `
-		INSERT INTO decisions (pilot_id, proposal_id, decision, metric, threshold, actual, reason, observation_id)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		INSERT INTO decisions (pilot_id, proposal_id, decision, metric, threshold, actual, reason, observation_id, workspace_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 		RETURNING id, pilot_id, proposal_id::text, decision, metric, threshold, actual, reason, observation_id, created_at`,
-		d.PilotID, d.ProposalID, d.Decision, d.Metric, d.Threshold, d.Actual, d.Reason, obs.ID,
+		d.PilotID, d.ProposalID, d.Decision, d.Metric, d.Threshold, d.Actual, d.Reason, obs.ID, ws,
 	).Scan(&dec.ID, &dec.PilotID, &dec.ProposalID, &dec.Decision, &dec.Metric, &dec.Threshold, &dec.Actual, &dec.Reason, &dec.ObservationID, &dec.CreatedAt)
 	if err != nil {
 		return nil, nil, fmt.Errorf("insert decision: %w", err)
@@ -205,7 +212,7 @@ func (s *Store) History(ctx context.Context, pilotID string, limit int) (*model.
 
 	rows, err := s.pool.Query(ctx, `
 		SELECT id, pilot_id, proposal_id::text, adoption_pct, quality_pct, to_char(observed_on, 'YYYY-MM-DD'), source, created_at
-		FROM observations WHERE pilot_id = $1 ORDER BY observed_on DESC, id DESC LIMIT $2`, pilotID, limit)
+		FROM observations WHERE pilot_id = $1 AND workspace_id = $3 ORDER BY observed_on DESC, id DESC LIMIT $2`, pilotID, limit, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -224,7 +231,7 @@ func (s *Store) History(ctx context.Context, pilotID string, limit int) (*model.
 
 	rows, err = s.pool.Query(ctx, `
 		SELECT id, pilot_id, proposal_id::text, decision, metric, threshold, actual, reason, observation_id, created_at
-		FROM decisions WHERE pilot_id = $1 ORDER BY created_at DESC, id DESC LIMIT $2`, pilotID, limit)
+		FROM decisions WHERE pilot_id = $1 AND workspace_id = $3 ORDER BY created_at DESC, id DESC LIMIT $2`, pilotID, limit, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -244,9 +251,10 @@ func (s *Store) History(ctx context.Context, pilotID string, limit int) (*model.
 func (s *Store) SaveEvaluation(ctx context.Context, e model.EvaluationIn) (int64, error) {
 	var id int64
 	err := s.pool.QueryRow(ctx, `
-		INSERT INTO evaluations (request, independent, conservative, proposal_id, proposal_version)
-		VALUES ($1, $2, $3, $4::uuid, $5) RETURNING id`,
-		[]byte(e.Request), []byte(e.Independent), []byte(e.Conservative), e.ProposalID, e.ProposalVersion).Scan(&id)
+		INSERT INTO evaluations (request, independent, conservative, proposal_id, proposal_version, rules_version, workspace_id)
+		VALUES ($1, $2, $3, $4::uuid, $5, $6, $7) RETURNING id`,
+		[]byte(e.Request), []byte(e.Independent), []byte(e.Conservative), e.ProposalID, e.ProposalVersion, e.RulesVersion,
+		model.WorkspaceID(ctx)).Scan(&id)
 	return id, err
 }
 
@@ -269,8 +277,8 @@ func (s *Store) evaluationSummaries(ctx context.Context, proposalID string, limi
 	}
 	rows, err := s.pool.Query(ctx, `
 		SELECT id, portfolio_id::text, proposal_id::text, proposal_version, created_at FROM evaluations
-		WHERE $1 = '' OR proposal_id::text = $1
-		ORDER BY created_at DESC, id DESC LIMIT $2`, proposalID, limit)
+		WHERE ($1 = '' OR proposal_id::text = $1) AND workspace_id = $3
+		ORDER BY created_at DESC, id DESC LIMIT $2`, proposalID, limit, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -290,7 +298,7 @@ func (s *Store) GetEvaluation(ctx context.Context, id int64) (*model.Evaluation,
 	var e model.Evaluation
 	err := s.pool.QueryRow(ctx, `
 		SELECT id, portfolio_id::text, proposal_id::text, proposal_version, request, independent, conservative, created_at
-		FROM evaluations WHERE id = $1`, id,
+		FROM evaluations WHERE id = $1 AND workspace_id = $2`, id, model.WorkspaceID(ctx),
 	).Scan(&e.ID, &e.PortfolioID, &e.ProposalID, &e.ProposalVersion, &e.Request, &e.Independent, &e.Conservative, &e.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
@@ -316,8 +324,9 @@ func (s *Store) HistoryTimeline(ctx context.Context, limit int) ([]model.History
 		       LAG(d.decision) OVER (PARTITION BY d.pilot_id ORDER BY d.created_at, d.id)
 		FROM decisions d
 		LEFT JOIN observations o ON o.id = d.observation_id
+		WHERE d.workspace_id = $2
 		ORDER BY d.created_at DESC, d.id DESC
-		LIMIT $1`, limit)
+		LIMIT $1`, limit, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -338,7 +347,7 @@ func (s *Store) HistoryTimeline(ctx context.Context, limit int) ([]model.History
 
 	erows, err := s.pool.Query(ctx, `
 		SELECT id, created_at, request, independent, conservative
-		FROM evaluations ORDER BY created_at DESC, id DESC LIMIT $1`, limit)
+		FROM evaluations WHERE workspace_id = $2 ORDER BY created_at DESC, id DESC LIMIT $1`, limit, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -469,10 +478,10 @@ func grpINR(v float64) string {
 func (s *Store) AddInterview(ctx context.Context, in model.InterviewIn) (*model.Interview, error) {
 	var r model.Interview
 	err := s.pool.QueryRow(ctx, `
-		INSERT INTO interviews (interviewee_role, task, minutes_per_task, useful_result, quote, interviewed_on)
-		VALUES ($1, $2, $3, $4, $5, $6::text::date)
+		INSERT INTO interviews (interviewee_role, task, minutes_per_task, useful_result, quote, interviewed_on, workspace_id)
+		VALUES ($1, $2, $3, $4, $5, $6::text::date, $7)
 		RETURNING id, interviewee_role, task, minutes_per_task, useful_result, quote, to_char(interviewed_on, 'YYYY-MM-DD'), created_at`,
-		in.IntervieweeRole, in.Task, in.MinutesPerTask, in.UsefulResult, in.Quote, in.InterviewedOn,
+		in.IntervieweeRole, in.Task, in.MinutesPerTask, in.UsefulResult, in.Quote, in.InterviewedOn, model.WorkspaceID(ctx),
 	).Scan(&r.ID, &r.IntervieweeRole, &r.Task, &r.MinutesPerTask, &r.UsefulResult, &r.Quote, &r.InterviewedOn, &r.CreatedAt)
 	if err != nil {
 		return nil, err
@@ -483,7 +492,7 @@ func (s *Store) AddInterview(ctx context.Context, in model.InterviewIn) (*model.
 func (s *Store) ListInterviews(ctx context.Context) ([]model.Interview, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT id, interviewee_role, task, minutes_per_task, useful_result, quote, to_char(interviewed_on, 'YYYY-MM-DD'), created_at
-		FROM interviews ORDER BY id`)
+		FROM interviews WHERE workspace_id = $1 ORDER BY id`, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -505,9 +514,9 @@ func (s *Store) ListInterviews(ctx context.Context) ([]model.Interview, error) {
 func (s *Store) CreateProposal(ctx context.Context, in model.ProposalIn) (*model.Proposal, error) {
 	var p model.Proposal
 	err := s.pool.QueryRow(ctx, `
-		INSERT INTO proposals (name, inputs, notes) VALUES ($1, $2, $3)
+		INSERT INTO proposals (name, inputs, notes, workspace_id) VALUES ($1, $2, $3, $4)
 		RETURNING id::text, name, status, version, inputs, notes, created_at, updated_at`,
-		in.Name, []byte(in.Inputs), in.Notes,
+		in.Name, []byte(in.Inputs), in.Notes, model.WorkspaceID(ctx),
 	).Scan(&p.ID, &p.Name, &p.Status, &p.Version, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
 		return nil, err
@@ -518,7 +527,8 @@ func (s *Store) CreateProposal(ctx context.Context, in model.ProposalIn) (*model
 func (s *Store) GetProposal(ctx context.Context, id string) (*model.Proposal, error) {
 	var p model.Proposal
 	err := s.pool.QueryRow(ctx, `
-		SELECT id::text, name, status, version, inputs, notes, created_at, updated_at FROM proposals WHERE id::text = $1`, id,
+		SELECT id::text, name, status, version, inputs, notes, created_at, updated_at FROM proposals
+		WHERE id::text = $1 AND workspace_id = $2`, id, model.WorkspaceID(ctx),
 	).Scan(&p.ID, &p.Name, &p.Status, &p.Version, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
@@ -531,13 +541,10 @@ func (s *Store) GetProposal(ctx context.Context, id string) (*model.Proposal, er
 
 // ListProposals returns active first (newest first), then archived.
 func (s *Store) ListProposals(ctx context.Context, includeArchived bool) ([]model.ProposalSummary, error) {
-	where := ` WHERE status = 'active'`
-	if includeArchived {
-		where = ""
-	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT id::text, name, status, version, notes, created_at, updated_at FROM proposals`+where+`
-		ORDER BY (status = 'active') DESC, updated_at DESC LIMIT 200`)
+		SELECT id::text, name, status, version, notes, created_at, updated_at FROM proposals
+		WHERE workspace_id = $1 AND ($2 OR status = 'active')
+		ORDER BY (status = 'active') DESC, updated_at DESC LIMIT 200`, model.WorkspaceID(ctx), includeArchived)
 	if err != nil {
 		return nil, err
 	}
@@ -564,9 +571,9 @@ func (s *Store) UpdateProposal(ctx context.Context, id string, in model.Proposal
 			version = CASE WHEN $3::jsonb IS NOT NULL AND $3::jsonb IS DISTINCT FROM inputs THEN version + 1 ELSE version END,
 			inputs  = COALESCE($3, inputs),
 			notes   = COALESCE($4, notes)
-		WHERE id::text = $1
+		WHERE id::text = $1 AND workspace_id = $5
 		RETURNING id::text, name, status, version, inputs, notes, created_at, updated_at`,
-		id, nameOrNull(in.Name), in.Inputs, in.Notes,
+		id, nameOrNull(in.Name), in.Inputs, in.Notes, model.WorkspaceID(ctx),
 	).Scan(&p.ID, &p.Name, &p.Status, &p.Version, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
@@ -592,9 +599,9 @@ func (s *Store) ArchiveProposal(ctx context.Context, id string, restore bool) (*
 	}
 	var p model.Proposal
 	err := s.pool.QueryRow(ctx, `
-		UPDATE proposals SET status = $2 WHERE id::text = $1
+		UPDATE proposals SET status = $2 WHERE id::text = $1 AND workspace_id = $3
 		RETURNING id::text, name, status, version, inputs, notes, created_at, updated_at`,
-		id, status,
+		id, status, model.WorkspaceID(ctx),
 	).Scan(&p.ID, &p.Name, &p.Status, &p.Version, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
@@ -606,7 +613,7 @@ func (s *Store) ArchiveProposal(ctx context.Context, id string, restore bool) (*
 }
 
 func (s *Store) DeleteProposal(ctx context.Context, id string) error {
-	tag, err := s.pool.Exec(ctx, `DELETE FROM proposals WHERE id::text = $1`, id)
+	tag, err := s.pool.Exec(ctx, `DELETE FROM proposals WHERE id::text = $1 AND workspace_id = $2`, id, model.WorkspaceID(ctx))
 	if err != nil {
 		return err
 	}
@@ -621,10 +628,14 @@ func (s *Store) DeleteProposal(ctx context.Context, id string) error {
 func (s *Store) AddEvidence(ctx context.Context, in model.EvidenceIn) (*model.Evidence, error) {
 	var e model.Evidence
 	err := s.pool.QueryRow(ctx, `
-		INSERT INTO evidence (proposal_id, kind, source, quality, note) VALUES ($1::uuid, $2, $3, $4, $5)
+		INSERT INTO evidence (proposal_id, kind, source, quality, note)
+		SELECT p.id, $2, $3, $4, $5 FROM proposals p WHERE p.id::text = $1 AND p.workspace_id = $6
 		RETURNING id, proposal_id::text, kind, source, quality, note, created_at`,
-		in.ProposalID, in.Kind, in.Source, in.Quality, in.Note,
+		in.ProposalID, in.Kind, in.Source, in.Quality, in.Note, model.WorkspaceID(ctx),
 	).Scan(&e.ID, &e.ProposalID, &e.Kind, &e.Source, &e.Quality, &e.Note, &e.CreatedAt)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, model.ErrNotFound // no such proposal in this workspace
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -633,8 +644,9 @@ func (s *Store) AddEvidence(ctx context.Context, in model.EvidenceIn) (*model.Ev
 
 func (s *Store) ListEvidence(ctx context.Context, proposalID string) ([]model.Evidence, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, proposal_id::text, kind, source, quality, note, created_at
-		FROM evidence WHERE proposal_id::text = $1 ORDER BY id`, proposalID)
+		SELECT e.id, e.proposal_id::text, e.kind, e.source, e.quality, e.note, e.created_at
+		FROM evidence e JOIN proposals p ON p.id = e.proposal_id
+		WHERE e.proposal_id::text = $1 AND p.workspace_id = $2 ORDER BY e.id`, proposalID, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -656,15 +668,16 @@ func (s *Store) ListEvidence(ctx context.Context, proposalID string) ([]model.Ev
 func (s *Store) UpsertPlan(ctx context.Context, p model.PilotPlan) (*model.PilotPlan, error) {
 	plan := p
 	err := s.pool.QueryRow(ctx, `
-		INSERT INTO pilot_plans (pilot_id, objective, owner, adoption_target_pct, quality_target_pct, cost_limit_inr, duration_days, stop_rule, status)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-		ON CONFLICT (pilot_id) DO UPDATE SET
+		INSERT INTO pilot_plans (pilot_id, objective, owner, adoption_target_pct, quality_target_pct, cost_limit_inr, duration_days, stop_rule, status, workspace_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+		ON CONFLICT (workspace_id, pilot_id) DO UPDATE SET
 			objective = EXCLUDED.objective, owner = EXCLUDED.owner,
 			adoption_target_pct = EXCLUDED.adoption_target_pct, quality_target_pct = EXCLUDED.quality_target_pct,
 			cost_limit_inr = EXCLUDED.cost_limit_inr, duration_days = EXCLUDED.duration_days,
 			stop_rule = EXCLUDED.stop_rule, status = EXCLUDED.status
 		RETURNING created_at, updated_at`,
 		p.PilotID, p.Objective, p.Owner, p.AdoptionTarget, p.QualityTarget, p.CostLimitINR, p.DurationDays, p.StopRule, p.Status,
+		model.WorkspaceID(ctx),
 	).Scan(&plan.CreatedAt, &plan.UpdatedAt)
 	if err != nil {
 		return nil, err
@@ -676,7 +689,7 @@ func (s *Store) PilotPlan(ctx context.Context, pilotID string) (*model.PilotPlan
 	var p model.PilotPlan
 	err := s.pool.QueryRow(ctx, `
 		SELECT pilot_id, objective, owner, adoption_target_pct, quality_target_pct, cost_limit_inr, duration_days, stop_rule, status, created_at, updated_at
-		FROM pilot_plans WHERE pilot_id = $1`, pilotID,
+		FROM pilot_plans WHERE pilot_id = $1 AND workspace_id = $2`, pilotID, model.WorkspaceID(ctx),
 	).Scan(&p.PilotID, &p.Objective, &p.Owner, &p.AdoptionTarget, &p.QualityTarget, &p.CostLimitINR, &p.DurationDays, &p.StopRule, &p.Status, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
@@ -690,7 +703,7 @@ func (s *Store) PilotPlan(ctx context.Context, pilotID string) (*model.PilotPlan
 func (s *Store) PilotPlans(ctx context.Context) ([]model.PilotPlan, error) {
 	rows, err := s.pool.Query(ctx, `
 		SELECT pilot_id, objective, owner, adoption_target_pct, quality_target_pct, cost_limit_inr, duration_days, stop_rule, status, created_at, updated_at
-		FROM pilot_plans ORDER BY updated_at DESC`)
+		FROM pilot_plans WHERE workspace_id = $1 ORDER BY updated_at DESC`, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -709,9 +722,9 @@ func (s *Store) PilotPlans(ctx context.Context) ([]model.PilotPlan, error) {
 func (s *Store) SetPlanStatus(ctx context.Context, pilotID, status string) (*model.PilotPlan, error) {
 	var p model.PilotPlan
 	err := s.pool.QueryRow(ctx, `
-		UPDATE pilot_plans SET status = $2 WHERE pilot_id = $1
+		UPDATE pilot_plans SET status = $2 WHERE pilot_id = $1 AND workspace_id = $3
 		RETURNING pilot_id, objective, owner, adoption_target_pct, quality_target_pct, cost_limit_inr, duration_days, stop_rule, status, created_at, updated_at`,
-		pilotID, status,
+		pilotID, status, model.WorkspaceID(ctx),
 	).Scan(&p.PilotID, &p.Objective, &p.Owner, &p.AdoptionTarget, &p.QualityTarget, &p.CostLimitINR, &p.DurationDays, &p.StopRule, &p.Status, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
@@ -724,7 +737,7 @@ func (s *Store) SetPlanStatus(ctx context.Context, pilotID, status string) (*mod
 
 // DeletePlan removes a plan row (store tests and explicit resets).
 func (s *Store) DeletePlan(ctx context.Context, pilotID string) error {
-	ct, err := s.pool.Exec(ctx, `DELETE FROM pilot_plans WHERE pilot_id = $1`, pilotID)
+	ct, err := s.pool.Exec(ctx, `DELETE FROM pilot_plans WHERE pilot_id = $1 AND workspace_id = $2`, pilotID, model.WorkspaceID(ctx))
 	if err != nil {
 		return err
 	}
@@ -739,7 +752,8 @@ func (s *Store) LatestEvaluationWithPilot(ctx context.Context, pilotID string) (
 	var e model.Evaluation
 	err := s.pool.QueryRow(ctx, `
 		SELECT id, portfolio_id::text, proposal_id::text, proposal_version, request, independent, conservative, created_at
-		FROM evaluations WHERE independent->'selected' ? $1 ORDER BY created_at DESC, id DESC LIMIT 1`, pilotID,
+		FROM evaluations WHERE independent->'selected' ? $1 AND workspace_id = $2
+		ORDER BY created_at DESC, id DESC LIMIT 1`, pilotID, model.WorkspaceID(ctx),
 	).Scan(&e.ID, &e.PortfolioID, &e.ProposalID, &e.ProposalVersion, &e.Request, &e.Independent, &e.Conservative, &e.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
@@ -762,10 +776,17 @@ func (s *Store) AddAuditEvent(ctx context.Context, e model.AuditEventIn) error {
 	if e.RequestID != "" {
 		reqID = &e.RequestID
 	}
+	actor := e.Actor
+	if actor == nil {
+		if p := model.PrincipalFrom(ctx); p != nil && p.Email != "" {
+			email := p.Email
+			actor = &email
+		}
+	}
 	_, err := s.pool.Exec(ctx, `
-		INSERT INTO audit_events (action, entity_type, entity_id, actor, request_id, details)
-		VALUES ($1, $2, $3, $4, $5, $6)`,
-		e.Action, e.EntityType, e.EntityID, e.Actor, reqID, details)
+		INSERT INTO audit_events (action, entity_type, entity_id, actor, request_id, details, workspace_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		e.Action, e.EntityType, e.EntityID, actor, reqID, details, model.WorkspaceID(ctx))
 	return err
 }
 
@@ -780,8 +801,8 @@ func (s *Store) ListAuditEvents(ctx context.Context, f model.AuditFilter) ([]mod
 	}
 	rows, err := s.pool.Query(ctx, `
 		SELECT id, action, entity_type, entity_id, actor, request_id, details, created_at FROM audit_events
-		WHERE ($1 = '' OR entity_type = $1) AND ($2 = '' OR entity_id = $2)
-		ORDER BY created_at DESC, id DESC LIMIT $3`, f.EntityType, f.EntityID, limit)
+		WHERE ($1 = '' OR entity_type = $1) AND ($2 = '' OR entity_id = $2) AND workspace_id = $4
+		ORDER BY created_at DESC, id DESC LIMIT $3`, f.EntityType, f.EntityID, limit, model.WorkspaceID(ctx))
 	if err != nil {
 		return nil, err
 	}
@@ -795,4 +816,18 @@ func (s *Store) ListAuditEvents(ctx context.Context, f model.AuditFilter) ([]mod
 		out = append(out, a)
 	}
 	return out, rows.Err()
+}
+
+// proposalInWorkspace returns ErrUnknownProposal unless the proposal exists in the workspace, so a
+// record can never link to another organisation's proposal by guessing its id.
+func proposalInWorkspace(ctx context.Context, q pgx.Tx, proposalID, ws string) error {
+	var ok bool
+	err := q.QueryRow(ctx, `SELECT EXISTS (SELECT 1 FROM proposals WHERE id::text = $1 AND workspace_id = $2)`, proposalID, ws).Scan(&ok)
+	if err != nil {
+		return err
+	}
+	if !ok {
+		return model.ErrUnknownProposal
+	}
+	return nil
 }

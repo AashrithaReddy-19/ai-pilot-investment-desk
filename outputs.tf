@@ -42,3 +42,8 @@ output "ssh_command" {
   description = "Command to SSH into the instance (works only from CIDRs in allowed_ssh_cidr)"
   value       = "ssh ubuntu@${aws_instance.app.public_ip}"
 }
+
+output "first_sign_in" {
+  description = "How to create the first admin and token when auth_mode is required"
+  value       = var.auth_mode == "required" ? "ssh in, then: cd /opt/c23/backend && ./bin/api bootstrap -email you@example.com -workspace \"Finance\"" : "auth is off: no sign-in needed"
+}

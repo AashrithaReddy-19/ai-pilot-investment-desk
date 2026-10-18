@@ -220,8 +220,10 @@ resource "aws_instance" "app" {
     DATABASE_URL=postgres://c23:${var.db_password}@localhost:5432/c23?sslmode=disable
     REDIS_URL=redis://localhost:6379/0
     RULES_ENGINE_URL=http://localhost:${var.decision_engine_port}
-    RULES_VERSION=6
     ALLOWED_ORIGINS=${var.allowed_origins}
+    AUTH_MODE=${var.auth_mode}
+    RATE_LIMIT_PER_MINUTE=${var.rate_limit_per_minute}
+    WORKER_ENABLED=true
     REQUEST_TIMEOUT_SECONDS=5
     CACHE_TTL_SECONDS=1800
     MAX_BODY_BYTES=1048576

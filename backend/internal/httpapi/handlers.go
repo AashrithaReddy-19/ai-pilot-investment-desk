@@ -27,12 +27,16 @@ var (
 )
 
 type Handlers struct {
-	cfg   config.Config
-	store Store
-	rules Rules
-	cache Cache
-	audit Auditor
-	log   *slog.Logger
+	cfg      config.Config
+	store    Store
+	rules    Rules
+	cache    Cache
+	audit    Auditor
+	platform Platform
+	uploads  Uploads
+	notify   func()
+	version  func() string
+	log      *slog.Logger
 }
 
 type fwdOpts struct {
@@ -43,7 +47,9 @@ type fwdOpts struct {
 
 // ---------------------------------------------------------------- ops
 
-func (h *Handlers) health(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"ok": true}) }
+func (h *Handlers) health(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"ok": true, "auth_mode": h.cfg.AuthMode, "rules_version": strOrNil(h.version())})
+}
 
 // ready needs Postgres and the rules engine. Redis is optional (fail-open), so it never fails readiness.
 func (h *Handlers) ready(c *gin.Context) {
@@ -74,7 +80,7 @@ func (h *Handlers) ready(c *gin.Context) {
 	if !healthy {
 		code = http.StatusServiceUnavailable
 	}
-	c.JSON(code, gin.H{"ready": healthy, "checks": checks})
+	c.JSON(code, gin.H{"ready": healthy, "checks": checks, "rules_version": strOrNil(h.version())})
 }
 
 // ---------------------------------------------------------------- helpers
@@ -330,7 +336,7 @@ func (h *Handlers) evaluate(c *gin.Context) {
 	var evaluationID *int64
 	if id, err := h.store.SaveEvaluation(c.Request.Context(), model.EvaluationIn{
 		Request: reqBody, Independent: answers["independent"].Body, Conservative: answers["conservative"].Body,
-		ProposalID: proposalID, ProposalVersion: proposalVersion,
+		ProposalID: proposalID, ProposalVersion: proposalVersion, RulesVersion: strOrNil(h.version()),
 	}); err != nil {
 		h.log.Warn("could not save evaluation history", "err", err, "request_id", reqID(c))
 	} else {
@@ -1019,9 +1025,9 @@ func (h *Handlers) realloc(c *gin.Context) {
 			return
 		}
 		var scope struct {
-			Fixture        *json.RawMessage `json:"fixture_as_used"`
-			Extension      *json.RawMessage `json:"extension"`
-			Mode           string           `json:"mode"`
+			Fixture   *json.RawMessage `json:"fixture_as_used"`
+			Extension *json.RawMessage `json:"extension"`
+			Mode      string           `json:"mode"`
 		}
 		_ = json.Unmarshal(p.NegotiatedScope, &scope)
 		if scope.Fixture != nil && !isNull(*scope.Fixture) {

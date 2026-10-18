@@ -90,3 +90,20 @@ variable "environment" {
   type        = string
   default     = "production"
 }
+
+variable "auth_mode" {
+  description = "Gateway sign-in: required (bearer tokens and workspaces, the default for a public server) or off (single default workspace, no sign-in)"
+  type        = string
+  default     = "required"
+
+  validation {
+    condition     = contains(["required", "off"], var.auth_mode)
+    error_message = "auth_mode must be required or off."
+  }
+}
+
+variable "rate_limit_per_minute" {
+  description = "Gateway requests per minute per client IP (0 disables rate limiting)"
+  type        = number
+  default     = 600
+}

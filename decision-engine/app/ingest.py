@@ -256,9 +256,24 @@ def parse_balance_sheet(raw: bytes, unit: str = "auto", amount_column: Optional[
     }
 
 
+def _overrides(raw: Any) -> dict:
+    """Reviewer corrections arrive as a JSON object (form field `overrides`)."""
+    if raw is None or raw == "" or raw == {}:
+        return {}
+    if isinstance(raw, str):
+        import json
+        try:
+            raw = json.loads(raw)
+        except ValueError as exc:
+            raise ParseError("overrides must be a JSON object.") from exc
+    if not isinstance(raw, dict):
+        raise ParseError("overrides must be a JSON object.")
+    return raw
+
+
 def confirm_balance_sheet(raw: bytes, selected_rows: list[int], unit: str = "auto",
                           amount_column: Optional[str] = None, d: Optional[dict] = None,
-                          period: str = "auto") -> dict:
+                          period: str = "auto", overrides: Any = None) -> dict:
     """Re-parse the same upload and total the confirmed rows into ai_burn_to_date (observed),
     beside the next-FY AI forecast from the token assumptions in d. Nothing is stored."""
     parsed = parse_balance_sheet(raw, unit, amount_column, period)
@@ -271,16 +286,34 @@ def confirm_balance_sheet(raw: bytes, selected_rows: list[int], unit: str = "aut
         raise ParseError(f"These rows are not AI-spend candidates of the uploaded file: {unknown}. "
                          f"Valid rows: {sorted(by_row)}.")
     flags, warnings = list(parsed["flags"]), list(parsed["warnings"])
+    ov = _overrides(overrides)
+    corrected: dict[int, float] = {}
+    for k, v in ov.items():
+        try:
+            row = int(k)
+        except (TypeError, ValueError):
+            raise ParseError(f"overrides key {k!r} is not a row number.")
+        if row not in by_row:
+            raise ParseError(f"overrides row {row} is not an AI-spend candidate of the uploaded file.")
+        if not _num(v) or v < 0:
+            raise ParseError(f"overrides row {row}: amount must be a non-negative number of rupees.")
+        corrected[row] = float(v)
     per_row, burn = [], 0
     for r in sorted(selected_rows):
-        c = by_row[r]
+        c = dict(by_row[r])
+        if r in corrected:
+            c["original_amount_inr"], c["amount_inr"] = c["amount_inr"], round(corrected[r])
+            flags.append({"code": "CORRECTED_BY_REVIEWER",
+                          "message": f"Row {r} ({c['label']}): amount corrected in review from "
+                                     f"{c['original_amount_inr']} to {c['amount_inr']}; the original is kept."})
         if c["amount_inr"] is None:
             flags.append({"code": "CONFIRMED_ROW_AMOUNT_MISSING",
                           "message": f"Row {r} ({c['label']}) has no parsable amount; it is excluded from the burn, not zeroed."})
             warnings.append(f"Row {r} ({c['label']}): amount missing; excluded from the burn total.")
         else:
             burn += c["amount_inr"]
-        per_row.append({"row": c["row"], "label": c["label"], "amount_inr": c["amount_inr"]})
+        per_row.append({"row": c["row"], "label": c["label"], "amount_inr": c["amount_inr"],
+                        **({"original_amount_inr": c["original_amount_inr"], "corrected": True} if r in corrected else {})})
     from . import core  # local import keeps ingest standalone of the decision core
     nxt = core.forecast_block(d or {})
     return {
@@ -491,8 +524,46 @@ def parse_pilots_csv(raw: bytes, unit: str = "auto", period: str = "auto") -> di
             "findings": findings(records, warnings, flags, dup_findings)}
 
 
+_PILOT_OVERRIDE_FIELDS = {"task", "setup_cost_inr", "annual_benefit_inr", "annual_running_cost_inr", "benefit_type",
+                          "overlap_group", "ramp_months", "delay_months"}
+_EXT_OVERRIDE_FIELDS = {"adoption_pct", "readiness"}
+
+
+def _check_override(pid: str, field: str, v: Any) -> Any:
+    bad = lambda why: ParseError(f"overrides {pid}.{field}: {why}")
+    if field in ("setup_cost_inr", "annual_benefit_inr"):
+        if not _num(v) or v < 0:
+            raise bad("must be a non-negative number of rupees")
+        return round(v)
+    if field == "annual_running_cost_inr":
+        if v is None:
+            return None
+        if not _num(v) or v < 0:
+            raise bad("must be a non-negative number of rupees or null")
+        return round(v)
+    if field in ("ramp_months", "delay_months"):
+        if not _num(v) or v < 0 or v > 120 or not float(v).is_integer():
+            raise bad("must be a whole number of months in 0-120")
+        return int(v)
+    if field == "adoption_pct":
+        if not _num(v) or v < 0 or v > 100:
+            raise bad("must be a percentage in 0-100")
+        return v
+    if field == "readiness":
+        if v not in ("low", "medium", "high"):
+            raise bad("must be low, medium or high")
+        return v
+    if field == "benefit_type":
+        if v not in ("cashable", "cashable assumption", "time freed", "non-cashable", "unknown"):
+            raise bad("must be cashable, time freed, non-cashable or unknown")
+        return v
+    if not isinstance(v, str) or not v.strip() or len(v) > (40 if field == "overlap_group" else 200):
+        raise bad("must be non-empty text")
+    return v.strip()
+
+
 def confirm_pilots_csv(raw: bytes, keep_ids: list[str], unit: str = "auto", fixture_ids: list[str] = (),
-                       period: str = "auto") -> dict:
+                       period: str = "auto", overrides: Any = None) -> dict:
     """Re-parse and return only the kept ids, in the shape the client uses on subsequent calls:
     `pilots` go into `fixture`, `extension_pilots` into `extension`. Persistence stays in Go."""
     parsed = parse_pilots_csv(raw, unit, period)
@@ -509,11 +580,35 @@ def confirm_pilots_csv(raw: bytes, keep_ids: list[str], unit: str = "auto", fixt
     if collisions:
         warnings.append(f"Ids also present in the shipped fixture: {', '.join(collisions)}; sending these rows as "
                         "`fixture` replaces the shipped pilots with the same ids.")
+    ov = _overrides(overrides)
+    for pid, fields in ov.items():
+        if pid not in keep_ids:
+            raise ParseError(f"overrides name {pid!r}, which is not among the kept ids.")
+        if not isinstance(fields, dict):
+            raise ParseError(f"overrides {pid!r} must be an object of field -> corrected value.")
+        unknown = set(fields) - _PILOT_OVERRIDE_FIELDS - _EXT_OVERRIDE_FIELDS
+        if unknown:
+            raise ParseError(f"overrides {pid!r}: field(s) {sorted(unknown)} cannot be corrected.")
+    flags = list(parsed["flags"])
+    corrections = []
     pilots, exts = [], []
     for i in keep_ids:
-        p, e = by_id[i]
+        p, e = dict(by_id[i][0]), dict(by_id[i][1])
+        for field, v in (ov.get(i) or {}).items():
+            target = e if field in _EXT_OVERRIDE_FIELDS else p
+            original = target.get(field)
+            value = _check_override(i, field, v)
+            if value is None:
+                target.pop(field, None)    # null withdraws the stated value (missing is never zero)
+            else:
+                target[field] = value
+            corrections.append({"id": i, "field": field, "original": original, "corrected": value})
         pilots.append(p)
         if len(e) > 1:          # extension rows carry at least one field besides id
             exts.append(e)
-    return {"pilots": pilots, "extension_pilots": exts, "flags": parsed["flags"], "warnings": warnings,
-            "unit": parsed["unit"], "periods": parsed["periods"], "format": parsed["format"]}
+    if corrections:
+        flags.append({"code": "CORRECTED_BY_REVIEWER",
+                      "message": f"{len(corrections)} value(s) corrected in review; originals are listed in `corrections`."})
+    return {"pilots": pilots, "extension_pilots": exts, "flags": flags, "warnings": warnings,
+            "unit": parsed["unit"], "periods": parsed["periods"], "format": parsed["format"],
+            "corrections": corrections}

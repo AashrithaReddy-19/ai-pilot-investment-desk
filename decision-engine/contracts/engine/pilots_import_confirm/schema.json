@@ -139,9 +139,13 @@
     },
     "format": {
       "type": "string"
+    },
+    "corrections": {
+      "type": "array"
     }
   },
   "required": [
+    "corrections",
     "extension_pilots",
     "flags",
     "format",

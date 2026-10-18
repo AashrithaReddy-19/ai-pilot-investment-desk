@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"sort"
@@ -16,12 +17,18 @@ import (
 // turns a successful change into a failed response. Details hold identifiers and status values only.
 
 var auditEntityTypes = map[string]bool{
-	"evaluation": true, "evidence": true, "export": true, "interview": true,
-	"observation": true, "plan": true, "portfolio": true, "proposal": true,
+	"approval": true, "evaluation": true, "evidence": true, "export": true, "interview": true, "member": true,
+	"observation": true, "plan": true, "portfolio": true, "proposal": true, "settings": true, "snapshot": true,
+	"upload": true, "workspace": true,
 }
 
 // record writes one audit event for the current request. entityID may be empty.
 func (h *Handlers) record(c *gin.Context, action, entityType, entityID string, details gin.H) {
+	h.recordIn(c.Request.Context(), c, action, entityType, entityID, details)
+}
+
+// recordIn is record with an explicit context (e.g. the workspace a request just created).
+func (h *Handlers) recordIn(ctx context.Context, c *gin.Context, action, entityType, entityID string, details gin.H) {
 	var id *string
 	if entityID != "" {
 		id = &entityID
@@ -32,7 +39,7 @@ func (h *Handlers) record(c *gin.Context, action, entityType, entityID string, d
 			raw = b
 		}
 	}
-	err := h.audit.AddAuditEvent(c.Request.Context(), model.AuditEventIn{
+	err := h.audit.AddAuditEvent(ctx, model.AuditEventIn{
 		Action: action, EntityType: entityType, EntityID: id, RequestID: reqID(c), Details: raw,
 	})
 	if err != nil {

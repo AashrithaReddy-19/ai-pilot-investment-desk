@@ -24,6 +24,12 @@ instance_type = "t3.small"
 # Exact browser origins allowed to call the gateway cross-origin (comma-separated, no wildcards)
 # allowed_origins = "https://desk.example.com"
 
+# Gateway sign-in. "required" (default) needs a bearer token per request: after deploy, SSH in and run
+#   cd /opt/c23/backend && ./bin/api bootstrap -email you@example.com -workspace "Finance"
+# to create the first admin and print their token. "off" runs without sign-in (demos only).
+# auth_mode = "required"
+# rate_limit_per_minute = 600
+
 # Application Database Password for role 'c23'
 db_password = "c23SecurePassword123"
 

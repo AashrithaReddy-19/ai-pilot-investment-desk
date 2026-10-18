@@ -160,14 +160,15 @@ fynd/
 ├── backend/
 │   ├── cmd/
 │   │   └── api/
-│   │       └── main.go                 # Backend entrypoint (server & migrations CLI)
+│   │       └── main.go                 # Backend entrypoint (server, migrations and bootstrap CLI)
 │   ├── db/
 │   │   └── init.sql                    # Initial PostgreSQL user & database setup
 │   ├── internal/
 │   │   ├── cache/                      # Redis fail-open cache implementation
 │   │   ├── config/                     # Environment configuration loader
-│   │   ├── httpapi/                    # Gin router, handlers, middleware
-│   │   ├── migrations/                 # Goose embedded SQL migrations (00001 to 00007)
+│   │   ├── httpapi/                    # Gin router, handlers, middleware, auth/roles/rate limit, uploads, workspace views
+│   │   ├── jobs/                       # Upload processing worker (claims queued uploads, retries with backoff)
+│   │   ├── migrations/                 # Goose embedded SQL migrations (00001 to 00012)
 │   │   ├── model/                      # Shared Go data structs
 │   │   ├── rules/                      # HTTP client talking to Decision Engine
 │   │   └── store/                      # PostgreSQL pgx store & migration runners
@@ -733,7 +734,7 @@ Persistent pilot candidates: each proposal is a named idea with versioned inputs
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `POST` | `/api/v1/proposals` | Creates a proposal (`name` plus optional `inputs` object and `notes`). Names must be unique. |
+| `POST` | `/api/v1/proposals` | Creates a proposal (`name` plus optional `inputs` object and `notes`). Names must be unique within the workspace. |
 | `GET` | `/api/v1/proposals` | Lists proposals. Active first, newest first. Add `?include_archived=true` to see archived ones too. |
 | `GET` | `/api/v1/proposals/:id` | Retrieves one proposal by UUID, including its stored inputs. |
 | `PATCH` | `/api/v1/proposals/:id` | Update `name`, `inputs`, `notes`. Omitted fields keep their stored value. |
@@ -742,6 +743,9 @@ Persistent pilot candidates: each proposal is a named idea with versioned inputs
 | `DELETE` | `/api/v1/proposals/:id` | Permanently deletes the proposal and its evidence. Observations and decisions keep, with their link set to null. |
 | `POST` | `/api/v1/proposals/:id/evidence` | Attaches an evidence row (`kind`: interview/measurement/document/assumption, plus `source`, `quality`, `note`). |
 | `GET` | `/api/v1/proposals/:id/evidence` | Lists the evidence attached to the proposal. |
+| `GET` | `/api/v1/proposals/:id/evaluations` | Evaluations run for this proposal, each with the inputs version it used. |
+| `POST` | `/api/v1/proposals/:id/approvals` | *(admin)* Records `approved` / `rejected` / `changes_requested` on the proposal's **current inputs version**, with an optional `comment` and `snapshot_id` (the engine outcome the approver saw is stored with it). |
+| `GET` | `/api/v1/proposals/:id/approvals` | Lists approvals, newest first; `stale: true` when the inputs changed after the approval. |
 
 #### Example Create proposal:
 ```bash
@@ -756,6 +760,51 @@ curl -s -X POST http://localhost:8080/api/v1/proposals \
 
 ---
 
+### Security, workspaces and members
+
+Every stored record belongs to a **workspace** (one organisation). With `AUTH_MODE=off` (local development) everything runs in the default workspace as admin. With `AUTH_MODE=required`, every `/api/v1` call sends `Authorization: Bearer <token>`; `X-Workspace-ID` picks the workspace (optional when the user belongs to exactly one). Another organisation's workspace id answers `403 not_a_member`, the same as a workspace that does not exist. Roles gate the routes: **viewer** reads and runs calculations, **analyst** also creates and edits records and uploads, **admin** also deletes, approves, changes settings and manages members. Requests are rate limited per client IP (`429 rate_limited` with `Retry-After`). Every successful edit, export and file download is written to the audit trail with the signed-in user as actor.
+
+The first user and token come from the command line (only the token's SHA-256 is stored):
+
+```bash
+cd backend
+go run ./cmd/api bootstrap -email you@example.com -workspace "Finance"   # prints the token once
+```
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/me` | Who is calling, the current workspace and role, and every workspace the user belongs to. |
+| `GET` / `POST` | `/api/v1/workspaces` | List your workspaces / create one (you become its admin). |
+| `GET` / `POST` / `DELETE` | `/api/v1/members`, `/api/v1/members/:user_id` | List members; *(admin)* add someone by `email` with a `role` or change their role; remove a member (the last admin cannot be removed). |
+| `GET` / `POST` / `DELETE` | `/api/v1/tokens`, `/api/v1/tokens/:id` | Your API tokens: list, create (the raw token is returned once), revoke. |
+
+### Budget settings and workspace views
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` / `PUT` | `/api/v1/settings` | The workspace decision context: `budget`, `mode`, `budget_set` (total / first-year / recurring / implementation / contingency), engine `defaults` (horizon, discount rate, token assumptions) and ranking `weights`. `PUT` is admin; unknown keys are 422. |
+| `POST` | `/api/v1/workspace/dashboard` | Executive dashboard built from the workspace's stored proposals (`proposal_ids`, or every active proposal) and its settings. The latest observation linked to each proposal fills its observed adoption/quality. The engine answer is stored as a **snapshot** and returned as `{snapshot, result}`. `use_fixture: true` runs the shipped case instead. |
+| `POST` | `/api/v1/workspace/decision`, `/workspace/comparison`, `/workspace/yearly-savings` | The same for the decision ranking, the section-2 comparison and the yearly savings view. |
+| `POST` | `/api/v1/workspace/export/decision-report`, `/workspace/export/yearly-csv` | Downloads for the stored proposals (`decision-report.md`, `yearly-savings.csv`). |
+| `GET` | `/api/v1/snapshots`, `/api/v1/snapshots/:id` | Stored snapshots; one snapshot comes back with `stale` and the reasons (a proposal's inputs changed, a proposal was deleted, the engine's rules version moved on). |
+| `POST` | `/api/v1/snapshots/:id/replay` | Re-runs the stored request uncached and reports `matches: true` when today's engine reproduces the stored answer exactly. |
+| `POST` | `/api/v1/economics`, `/decision`, `/views/dashboard`, `/views/yearly-savings`, `/pricing/quote`, `/pricing/optimise`, `/forecast/usage`, `/export/decision-report`, `/export/yearly-csv` | Cached pass-through to the engine endpoints of rules version 7+ for explicit proposal lists (see `decision-engine/docs/engine.md`). |
+
+### Stored uploads and review
+
+Documents are kept, not just parsed: the gateway validates the file (`.csv` UTF-8 or `.xlsx`, checked against the bytes, at most `UPLOAD_MAX_BYTES`), stores the original with its SHA-256 (the same file uploaded again is the same upload), and a background worker sends it to the engine parser, retrying outages with backoff (5 s, 20 s, 45 s; three attempts). A file the engine rejects fails at once with the engine's reason. Status moves `received → processing → parsed | failed → confirmed`.
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/v1/uploads` | *(analyst)* Multipart `file` + `kind` (`balance_sheet` / `pilots`) + optional `unit`, `period`, `amount_column`. `202` with the queued upload, or `200` with `duplicate: true`. |
+| `GET` | `/api/v1/uploads`, `/api/v1/uploads/:id` | The queue; one upload with its parse result, its corrections and the review rows (original value beside corrected value). |
+| `GET` | `/api/v1/uploads/:id/file` | The original file as an attachment (workspace-scoped, `nosniff`, audited). |
+| `POST` | `/api/v1/uploads/:id/corrections` | *(analyst)* `{row_ref, field, value, note?}`: a reviewed value. The original is kept; balance sheets correct `amount_inr`, pilot imports correct money, benefit type, overlap group, ramp/delay, adoption, readiness or task. |
+| `POST` | `/api/v1/uploads/:id/confirm` | *(analyst)* `{rows: [...]}` (balance sheet) or `{keep: [...]}` (pilots). The engine re-reads the stored file with the corrections applied, so the burn and the imported rows are still computed by the engine. |
+| `POST` | `/api/v1/uploads/:id/retry` | *(analyst)* Puts a failed upload back in the queue. |
+
+---
+
 ## Configuration Reference
 
 ### Backend Configuration (`backend/.env`)
@@ -766,13 +815,20 @@ curl -s -X POST http://localhost:8080/api/v1/proposals \
 | `DATABASE_URL` | *Required* | PostgreSQL connection string (`postgres://user:pass@host:5432/db`). |
 | `REDIS_URL` | `redis://localhost:6379/0` | Redis connection URL. Leave empty to run without cache. |
 | `RULES_ENGINE_URL` | `http://localhost:8000` | URL of the Python FastAPI Decision Engine. |
-| `RULES_VERSION` | `6` | Cache namespace version (bump whenever rules logic changes; 6 = Phase 6 lifecycle rules). |
+| `RULES_VERSION` | *unset* | Fallback cache namespace, used only until the engine reports its own `rules_version` from `/health`. The cache key follows the engine automatically, so nobody edits this by hand. |
+| `RULES_VERSION_POLL_SECONDS` | `30` | How often the gateway re-reads the engine's `rules_version`. |
 | `ALLOWED_ORIGINS` | `http://localhost:5173` | Comma-separated list of allowed CORS origins. |
 | `REQUEST_TIMEOUT_SECONDS` | `5` | Request context timeout in seconds. |
 | `CACHE_TTL_SECONDS` | `1800` | TTL in seconds for cached rule responses (0 disables cache). |
 | `MAX_BODY_BYTES` | `1048576` | Maximum allowed request body size in bytes (default 1 MB). |
 | `AUTO_MIGRATE` | `false` | If `true`, applies pending Goose migrations on server startup. |
 | `GIN_MODE` | `release` | Gin server mode (`release` or `debug`). |
+| `AUTH_MODE` | `off` | `off`: no sign-in, default workspace. `required`: bearer tokens, workspaces and roles (the OpenTofu deployment defaults to `required`). |
+| `RATE_LIMIT_PER_MINUTE` | `600` | Requests per minute per client IP; `0` disables rate limiting. |
+| `RATE_LIMIT_BURST` | `120` | Requests allowed at once above the per-minute rate. |
+| `UPLOAD_MAX_BYTES` | `2000000` | Largest stored upload (the engine parses at most 2 MB). |
+| `WORKER_ENABLED` | `true` | Run the upload processing worker in this gateway process. |
+| `WORKER_POLL_MS` | `1000` | How often the worker looks for queued uploads (new uploads also wake it immediately). |
 
 ### Decision Engine Configuration (`decision-engine/.env`)
 
@@ -799,6 +855,11 @@ The backend uses [Goose](https://github.com/pressly/goose) migrations located in
 7. **`evaluations`**: Audit log of dual-mode evaluations computed through `/api/v1/evaluate`; readable via `GET /api/v1/evaluations`.
 8. **`interviews`**: Qualitative interview records with business stakeholders.
 9. **`pilot_plans`** *(migration 00007)*: One current 30-day checkpoint plan per pilot — objective, owner, adoption/quality targets, cost limit, duration, stop rule and lifecycle status (`planned` / `active` / `revise` / `stopped` / `completed`). Expected values come from the engine plan generator; actuals live in `observations`.
+10. **`audit_events`** *(migration 00008)*: Every successful edit, export and download — action, entity, actor (the signed-in user), request id and identifiers only (never document contents).
+11. **`proposals.version`, `evaluations.proposal_id/proposal_version`** *(migration 00009)*: The inputs version goes up only when the stored inputs change; an evaluation records the proposal version it used.
+12. **`workspaces`, `users`, `memberships`, `api_tokens`** *(migration 00010)*: Organisations, people, roles per workspace and hashed API tokens. Every table above gained `workspace_id`; names (portfolios, proposals) and pilot plans are unique **per workspace**. Existing rows moved into the default workspace.
+13. **`uploads`, `upload_corrections`** *(migration 00011)*: Stored originals with SHA-256, the processing job (status, attempts, next attempt, last error), the engine's parse and confirm answers, and reviewer corrections with original and corrected values.
+14. **`snapshots`, `approvals`, `evaluations.rules_version`** *(migration 00012)*: Reproducible engine answers (request, response, proposal versions, rules and contract versions), approvals per proposal version, and the engine version behind each evaluation.
 
 ### Managing Migrations CLI
 
@@ -813,7 +874,14 @@ go run ./cmd/api migrate up
 
 # Roll back the most recent migration
 go run ./cmd/api migrate down
+
+# Create a user, a workspace and a sign-in token (needed when AUTH_MODE=required)
+go run ./cmd/api bootstrap -email you@example.com -workspace "Finance"
 ```
+
+### Shared lint and test commands
+
+From the repository root: `make test` (engine, gateway, frontend), `make lint` (gofmt, go vet, golangci-lint when installed, TypeScript typecheck), `make contracts` (regenerate the engine contract examples). Gateway store tests run against a disposable Postgres when `TEST_DATABASE_URL` is set. Path ownership for reviews is in `.github/CODEOWNERS`.
 
 ---
 

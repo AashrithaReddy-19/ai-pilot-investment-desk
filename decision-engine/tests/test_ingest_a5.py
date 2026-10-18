@@ -84,3 +84,29 @@ def test_balance_sheet_findings_carry_the_no_ai_row_flag():
 def test_parse_rules_document_formats_and_periods():
     assert ingest.PARSE_RULES["period_factors"] == {"annual": 1, "half_year": 2, "quarterly": 4, "monthly": 12}
     assert "xlsx (first sheet)" in ingest.PARSE_RULES["formats"]
+
+
+def test_balance_confirm_applies_reviewer_overrides_and_keeps_originals():
+    data = b"Account,Amount in INR\nAI software licences,1200000\nCloud AI platform,350000\n"
+    r = c.post("/balance-sheet/confirm", files={"file": ("b.csv", data, "text/csv")},
+               data={"rows": "2,3", "overrides": '{"3": 300000}'}).json()
+    assert r["ai_burn_to_date"] == 1_500_000                                    # 1,200,000 + corrected 300,000
+    row3 = next(x for x in r["confirmations"] if x["row"] == 3)
+    assert row3["original_amount_inr"] == 350000 and row3["corrected"] is True
+    assert "CORRECTED_BY_REVIEWER" in [f["code"] for f in r["flags"]]
+    bad = c.post("/balance-sheet/confirm", files={"file": ("b.csv", data, "text/csv")},
+                 data={"rows": "2", "overrides": '{"9": 1}'})
+    assert bad.status_code == 422 and "not an AI-spend candidate" in bad.json()["detail"]
+
+
+def test_pilot_confirm_applies_overrides_to_pilot_and_extension_fields():
+    data = b"id,task,setup_cost_inr,annual_benefit_inr,readiness\nP1,Invoices,200000,180000,low\n"
+    r = c.post("/pilots/import/confirm", files={"file": ("p.csv", data, "text/csv")},
+               data={"keep": "P1", "overrides": '{"P1": {"annual_benefit_inr": 210000, "readiness": "high"}}'}).json()
+    assert r["pilots"][0]["annual_benefit_inr"] == 210000
+    assert r["extension_pilots"][0]["readiness"] == "high"
+    assert {"id": "P1", "field": "annual_benefit_inr", "original": 180000, "corrected": 210000} in r["corrections"]
+    for ov, msg in (('{"P9": {"task": "x"}}', "not among the kept ids"), ('{"P1": {"id": "x"}}', "cannot be corrected"),
+                    ('{"P1": {"adoption_pct": 140}}', "0-100")):
+        bad = c.post("/pilots/import/confirm", files={"file": ("p.csv", data, "text/csv")}, data={"keep": "P1", "overrides": ov})
+        assert bad.status_code == 422 and msg in bad.json()["detail"], ov

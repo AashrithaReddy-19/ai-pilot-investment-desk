@@ -2,6 +2,7 @@ package httpapi
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -283,5 +284,5 @@ func isUniqueViolation(err error) bool {
 }
 
 func isFKViolation(err error) bool {
-	return err != nil && strings.Contains(err.Error(), "SQLSTATE 23503")
+	return err != nil && (errors.Is(err, model.ErrUnknownProposal) || strings.Contains(err.Error(), "SQLSTATE 23503"))
 }

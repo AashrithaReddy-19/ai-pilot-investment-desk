@@ -8,6 +8,6 @@
   so a persisted result can be reproduced with the formulas that made it.
 """
 
-RULES_VERSION = "7"
+RULES_VERSION = "8"
 CONTRACT_VERSION = 1
 FORMULA_VERSION = "cf-1"

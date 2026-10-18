@@ -9,7 +9,7 @@ import (
 )
 
 func TestKeyIgnoresFieldOrderAndWhitespace(t *testing.T) {
-	c := &Cache{version: "1"}
+	c := withVersion("1")
 	a, _ := c.key("/portfolio", []byte(`{"budget":600000,"mode":"independent"}`))
 	b, _ := c.key("/portfolio", []byte(`{ "mode" : "independent",  "budget" : 600000 }`))
 	if a != b {
@@ -18,7 +18,7 @@ func TestKeyIgnoresFieldOrderAndWhitespace(t *testing.T) {
 }
 
 func TestKeyChangesWithContentEndpointAndVersion(t *testing.T) {
-	c1, c2 := &Cache{version: "1"}, &Cache{version: "2"}
+	c1, c2 := withVersion("1"), withVersion("2")
 	base, _ := c1.key("/portfolio", []byte(`{"budget":600000}`))
 	for name, other := range map[string]func() (string, error){
 		"budget":   func() (string, error) { return c1.key("/portfolio", []byte(`{"budget":100000}`)) },
@@ -33,7 +33,7 @@ func TestKeyChangesWithContentEndpointAndVersion(t *testing.T) {
 }
 
 func TestKeyRejectsInvalidJSON(t *testing.T) {
-	if _, err := (&Cache{version: "1"}).key("/x", []byte(`{bad`)); err == nil {
+	if _, err := withVersion("1").key("/x", []byte(`{bad`)); err == nil {
 		t.Fatal("expected an error for invalid JSON")
 	}
 }
@@ -61,5 +61,25 @@ func TestDisabledCacheCallsThrough(t *testing.T) {
 	}
 	if err := c.Ping(context.Background()); err != nil {
 		t.Fatal("ping on a disabled cache must not fail")
+	}
+}
+
+func withVersion(v string) *Cache {
+	c := &Cache{}
+	c.version.Store(v)
+	return c
+}
+
+func TestSetVersionChangesTheKeyNamespace(t *testing.T) {
+	c := withVersion("fallback")
+	before, _ := c.key("/pilots", []byte(`{}`))
+	c.SetVersion("7")
+	after, _ := c.key("/pilots", []byte(`{}`))
+	if before == after || c.Version() != "7" {
+		t.Fatalf("version switch did not change the key: %s vs %s", before, after)
+	}
+	c.SetVersion("") // an engine that reports nothing keeps the last known version
+	if c.Version() != "7" {
+		t.Fatalf("empty version must be ignored, got %q", c.Version())
 	}
 }

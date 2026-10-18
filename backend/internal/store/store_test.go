@@ -450,9 +450,9 @@ func TestLatestEvaluationWithPilotSelectsTheNewestFundingEvaluation(t *testing.T
 		t.Fatal(err)
 	}
 	var funded struct {
-		Selected []string  `json:"selected"`
-		Budget   float64   `json:"budget"`
-		Fixture  struct{}  `json:"fixture"`
+		Selected []string `json:"selected"`
+		Budget   float64  `json:"budget"`
+		Fixture  struct{} `json:"fixture"`
 	}
 	if err := json.Unmarshal(ev.Independent, &funded); err != nil || funded.Budget != 424242 || len(funded.Selected) != 1 {
 		t.Fatalf("independent decode wrong: %v err=%v", funded, err)

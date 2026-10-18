@@ -4,10 +4,14 @@ package rules
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
+	"net/textproto"
+	"sort"
 	"strings"
 	"time"
 
@@ -81,6 +85,28 @@ func (c *Client) do(ctx context.Context, method, path string, body []byte, reqID
 	return &model.Upstream{Status: resp.StatusCode, Body: b, ContentType: resp.Header.Get("Content-Type")}, nil
 }
 
+// Version reads the engine's own rules_version from GET /health ("" when an older engine does not report it).
+func (c *Client) Version(ctx context.Context) (string, error) {
+	r, err := c.Do(ctx, http.MethodGet, "/health", nil, "")
+	if err != nil {
+		return "", err
+	}
+	if r.Status != http.StatusOK {
+		return "", fmt.Errorf("rules engine /health returned %d", r.Status)
+	}
+	var h struct {
+		RulesVersion json.RawMessage `json:"rules_version"`
+	}
+	if err := json.Unmarshal(r.Body, &h); err != nil || len(h.RulesVersion) == 0 {
+		return "", nil
+	}
+	var s string
+	if json.Unmarshal(h.RulesVersion, &s) == nil {
+		return s, nil
+	}
+	return strings.Trim(string(h.RulesVersion), `"`), nil // tolerate a numeric version
+}
+
 func (c *Client) Ping(ctx context.Context) error {
 	r, err := c.Do(ctx, http.MethodGet, "/health", nil, "")
 	if err != nil {
@@ -90,4 +116,38 @@ func (c *Client) Ping(ctx context.Context) error {
 		return fmt.Errorf("rules engine /health returned %d", r.Status)
 	}
 	return nil
+}
+
+// Multipart builds a multipart/form-data body with one file part and plain fields (in sorted order, so
+// the same upload always produces the same bytes). Returns the body and its Content-Type.
+func Multipart(fields map[string]string, filename, contentType string, content []byte) ([]byte, string, error) {
+	var buf bytes.Buffer
+	w := multipart.NewWriter(&buf)
+	h := textproto.MIMEHeader{}
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="file"; filename="%s"`, strings.NewReplacer(`"`, "", "\r", "", "\n", "").Replace(filename)))
+	if contentType == "" {
+		contentType = "application/octet-stream"
+	}
+	h.Set("Content-Type", contentType)
+	part, err := w.CreatePart(h)
+	if err != nil {
+		return nil, "", err
+	}
+	if _, err := part.Write(content); err != nil {
+		return nil, "", err
+	}
+	keys := make([]string, 0, len(fields))
+	for k := range fields {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		if err := w.WriteField(k, fields[k]); err != nil {
+			return nil, "", err
+		}
+	}
+	if err := w.Close(); err != nil {
+		return nil, "", err
+	}
+	return buf.Bytes(), w.FormDataContentType(), nil
 }
