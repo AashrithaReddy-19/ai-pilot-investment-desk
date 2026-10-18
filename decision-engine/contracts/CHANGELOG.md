@@ -4,6 +4,19 @@ Every change to a published engine response, newest first. Additive changes keep
 version and bump `RULES_VERSION`; a rename, removal or type change bumps `CONTRACT_VERSION`
 (both in `app/version.py`) and needs both owners to approve.
 
+## 1.0 — rules version 9 (2026-10-18)
+
+Additive, for annual reports and the gateway's AI reader:
+
+- Money units gain `millions` (×1,000,000) and `billions` (×1,000,000,000): as a `unit` choice, detected
+  from amount-column headers ("₹ in million", "(INR bn)"), and as inline suffixes on a value (`9,663.3 mn`,
+  `1.5 bn`). `/defaults` → `parse_rules.unit_multipliers` lists them. Applies to the balance sheet and the
+  proposal import alike.
+- `POST /balance-sheet/parse` and `/confirm` accept an optional `propose` form field: `keywords` (default,
+  unchanged behaviour) or `all`, which makes every described row a candidate. The gateway sends `all` for
+  a table its AI reader already proposed; `matched` is then empty for rows no keyword matched, and the
+  user still confirms every row. `/defaults` → `parse_rules.balance_sheet_propose_modes` lists the modes.
+
 ## 1.0 — rules version 8 (2026-10-18)
 
 Additive, for the gateway's stored-upload review (B4):

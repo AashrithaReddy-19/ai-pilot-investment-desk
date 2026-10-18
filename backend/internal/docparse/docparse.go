@@ -39,7 +39,7 @@ const (
 	CodeTooManyPages      = "too_many_pages"
 	CodeTooLarge          = "document_too_large"
 	CodeCurrency          = "currency_not_supported"
-	CodeUnit              = "unit_not_supported"
+	CodeUnit              = "unit_not_supported" // no longer raised: every unit a statement states is supported
 	CodeTimeout           = "extraction_timeout"
 )
 
@@ -109,6 +109,9 @@ type Result struct {
 	Rows       int             `json:"rows"`
 	Notes      []string        `json:"notes,omitempty"`
 	Flags      []Flag          `json:"-"`
+	// Reasons[i] says why CSV line i+1 was proposed, when something other than the engine's keyword rule
+	// proposed it (the AI reader); nil otherwise.
+	Reasons []string `json:"-"`
 }
 
 // Options narrows a conversion.

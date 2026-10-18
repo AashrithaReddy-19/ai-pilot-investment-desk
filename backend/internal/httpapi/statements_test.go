@@ -82,9 +82,12 @@ func (e *statementEngine) fake() *fakeRules {
 				return &model.Upstream{Status: 500, Body: []byte("Internal Server Error")}, nil
 			}
 		}
-		var cands, confs []map[string]any
+		cands, confs := []map[string]any{}, []map[string]any{} // the engine always sends lists, never null
 		for i, r := range rs[1:] {
-			if m := aiRows.FindAllString(r[0], -1); len(m) > 0 {
+			if m := aiRows.FindAllString(r[0], -1); len(m) > 0 || e.fields["propose"] == "all" && r[0] != "" {
+				if m == nil {
+					m = []string{}
+				}
 				var amount any
 				if v := strings.ReplaceAll(strings.TrimPrefix(r[1], "-"), ",", ""); v != "" {
 					f, _ := strconv.ParseFloat(v, 64)

@@ -12,6 +12,7 @@ function statementForm(fileV: File, unit: BalanceUnit, amountColumn?: string, op
   if (amountColumn) f.append('amount_column', amountColumn)
   if (opts?.sheet) f.append('sheet', opts.sheet)
   if (opts?.pages?.trim()) f.append('pages', opts.pages.trim())
+  if (opts?.aiAssist && opts.aiAssist !== 'auto') f.append('ai_assist', opts.aiAssist)
   return f
 }
 

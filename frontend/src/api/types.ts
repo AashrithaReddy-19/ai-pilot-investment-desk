@@ -376,7 +376,7 @@ export interface HistoryEvent {
 
 // ---- Phase 4: balance sheet, proposal import, compare ----
 
-export type BalanceUnit = 'auto' | 'rupees' | 'thousands' | 'lakh' | 'crore'
+export type BalanceUnit = 'auto' | 'rupees' | 'thousands' | 'lakh' | 'crore' | 'millions' | 'billions'
 
 /** Where a row came from in the original document (added by the gateway for PDF, XLSX and XLS). */
 export interface StatementSource { sheet?: string; row?: number; page?: number; text?: string }
@@ -417,11 +417,35 @@ export interface Extraction {
   notes?: string[]
   /** False when the engine's row numbers could not be tied to source rows, so no source is shown. */
   sources_matched: boolean
+  /** Whether this server has the AI reader (Claude on Amazon Bedrock, Textract for scans). */
+  ai_available?: boolean
+  /** What the AI reader did, when it ran. */
+  ai_assist?: AIAssistInfo
+}
+
+/** The gateway's AI reader: why it ran, what it read, and what it proposed or left out. */
+export interface AIAssistInfo {
+  used: boolean
+  trigger?: 'scanned_document' | 'no_table_found' | 'no_candidates' | 'requested'
+  method?: string
+  model?: string
+  ocr?: string
+  pages_read?: number
+  pages_sent?: number[]
+  proposed: number
+  kept: number
+  dropped?: { page: number; label: string; amount: string; reason: string }[]
+  notes?: string[]
+  cached?: boolean
+  /** Set when it ran and could not help. */
+  error?: string
+  kept_for_minutes?: number
 }
 export interface ParseFinding { severity: string; code: string; line: number | null; field: string | null; message: string }
 
-/** Optional document choices sent beside the file: a worksheet name and/or PDF pages like "3-5,9". */
-export interface StatementOptions { sheet?: string; pages?: string }
+/** Optional document choices sent beside the file: a worksheet name, PDF pages like "3-5,9", and whether
+ *  to use the AI reader ("auto": only when the ordinary reader finds nothing; "on": use its reading). */
+export interface StatementOptions { sheet?: string; pages?: string; aiAssist?: 'auto' | 'on' | 'off' }
 
 export interface ParseUnit { choice: string; unit: string; multiplier: number; source: string }
 

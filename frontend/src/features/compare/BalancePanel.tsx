@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { api } from '../../api/client'
-import type { BalanceSheetConfirm, BalanceSheetParse, BalanceUnit, StatementOptions } from '../../api/types'
+import type { AIAssistInfo, BalanceSheetConfirm, BalanceSheetParse, BalanceUnit, StatementOptions } from '../../api/types'
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
 import { SelectField, TextField } from '../../components/ui/Fields'
 import {
@@ -10,27 +10,28 @@ import {
 import { Stat, inr } from './shared'
 
 const UNITS: { value: BalanceUnit; label: string }[] = [
-  { value: 'auto', label: 'Detect from the file (₹ / thousand / lakh / crore)' },
+  { value: 'auto', label: 'Detect from the file (₹ / thousand / lakh / crore / million / billion)' },
   { value: 'rupees', label: 'Rupees' }, { value: 'thousands', label: 'Thousands' },
   { value: 'lakh', label: 'Lakh' }, { value: 'crore', label: 'Crore' },
+  { value: 'millions', label: 'Millions' }, { value: 'billions', label: 'Billions' },
 ]
 
-/** The choices that shape how the document is read; changing one reads it again. */
-interface Choices { unit: BalanceUnit; amountColumn: string; sheet: string; pages: string }
+/** The choices that shape how the document is read; changing one reads it again. ai = use the AI reader. */
+interface Choices { unit: BalanceUnit; amountColumn: string; sheet: string; pages: string; ai: boolean }
 
 /* -------------------------------------------------- balance sheet */
 
 export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetConfirm) => void }) {
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState<string | null>(null)
-  const [choices, setChoices] = useState<Choices>({ unit: 'auto', amountColumn: '', sheet: '', pages: '' })
+  const [choices, setChoices] = useState<Choices>({ unit: 'auto', amountColumn: '', sheet: '', pages: '', ai: false })
   const [parse, setParse] = useState<BalanceSheetParse | null>(null)
   const [checked, setChecked] = useState<Set<number>>(new Set())
   const [res, setRes] = useState<BalanceSheetConfirm | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<unknown>(null)
 
-  const opts = (c: Choices): StatementOptions => ({ sheet: c.sheet || undefined, pages: c.pages || undefined })
+  const opts = (c: Choices): StatementOptions => ({ sheet: c.sheet || undefined, pages: c.pages || undefined, aiAssist: c.ai ? 'on' : undefined })
 
   const doParse = async (next: Choices = choices, f: File | null = file) => {
     if (!f) return
@@ -49,14 +50,16 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
       // confirm re-reads the document with the same choices, so the row numbers still match
       // and with the column parse used, even when the person never picked one, so both calls total the same figures
       const column = choices.amountColumn || parse?.amount_column_used || undefined
-      const r = (await api.balanceSheetConfirm(file, [...checked], choices.unit, column, undefined, opts(choices))).data
+      // rows the AI reader proposed are confirmed against its reading of the file, not a fresh one
+      const ai = choices.ai || !!parse?.extraction?.ai_assist?.used
+      const r = (await api.balanceSheetConfirm(file, [...checked], choices.unit, column, undefined, opts({ ...choices, ai }))).data
       setRes(r); onConfirmed(r)
     } catch (e) { setErr(e) } finally { setBusy(false) }
   }
 
   const onPick = (f: File | null) => {
     setParse(null); setRes(null); setErr(null); setChecked(new Set())
-    setChoices((c) => ({ ...c, amountColumn: '', sheet: '', pages: '' }))
+    setChoices((c) => ({ ...c, amountColumn: '', sheet: '', pages: '', ai: false }))
     const problem = f ? validateStatementFile(f) : null
     setFileError(problem)
     setFile(problem ? null : f)
@@ -74,7 +77,7 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
       <h3 className="h3">Balance sheet: what the AI has burned</h3>
       <p className="hint">Upload the balance sheet, profit and loss statement or annual report as a <strong>PDF</strong>, an <strong>Excel</strong> workbook (.xlsx or .xls) or a <strong>CSV</strong>, up to {MAX_STATEMENT_MB} MB.
         The service only <em>proposes</em> rows that look like AI spend (keywords: ai, software, cloud, licence, token): <em>you</em> decide which count, so a software or cloud line is never counted on its own.
-        Nothing is stored. A PDF must contain real text: a scanned (picture-only) PDF cannot be read, and the desk will say so.</p>
+        When this server has the <strong>AI reader</strong> and those keywords find nothing (or the file is a scan, or has no table the desk recognises), the file is sent to Claude on Amazon Bedrock in this AWS account, and scans to Amazon Textract, to propose the lines; every amount it proposes is checked against the page. A scan is held in a private S3 bucket only while it is read, and the AI reading is kept in memory for an hour so that confirming sees the same rows. Nothing else is stored.</p>
       <div className="row" style={{ flexWrap: 'wrap', gap: 12, alignItems: 'flex-end' }}>
         <div className="field">
           <label className="label" htmlFor="bs-file">Statement file</label>
@@ -85,12 +88,19 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
             hint={parse ? undefined : 'Amounts are never multiplied unless the file states a unit or you choose one.'} />
         </div>
         <button className="btn" onClick={() => void doParse()} disabled={!file || busy}>{busy ? 'Reading…' : parse ? 'Read again' : 'Read the file'}</button>
+        {parse && x?.ai_available && !x.ai_assist?.used && (
+          <button className="btn" onClick={() => change({ ai: true })} disabled={busy}
+            title="Sends the file to Claude on Amazon Bedrock (scans to Amazon Textract) to find AI and technology spending the keywords missed">
+            Look through the document with the AI reader
+          </button>
+        )}
         {parse && parse.candidates.length > 0 && (
           <button className="btn btn-primary" onClick={() => void doConfirm()} disabled={busy || checked.size === 0}>Confirm selected rows</button>
         )}
       </div>
       {fileError && <div id="bs-file-err" className="notice notice-bad" role="alert"><div>{fileError}</div></div>}
       {file && !parse && !busy && err == null && format && <p className="hint">{FORMAT_LABEL[format]} selected: {file.name} ({(file.size / 1024).toLocaleString('en-IN', { maximumFractionDigits: 0 })} KB). Choose “Read the file”.</p>}
+      {busy && <p className="hint" role="status">Reading. A long report, or a reading by the AI reader, can take a minute or two.</p>}
 
       {err != null && <ErrorNotice title="The file could not be read." error={err} />}
 
@@ -120,12 +130,14 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
         </div>
       )}
 
+      {x?.ai_assist && <AIReaderNotice info={x.ai_assist} />}
+
       {flags.map((f, i) => <div key={i} className="notice notice-warn"><div><span className="mono">{f.code}</span> — {f.message}</div></div>)}
       {warnings.map((w, i) => <div key={`w${i}`} className="notice notice-info"><div>{w}</div></div>)}
       {findings.map((f, i) => <div key={`f${i}`} className="notice notice-info"><div><span className="mono">{f.code}</span>{f.line ? ` (line ${f.line})` : ''} — {f.message}</div></div>)}
 
       {parse && parse.candidates.length === 0 && (
-        <p className="muted">No line item matched the AI-spend keywords, so the AI burn is unknown. Rename the relevant line items or extend the keyword set (visible in /defaults).</p>
+        <p className="muted">No line item matched the AI-spend keywords, so the AI burn is unknown. Rename the relevant line items or extend the keyword set (visible in /defaults){x?.ai_available && !x.ai_assist?.used ? ', or ask the AI reader to look through the document' : ''}.</p>
       )}
 
       {parse && parse.candidates.length > 0 && (
@@ -193,6 +205,40 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
       {res && res.next_fy.ai_run_cost_inr === null && (
         <p className="hint">Record monthly token usage and the price per 1M tokens (team assumptions in /defaults) to see the next-FY plan; it is never guessed as zero.</p>
       )}
+    </div>
+  )
+}
+
+const TRIGGER: Record<NonNullable<AIAssistInfo['trigger']>, string> = {
+  scanned_document: 'the PDF is a scan',
+  no_table_found: 'no table of descriptions and amounts was found',
+  no_candidates: 'no line with a readable amount matched the AI-spend keywords',
+  requested: 'you asked for it',
+}
+
+/** What the AI reader did: the pages it read, what it proposed and what it left out, or why it could not help. */
+function AIReaderNotice({ info }: { info: AIAssistInfo }) {
+  if (!info.used) {
+    return info.error ? <div className="notice notice-info"><div><span className="strong">The AI reader looked too, but could not help:</span> {info.error}.</div></div> : null
+  }
+  const pages = info.pages_sent ?? []
+  const where = pages.length === 1 ? `page ${pages[0]}` : `pages ${pages.join(', ')}`
+  return (
+    <div className="notice notice-info" data-testid="ai-reader">
+      <div className="stack" style={{ gap: 4 }}>
+        <div>
+          <span className="strong">Read by the AI reader</span> ({info.method}){info.trigger ? `, because ${TRIGGER[info.trigger]}` : ''}.
+          {' '}It read {where} and proposed {info.proposed} line{info.proposed === 1 ? '' : 's'}; {info.kept} passed the check that the amount and description appear on the page.
+          {info.cached && ' (Reused the reading made in the last hour.)'}
+        </div>
+        {info.dropped && info.dropped.length > 0 && (
+          <details>
+            <summary>{info.dropped.length} proposal{info.dropped.length === 1 ? ' was' : 's were'} left out</summary>
+            <ul>{info.dropped.map((d, i) => <li key={i}>Page {d.page}: “{d.label}” {d.amount}: {d.reason}</li>)}</ul>
+          </details>
+        )}
+        {info.notes?.map((n, i) => <div key={i}>{n}</div>)}
+      </div>
     </div>
   )
 }

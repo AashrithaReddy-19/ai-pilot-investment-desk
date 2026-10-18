@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "rules_version": "8",
+  "rules_version": "9",
   "contract_version": 1,
   "formula_version": "cf-1"
 }

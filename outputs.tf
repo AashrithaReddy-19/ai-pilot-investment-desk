@@ -58,3 +58,14 @@ output "first_sign_in" {
   description = "How to create the first admin and token when auth_mode is required"
   value       = var.auth_mode == "required" ? "ssh in, then: cd /opt/c23/backend && sudo -u c23 ./bin/api bootstrap -email you@example.com -workspace \"Finance\"" : "auth is off: no sign-in needed"
 }
+
+output "ai_reader" {
+  description = "The balance-sheet AI reader's setup"
+  value = var.ai_assist ? {
+    model          = var.bedrock_model
+    bedrock_region = local.bedrock_region
+    scan_bucket    = local.scan_bucket
+    instance_role  = aws_iam_role.app[0].name
+    before_use     = "Enable access to ${var.bedrock_model} in the AWS console: Amazon Bedrock > Model access (region ${local.bedrock_region})"
+  } : null
+}

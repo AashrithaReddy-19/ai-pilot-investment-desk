@@ -17,6 +17,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"c23desk/internal/aiassist"
 	"c23desk/internal/config"
 	"c23desk/internal/model"
 )
@@ -37,7 +38,8 @@ type Handlers struct {
 	notify   func()
 	version  func() string
 	log      *slog.Logger
-	docSlots chan struct{} // limits how many documents are read at once; nil = unlimited
+	docSlots chan struct{}    // limits how many documents are read at once; nil = unlimited
+	ai       *aiassist.Reader // balance-sheet AI reader; nil = off
 }
 
 type fwdOpts struct {

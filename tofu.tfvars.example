@@ -53,6 +53,16 @@ git_ref  = "main"
 # Private repository: a fine-grained GitHub token limited to this repo, Contents: Read-only
 # git_token = "github_pat_..."
 
+# Balance-sheet AI reader: Claude on Amazon Bedrock proposes AI-spend rows when the ordinary
+# reader finds nothing it can count (or the reviewer asks); Amazon Textract reads scanned PDFs.
+# Creates a private S3 bucket for scans (auto-deleted after a day) and an IAM role for the instance.
+# Before first use: AWS console > Amazon Bedrock > Model access > enable the model below.
+# ai_assist          = true
+# bedrock_model      = "anthropic.claude-sonnet-5-5"
+# bedrock_region     = ""    # empty = aws_region
+# ai_timeout_seconds = 240
+# textract_max_pages = 100
+
 # Build toolchains
 # go_version = "1.26.4"
 # node_major = 24

@@ -26,16 +26,23 @@ PERIOD_HEADER_HINTS = [("monthly", re.compile(r"month|\bpm\b|/\s*mo\b", re.I)),
 # Note A point 4: candidates matched only by keyword; the user confirms which rows are AI spend.
 BALANCE_KEYWORDS = ["ai", "software", "cloud", "licence", "license", "token"]
 BALANCE_KEYWORD_RE = re.compile(r"\b(?:ai|software|cloud|licen[cs]e|tokens?)\b", re.IGNORECASE)
+# Which rows become candidates: "keywords" (the rule above) or "all" (every described row, for a table
+# whose rows were already proposed elsewhere, e.g. by the gateway's AI reader; the user still confirms).
+PROPOSE_MODES = ("keywords", "all")
 
-UNIT_MULTIPLIERS = {"rupees": 1, "thousands": 1_000, "lakh": 100_000, "crore": 10_000_000}
+UNIT_MULTIPLIERS = {"rupees": 1, "thousands": 1_000, "lakh": 100_000, "crore": 10_000_000,
+                    "millions": 1_000_000, "billions": 1_000_000_000}
 # Detection order matters: a header saying "₹ lakh" carries both hints; the biggest unit wins.
-UNIT_HEADER_HINTS = [("crore", re.compile(r"crore", re.I)),
+UNIT_HEADER_HINTS = [("billions", re.compile(r"billion|\bbn\b", re.I)),
+                     ("crore", re.compile(r"crore", re.I)),
+                     ("millions", re.compile(r"million|\bmn\b", re.I)),
                      ("lakh", re.compile(r"lakh|lac\b", re.I)),
                      ("thousands", re.compile(r"thousand|'000|\bk\b", re.I)),
                      ("rupees", re.compile(r"₹|inr|rupee", re.I))]
 # Inline suffixes on a value ("2.5 cr") win over the column multiplier.
 _INLINE_SUFFIX = [(re.compile(rf"(?:{pat})$", re.IGNORECASE), mult) for pat, mult in
-                  (("crore|cr", 10_000_000), ("lakh|lac|L", 100_000), ("thousand|k", 1_000))]
+                  (("crore|cr", 10_000_000), ("billions?|bn", 1_000_000_000), ("millions?|mn", 1_000_000),
+                   ("lakh|lac|L", 100_000), ("thousand|k", 1_000))]
 
 _BLANKS = {"", "-", "\u2013", "\u2014", "n/a", "na", "nil", "not available"}
 
@@ -199,9 +206,12 @@ def _cell(row: list[str], idx: int) -> str:
 
 
 def parse_balance_sheet(raw: bytes, unit: str = "auto", amount_column: Optional[str] = None,
-                        period: str = "auto") -> dict:
+                        period: str = "auto", propose: str = "keywords") -> dict:
     """Parse a PY balance-sheet CSV or XLSX into candidate AI-spend rows. ai_burn_to_date stays None:
     the user decides which candidates are AI spend (never guessed)."""
+    propose = (propose or "keywords").strip().lower()
+    if propose not in PROPOSE_MODES:
+        raise ParseError(f"Unknown propose mode {propose!r}; supported: {', '.join(PROPOSE_MODES)}.")
     all_rows, fmt = _table(raw)
     if len(all_rows) < 2:
         raise ParseError("The CSV needs a header row and at least one data row.")
@@ -229,7 +239,7 @@ def parse_balance_sheet(raw: bytes, unit: str = "auto", amount_column: Optional[
     for n, row in enumerate(data, start=2):
         label = _cell(row, label_idx)
         matched = sorted({k.lower() for k in BALANCE_KEYWORD_RE.findall(label)})
-        if not matched:
+        if not matched and not (propose == "all" and label):
             continue
         raw_amt = _cell(row, chosen)
         amt = parse_money(raw_amt, mult)
@@ -273,10 +283,10 @@ def _overrides(raw: Any) -> dict:
 
 def confirm_balance_sheet(raw: bytes, selected_rows: list[int], unit: str = "auto",
                           amount_column: Optional[str] = None, d: Optional[dict] = None,
-                          period: str = "auto", overrides: Any = None) -> dict:
+                          period: str = "auto", overrides: Any = None, propose: str = "keywords") -> dict:
     """Re-parse the same upload and total the confirmed rows into ai_burn_to_date (observed),
     beside the next-FY AI forecast from the token assumptions in d. Nothing is stored."""
-    parsed = parse_balance_sheet(raw, unit, amount_column, period)
+    parsed = parse_balance_sheet(raw, unit, amount_column, period, propose)
     by_row = {c["row"]: c for c in parsed["candidates"]}
     if not selected_rows:
         valid = sorted(by_row) or "none (no candidates in the file)"
@@ -349,6 +359,7 @@ FIELD_ALIASES: dict[str, list[str]] = {
 PARSE_RULES = {
     "max_upload_bytes": MAX_UPLOAD_BYTES,
     "balance_sheet_keywords": BALANCE_KEYWORDS,
+    "balance_sheet_propose_modes": list(PROPOSE_MODES),
     "unit_multipliers": UNIT_MULTIPLIERS,
     "pilot_csv_columns": FIELD_ALIASES,
     "formats": ["csv", "xlsx (first sheet)"],

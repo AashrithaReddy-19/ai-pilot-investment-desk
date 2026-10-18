@@ -309,6 +309,12 @@
                 "type": "string"
               }
             },
+            "balance_sheet_propose_modes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
             "unit_multipliers": {
               "type": "object",
               "properties": {
@@ -323,11 +329,19 @@
                 },
                 "crore": {
                   "type": "number"
+                },
+                "millions": {
+                  "type": "number"
+                },
+                "billions": {
+                  "type": "number"
                 }
               },
               "required": [
+                "billions",
                 "crore",
                 "lakh",
+                "millions",
                 "rupees",
                 "thousands"
               ]
@@ -475,6 +489,7 @@
           },
           "required": [
             "balance_sheet_keywords",
+            "balance_sheet_propose_modes",
             "finding_severities",
             "formats",
             "max_upload_bytes",

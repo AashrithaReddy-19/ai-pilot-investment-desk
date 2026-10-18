@@ -347,7 +347,9 @@ func TestXLSXFailuresAreExplained(t *testing.T) {
 	wantErr(t, FormatXLSX, buildXLSX([]xsheet{{name: "Empty"}}), Options{}, CodeNoTable)
 	wantErr(t, FormatXLSX, buildXLSX([]xsheet{{name: "Text", rows: [][]any{{"Particulars", "Amount"}, {"Software", "n/a"}, {"Cloud", "—"}}}}), Options{}, CodeNoTable)
 	wantErr(t, FormatXLSX, buildXLSX([]xsheet{statementSheet("S", "USD in millions")}), Options{}, CodeCurrency)
-	wantErr(t, FormatXLSX, buildXLSX([]xsheet{statementSheet("S", "(INR in millions)")}), Options{}, CodeUnit)
+	if res := convert(t, FormatXLSX, buildXLSX([]xsheet{statementSheet("S", "(INR in millions)")}), Options{}); res.Unit != unitMillions {
+		t.Fatalf("millions are read, not refused: %q", res.Unit)
+	}
 	// a sheet over the row cap is refused, not truncated
 	e := wantErr(t, FormatXLSX, good, Options{MaxRows: 3}, CodeTooLarge)
 	if !strings.Contains(e.Message, "3") {
@@ -703,7 +705,9 @@ func TestPDFCurrencyAndUnitRules(t *testing.T) {
 	usd := buildPDF([]tpage{statementPage("(USD in millions)", statementRows, 0, 1, 1, true, "Statement")}, pdfOpts{})
 	wantErr(t, FormatPDF, usd, Options{}, CodeCurrency)
 	mn := buildPDF([]tpage{statementPage("(INR in millions)", statementRows, 0, 1, 1, true, "Statement")}, pdfOpts{})
-	wantErr(t, FormatPDF, mn, Options{}, CodeUnit)
+	if res := convert(t, FormatPDF, mn, Options{}); res.Unit != unitMillions || !strings.Contains(string(res.CSV), "INR millions") {
+		t.Fatalf("millions are read and named in the heading: %q %s", res.Unit, res.CSV)
+	}
 	// page 1 states lakh and page 2 states crore: no single unit is right for both
 	mixed := buildPDF([]tpage{
 		statementPage("(INR in lakh)", statementRows[:4], 0, 1, 2, true, "Statement"),

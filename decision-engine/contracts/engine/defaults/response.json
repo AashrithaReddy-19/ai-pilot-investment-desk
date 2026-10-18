@@ -124,7 +124,7 @@
   },
   "pipeline_rules": {
     "versions": {
-      "rules_version": "8",
+      "rules_version": "9",
       "contract_version": 1,
       "formula_version": "cf-1"
     },
@@ -165,11 +165,17 @@
         "license",
         "token"
       ],
+      "balance_sheet_propose_modes": [
+        "keywords",
+        "all"
+      ],
       "unit_multipliers": {
         "rupees": 1,
         "thousands": 1000,
         "lakh": 100000,
-        "crore": 10000000
+        "crore": 10000000,
+        "millions": 1000000,
+        "billions": 1000000000
       },
       "pilot_csv_columns": {
         "id": [

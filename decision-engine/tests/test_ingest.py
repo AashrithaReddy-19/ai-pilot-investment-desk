@@ -10,10 +10,12 @@ c = TestClient(app)
 D = Path(__file__).resolve().parent.parent / "data"
 
 
-def bal(rows: str, unit="auto", col=None):
+def bal(rows: str, unit="auto", col=None, propose=None):
     data = {"unit": unit}
     if col:
         data["amount_column"] = col
+    if propose:
+        data["propose"] = propose
     return c.post("/balance-sheet/parse", files={"file": ("bs.csv", rows.encode("utf-8"), "text/csv")}, data=data)
 
 
@@ -193,3 +195,36 @@ def test_defaults_expose_parse_rules():
     rules = j["pipeline_rules"]["parse_rules"]
     assert rules["max_upload_bytes"] == ingest.MAX_UPLOAD_BYTES
     assert "ai" in rules["balance_sheet_keywords"] and rules["unit_multipliers"]["crore"] == 10_000_000
+
+
+# ---- millions / billions (annual reports state "₹ in million") ----
+
+def test_million_and_billion_units():
+    f = ingest.parse_money
+    assert f("9,663.3 mn") == 9_663_300_000 and f("2 million") == 2_000_000
+    assert f("1.5 bn") == 1_500_000_000 and f("3 billions") == 3_000_000_000
+    j = bal("Particulars,Year ended 31.03.2026 (INR millions)\nSoftware additions,\"9,663.3\"\nRent,10\n").json()
+    assert j["unit"]["unit"] == "millions" and j["unit"]["multiplier"] == 1_000_000
+    assert j["candidates"][0]["amount_inr"] == 9_663_300_000
+    j = bal("Account,Amount (₹ bn)\nCloud hosting,2\n").json()
+    assert j["unit"]["unit"] == "billions" and j["candidates"][0]["amount_inr"] == 2_000_000_000
+    j = bal("Account,Amount\nAI tools,4\n", unit="millions").json()
+    assert j["unit"]["source"] == "user choice" and j["candidates"][0]["amount_inr"] == 4_000_000
+
+
+# ---- propose=all: rows already proposed elsewhere (the gateway's AI reader) ----
+
+def test_propose_all_makes_every_described_row_a_candidate():
+    rows = "Particulars,Amount as printed\nAdditions during the year (Movement in software),\"9,663.3 mn\"\nOpenAI subscription,\"1,20,000\"\n"
+    j = bal(rows).json()                                   # keyword rule: neither label matches a keyword whole
+    assert [x["row"] for x in j["candidates"]] == [2]      # "software" inside the context text matches
+    j = bal(rows, propose="all").json()
+    assert [x["row"] for x in j["candidates"]] == [2, 3]
+    assert j["candidates"][1]["matched"] == [] and j["candidates"][0]["amount_inr"] == 9_663_300_000
+    r = c.post("/balance-sheet/confirm", files={"file": ("bs.csv", rows.encode(), "text/csv")},
+               data={"rows": "3", "propose": "all"})
+    assert r.status_code == 200 and r.json()["ai_burn_to_date"] == 120_000
+    # without propose=all the same row is not a candidate, so confirm refuses it
+    assert c.post("/balance-sheet/confirm", files={"file": ("bs.csv", rows.encode(), "text/csv")},
+                  data={"rows": "3"}).status_code == 422
+    assert bal(rows, propose="everything").status_code == 422

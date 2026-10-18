@@ -365,15 +365,6 @@ func finish(format string, t *table, pageUnits map[int]string) (*Result, error) 
 			}
 		}
 	}
-	if units[unitMillions] != "" || units[unitBillions] != "" {
-		which := unitMillions
-		if units[unitMillions] == "" {
-			which = unitBillions
-		}
-		return nil, fail(CodeUnit, "", "the document states amounts in %s, which the desk does not support; convert to rupees, thousands, lakh or crore and upload again", which)
-	}
-	delete(units, unitMillions)
-	delete(units, unitBillions)
 	switch len(units) {
 	case 0:
 	case 1:

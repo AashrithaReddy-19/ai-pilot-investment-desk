@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strings"
 
+	"c23desk/internal/aiassist"
 	"c23desk/internal/docparse"
 )
 
@@ -25,13 +26,17 @@ type extractionInfo struct {
 	ConvertedRows  int                      `json:"converted_rows,omitempty"`
 	Notes          []string                 `json:"notes,omitempty"`
 	SourcesMatched bool                     `json:"sources_matched"`
+	// AI reader: whether this server has one (so the reviewer can ask it to look), and what it did.
+	AIAvailable bool           `json:"ai_available"`
+	AI          *aiassist.Info `json:"ai_assist,omitempty"`
 }
 
 func rawJSON(v any) json.RawMessage { b, _ := json.Marshal(v); return b }
 
 // augmentStatement adds, to a parse or confirm answer: an "extraction" summary, a source (sheet and row,
-// or page) and a reason on each row, and the flags a reviewer needs. form holds the fields the person sent.
-func augmentStatement(body []byte, res *docparse.Result, form map[string]string) []byte {
+// or page) and a reason on each row, and the flags a reviewer needs. form holds the fields the person sent;
+// ai is what the AI reader did (nil when it did not run).
+func augmentStatement(body []byte, res *docparse.Result, form map[string]string, ai *aiassist.Info, aiAvailable bool) []byte {
 	var top map[string]json.RawMessage
 	if json.Unmarshal(body, &top) != nil || top == nil {
 		return body
@@ -79,7 +84,8 @@ func augmentStatement(body []byte, res *docparse.Result, form map[string]string)
 			var label string
 			_ = json.Unmarshal(it["row"], &row)
 			_ = json.Unmarshal(it["label"], &label)
-			if src := sourceOf(row, label); src != nil {
+			src := sourceOf(row, label)
+			if src != nil {
 				it["source"] = src
 			}
 			if withReason {
@@ -87,6 +93,9 @@ func augmentStatement(body []byte, res *docparse.Result, form map[string]string)
 				_ = json.Unmarshal(it["matched"], &matched)
 				if len(matched) > 0 {
 					it["reason"] = rawJSON("Matched keyword: " + strings.Join(matched, ", "))
+				}
+				if src != nil && row >= 1 && row <= len(res.Reasons) && res.Reasons[row-1] != "" {
+					it["reason"] = rawJSON(res.Reasons[row-1]) // proposed by the AI reader, not by a keyword
 				}
 				if v, ok := it["amount_inr"]; ok && bytes.Equal(bytes.TrimSpace(v), []byte("null")) {
 					missing++
@@ -110,6 +119,7 @@ func augmentStatement(body []byte, res *docparse.Result, form map[string]string)
 		}
 	}
 	info.SourcesMatched = res != nil && allMatched
+	info.AIAvailable, info.AI = aiAvailable, ai
 	top["extraction"] = rawJSON(info)
 
 	// the unit: if nothing stated one and the person did not choose, the figures were read as rupees

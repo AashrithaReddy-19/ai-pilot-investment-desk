@@ -153,6 +153,14 @@ DOCUMENT_MAX_BYTES=26214400
 DOCUMENT_MAX_PAGES=500
 DOCUMENT_TIMEOUT_SECONDS=60
 DOCUMENT_CONCURRENCY=2
+# Balance-sheet AI reader: Claude on Bedrock and Textract, called as the instance's IAM role
+AI_ASSIST=${ai_assist ? "on" : "off"}
+AWS_REGION=${aws_region}
+BEDROCK_REGION=${bedrock_region}
+BEDROCK_MODEL=${bedrock_model}
+AI_DOC_BUCKET=${scan_bucket}
+AI_TIMEOUT_SECONDS=${ai_timeout_seconds}
+TEXTRACT_MAX_PAGES=${textract_max_pages}
 ENV
 chown "$APP_USER:$APP_USER" "$APP_DIR/backend/.env"
 chmod 600 "$APP_DIR/backend/.env"
@@ -236,8 +244,9 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_read_timeout 90s;
-        proxy_send_timeout 90s;
+        # a balance-sheet reading may take the ordinary reader's 60 s plus the AI reader's budget
+        proxy_read_timeout ${ai_timeout_seconds + 120}s;
+        proxy_send_timeout ${ai_timeout_seconds + 120}s;
     }
 
     # Vite puts content-hashed files under /assets

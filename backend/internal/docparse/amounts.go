@@ -9,14 +9,14 @@ import (
 // This file recognises money as a document prints it. It never converts a figure: the text is copied
 // through unchanged (apart from the minus sign and currency marker, below) and the engine does the maths.
 
-// Units the engine understands, and the ones it does not.
+// Units the engine understands (annual reports often state "₹ in million").
 const (
 	unitRupees    = "rupees"
 	unitThousands = "thousands"
 	unitLakh      = "lakh"
 	unitCrore     = "crore"
-	unitMillions  = "millions" // not supported by the engine
-	unitBillions  = "billions" // not supported by the engine
+	unitMillions  = "millions"
+	unitBillions  = "billions"
 )
 
 type amountInfo struct {
@@ -198,6 +198,9 @@ func unitsIn(text string) []string {
 	}
 	return out
 }
+
+// UnitsIn is unitsIn for callers outside the package (the AI reader checks the unit a page states).
+func UnitsIn(text string) []string { return unitsIn(text) }
 
 // hasUnitWord reports whether a column heading already states a unit the engine would pick up.
 func hasUnitWord(header string) bool {

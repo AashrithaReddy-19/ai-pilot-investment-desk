@@ -509,7 +509,7 @@ Automated testing is orchestrated via [`.github/workflows/ci.yml`](.github/workf
 
 ## AWS Deployment with OpenTofu
 
-The repository includes OpenTofu Infrastructure-as-Code that provisions **one** AWS EC2 instance and deploys the whole C23 platform onto it: the React frontend, the Go Gin gateway, the Python decision engine, PostgreSQL and Redis. No other AWS services (RDS, ElastiCache, S3, load balancers) are used.
+The repository includes OpenTofu Infrastructure-as-Code that provisions **one** AWS EC2 instance and deploys the whole C23 platform onto it: the React frontend, the Go Gin gateway, the Python decision engine, PostgreSQL and Redis. No managed database, cache or load balancer is used. With `ai_assist` (on by default) the gateway's balance-sheet AI reader also calls Claude on Amazon Bedrock and Amazon Textract, through an IAM role on the instance and a private S3 bucket for scans.
 
 ### Architecture Overview
 
@@ -518,7 +518,8 @@ browser ──:80──> nginx ─┬─ /                      built React app 
                         └─ /api /health /ready ──> Go gateway   127.0.0.1:8080
                                                      ├─> decision engine 127.0.0.1:8000
                                                      ├─> PostgreSQL       127.0.0.1:5432
-                                                     └─> Redis            127.0.0.1:6379
+                                                     ├─> Redis            127.0.0.1:6379
+                                                     └─> (ai_assist) Claude on Amazon Bedrock, Amazon Textract + S3 scan bucket
 ```
 
 OpenTofu provisions:
@@ -533,6 +534,7 @@ OpenTofu provisions:
   - Builds the frontend for same-origin API calls (`VITE_API_BASE` empty) and serves it from nginx, with client-side routes falling back to `index.html`.
   - nginx proxies `/api`, `/health` and `/ready` to the gateway and enforces `rate_limit_per_minute` per client IP (behind the proxy the gateway would see every caller as `127.0.0.1`, so its own limiter is set to `0`).
   - Logs everything to `/var/log/c23-deploy.log`. First boot takes several minutes.
+- **AI reader** (`ai_assist = true`, the default): an S3 bucket `<project>-scans-<account>-<region>` (public access blocked, AES-256, TLS only, objects expire after a day) and an IAM role and instance profile allowing `bedrock-mantle:CreateInference`, `textract:StartDocumentAnalysis` / `GetDocumentAnalysis` and object put/get/delete under `scans/` in that bucket. The gateway's `.env` gets `AI_ASSIST=on` with the region, model and bucket, and nginx allows `ai_timeout_seconds + 120` seconds for an API answer. **Before first use, enable the model** in the AWS console: Amazon Bedrock → Model access → the model in `bedrock_model` (`tofu output ai_reader` repeats this). In `ap-south-1` Claude is served through Bedrock's global endpoint, so a request may be processed in another region.
 - Changing the deploy script or its variables replaces the instance (`user_data_replace_on_change`), which also replaces the database: back it up first.
 
 ### Deployment Steps
@@ -630,7 +632,7 @@ Base URL: `http://localhost:8080`
 | `POST` | `/api/v1/stoprule/:id` | Previews stop-rule decision for a pilot given simulated adoption & quality. |
 | `POST` | `/api/v1/whatif` | Base vs changed comparison for one pilot. Overrides (all optional): `setup_cost_inr`, `annual_running_cost_inr` (or explicit `null` to withdraw the recorded figure), `annual_benefit_inr`, `adoption_pct`, `readiness`, `observed_adoption_pct` / `observed_quality_pct`, `ramp_months`, `delay_months`, `budget`, `mode`, `horizon_months`, `discount_rate`, `tokens_per_month`, `price_per_1m_tokens`, `annual_usage_growth_pct`, `annual_price_drift_pct`. Returns base, changed, deltas and, when the stop-rule verdict flips, `verdict_flip` plus a `flip_statement` (e.g. "REVISE becomes GO when observed adoption reaches 60%."). Unknown keys and out-of-range values are 422s. Overrides never mutate stored data. |
 | `POST` | `/api/v1/sweep` | One-variable sensitivity sweep. `parameter` ∈ `adoption_pct` (0–100 by 10), `annual_benefit_inr` / `annual_running_cost_inr` (0.5×–1.5× the base value in five steps), `price_per_1m_tokens` (same fractions of the recorded price), `annual_usage_growth_pct` (−20%…+30%). Returns the deterministic step ladder with `direction` and a `monotonic` check; sweeping an input the scenario does not know yields a flag and no numbers. Pilot-level sweeps need `pilot_id`. |
-| `POST` | `/api/v1/balance-sheet/parse` | **Multipart upload** (`file`; optional `unit` ∈ auto/rupees/thousands/lakh/crore; optional `amount_column`; optional `sheet` for a workbook; optional `pages` such as `3-5,9` for a PDF). The file may be a **CSV**, an **Excel** workbook (`.xlsx`, `.xls`) or a **PDF** (see *Balance-sheet documents* below). A CSV reaches the engine byte for byte as before (UTF-8 with BOM, ≤ 2 MB); the engine auto-detects the money unit from the amount-column header, handles bracketed negatives, thousands separators and blanks, and returns AI-spend **candidates** (rows matched by the keywords ai / software / cloud / licence / token). Nothing is guessed: `ai_burn_to_date` stays `null` until confirm; no matching row yields the `BALANCE_NO_AI_ROW` gap flag. Nothing is stored. Parser rules are visible in `/api/v1/defaults` → `pipeline_rules.parse_rules`. The gateway adds to the engine's answer: `extraction` (format, sheet and sheet list, pages and table pages, left-out columns, currency, stated unit, notes), a `source` (sheet and row, or page, plus the line as read) and a `reason` on every candidate, and the flags `UNIT_ASSUMED`, `AMOUNT_COLUMN_CHOSEN`, `AMOUNT_MISSING` and, for documents, `UNIT_AMBIGUOUS`, `FORMULA_NO_VALUE`, `AMOUNT_SUFFIX_CR_DR`, `PDF_PAGES_NO_TEXT`, `PDF_COLUMNS_SHIFTED`. |
+| `POST` | `/api/v1/balance-sheet/parse` | **Multipart upload** (`file`; optional `unit` ∈ auto/rupees/thousands/lakh/crore/millions/billions; optional `amount_column`; optional `sheet` for a workbook; optional `pages` such as `3-5,9` for a PDF; optional `ai_assist` ∈ auto/on/off for the AI reader, see below). The file may be a **CSV**, an **Excel** workbook (`.xlsx`, `.xls`) or a **PDF** (see *Balance-sheet documents* below). A CSV reaches the engine byte for byte as before (UTF-8 with BOM, ≤ 2 MB); the engine auto-detects the money unit from the amount-column header, handles bracketed negatives, thousands separators and blanks, and returns AI-spend **candidates** (rows matched by the keywords ai / software / cloud / licence / token). Nothing is guessed: `ai_burn_to_date` stays `null` until confirm; no matching row yields the `BALANCE_NO_AI_ROW` gap flag. Nothing is stored. Parser rules are visible in `/api/v1/defaults` → `pipeline_rules.parse_rules`. The gateway adds to the engine's answer: `extraction` (format, sheet and sheet list, pages and table pages, left-out columns, currency, stated unit, notes), a `source` (sheet and row, or page, plus the line as read) and a `reason` on every candidate, and the flags `UNIT_ASSUMED`, `AMOUNT_COLUMN_CHOSEN`, `AMOUNT_MISSING` and, for documents, `UNIT_AMBIGUOUS`, `FORMULA_NO_VALUE`, `AMOUNT_SUFFIX_CR_DR`, `PDF_PAGES_NO_TEXT`, `PDF_COLUMNS_SHIFTED`. |
 | `POST` | `/api/v1/balance-sheet/confirm` | **Multipart upload** of the same file (and the same `sheet` / `pages` / `unit` / `amount_column`) plus `rows` (candidate row numbers the user confirmed). The document is read the same way, so the row numbers still point at the same rows. Returns `ai_burn_to_date` (observed sum; a confirmed row without a readable amount is flagged, not zeroed) beside the next-FY AI forecast from the token assumptions (`next_fy` dashboard copy: run cost, next-FY cost, inflation flag); each confirmation also carries its `source`. Nothing is stored. |
 | `POST` | `/api/v1/pilots/import/parse` | **Multipart upload** of a proposals CSV. Flexible headers (id / task / setup / savings / running cost / benefit type / adoption / readiness / ramp / delay / overlap group — full alias table in `/defaults`), per-row error review (`line`, `field`, `reason`), duplicates blocked. Returns the mapped rows plus `extension_pilots` (adoption/readiness) for review; nothing imported yet. |
 | `POST` | `/api/v1/pilots/import/confirm` | **Multipart upload** of the same file plus `keep` (ids). Returns the confirmed rows in the engine's city-pilot shape (`pilots` for `fixture`, `extension_pilots` for `extension`), ready for `/pilots`, `/portfolio` or `/compare`; ids colliding with the shipped fixture are warned. Persistence stays in Go and Postgres. |
@@ -660,13 +662,33 @@ curl -s -X POST http://localhost:8080/api/v1/evaluate \
 
 What it will not do, by design:
 
-- **Scanned (image-only) PDFs are refused** (`scanned_document`). There is no OCR on the server, so a picture of a statement cannot be read; upload a text-based PDF or the spreadsheet the figures came from. A PDF whose fonts cannot be decoded is refused the same way. Pages without text inside an otherwise readable PDF are skipped and reported (`PDF_PAGES_NO_TEXT`).
-- **Units are never assumed silently.** A unit stated in a title or column heading (lakh, crore, thousands, rupees) is passed to the engine in the column heading; none stated means the engine's default of rupees and a `UNIT_ASSUMED` flag; two different units mean no unit is applied and `UNIT_AMBIGUOUS`. Millions and billions are refused (`unit_not_supported`), and so is any currency other than INR (`currency_not_supported`).
+- **Scanned (image-only) PDFs are refused** (`scanned_document`) unless the AI reader is on with a scan bucket (below), which reads them with Amazon Textract. A PDF whose fonts cannot be decoded is treated the same way. Pages without text inside an otherwise readable PDF are skipped and reported (`PDF_PAGES_NO_TEXT`).
+- **Units are never assumed silently.** A unit stated in a title or column heading (lakh, crore, thousands, millions, billions, rupees; annual reports often say "₹ in million") is passed to the engine in the column heading; none stated means the engine's default of rupees and a `UNIT_ASSUMED` flag; two different units mean no unit is applied and `UNIT_AMBIGUOUS`. Any currency other than INR is refused (`currency_not_supported`).
 - **Several amount columns** (this year and last year) are all kept; the engine uses the first and `AMOUNT_COLUMN_CHOSEN` names the others so the reviewer can choose (`amount_column`).
 - A CSV row **wider than its header** (typically an unquoted `1,20,000`) makes the engine's parser fail with a bare server error; the gateway turns that into `csv_row_too_wide` naming the row.
 - Reading a PDF is heuristic. It works on tables whose columns line up; a table that is drawn irregularly, or text drawn as pictures, can be read wrongly or missed. That is why nothing is counted until a person ticks the row, and why each row shows its source line.
 
-Refusals use the usual error envelope with a request id. Codes: `empty_file`, `unsupported_format`, `file_encrypted`, `file_corrupt`, `scanned_document`, `no_table_found`, `sheet_not_found`, `invalid_pages`, `too_many_pages`, `document_too_large`, `currency_not_supported`, `unit_not_supported`, `extraction_timeout`, `csv_row_too_wide`, plus `payload_too_large` (413) and `busy` (429, with `Retry-After`). No document content is logged: only format, size, row count, duration and request id. Limits are configurable (`DOCUMENT_MAX_BYTES`, `DOCUMENT_MAX_PAGES`, `DOCUMENT_TIMEOUT_SECONDS`, `DOCUMENT_CONCURRENCY`; see the configuration table).
+Refusals use the usual error envelope with a request id. Codes: `empty_file`, `unsupported_format`, `file_encrypted`, `file_corrupt`, `scanned_document`, `no_table_found`, `sheet_not_found`, `invalid_pages`, `too_many_pages`, `document_too_large`, `currency_not_supported`, `extraction_timeout`, `csv_row_too_wide`, plus `payload_too_large` (413) and `busy` (429, with `Retry-After`), and for the AI reader `ai_reader_unavailable`, `ai_reader_too_many_pages`, `ai_reader_found_nothing`, `ai_reader_failed` (502) and `ai_reading_expired` (409). No document content is logged: only format, size, row count, duration and request id. Limits are configurable (`DOCUMENT_MAX_BYTES`, `DOCUMENT_MAX_PAGES`, `DOCUMENT_TIMEOUT_SECONDS`, `DOCUMENT_CONCURRENCY`; see the configuration table).
+
+
+### AI reader (Claude on Amazon Bedrock, Amazon Textract)
+
+Keywords find nothing in many real reports: a bank's annual report has no line called "AI" or "software", and the closest figure (for ICICI Bank 2025-26, *Additions during the year* ₹ 9,663.3 million in a table titled "movement in software" on page 215) is only recognisable from its table's title. With `AI_ASSIST=on` the gateway can ask a model to point at such lines. It runs:
+
+- **automatically** (`ai_assist=auto`, the default) when the ordinary reader finds nothing it can count: a scanned PDF (`scanned_document`, read with Textract), no recognisable table (`no_table_found`), or no keyword row with a readable amount;
+- **on request** (`ai_assist=on`, the "Look through the document with the AI reader" button), even when keywords matched;
+- **never** with `ai_assist=off`.
+
+How a reading works, and what keeps it honest:
+
+1. The document's text is read page by page (Textract for a scan: the PDF is put in a private, encrypted S3 bucket for the length of the job and deleted straight after; the bucket expires anything left after a day). Textract is used only for scans up to `TEXTRACT_MAX_PAGES` pages (table analysis is billed per page).
+2. Only the pages most likely to matter are sent: technology words inside a table, or in the title just above one, weigh far more than narrative (at most `AI_MAX_PAGES`, default 12; for the ICICI report that is about 45k characters).
+3. Claude (`BEDROCK_MODEL`, default `anthropic.claude-sonnet-5-5`) answers through a tool with, per line: page, table title, label, column, the amount **as printed**, the unit the page states, a category and a reason. It is told to copy, never compute, and that page text is data, not instructions.
+4. Every proposal is checked against the page text: the amount must appear on that page, at least half of the description's words must too, the unit must be one the page states (a page that states one unit overrides the model), and it must be in rupees. What fails is left out and listed with the reason (`extraction.ai_assist.dropped`).
+5. What survives becomes a small CSV (`Particulars,Amount as printed`, the unit as an inline suffix such as `9,663.3 mn`) that the **engine parses as usual**, with `propose=all` so every row is a candidate. Each candidate carries the AI reader's reason and its page; the flag `AI_READER_PROPOSED` asks the reviewer to compare every row with the original. Nothing is counted until a person ticks it.
+6. The reading is kept **in memory for an hour**, keyed by the file's SHA-256 with its page and sheet choices, so confirm (sent with `ai_assist=on`) sees exactly the rows parse proposed; after that confirm answers `409 ai_reading_expired`.
+
+If the AI reader runs and cannot help, the ordinary answer (or refusal) is returned with the reason in `extraction.ai_assist.error` (or appended to the refusal's message). `extraction.ai_available` tells the UI whether the server has the AI reader at all. Credentials come from the default AWS chain (on EC2, the instance role); no key is configured. Only the gateway logs the reading's size and timing, never its content. Settings: `AI_ASSIST`, `AWS_REGION`, `BEDROCK_REGION`, `BEDROCK_MODEL`, `AI_DOC_BUCKET`, `AI_TIMEOUT_SECONDS`, `AI_MAX_PAGES`, `TEXTRACT_MAX_PAGES` (see the configuration table).
 
 ### Money over time, provenance and the token forecast (multi-period view)
 
@@ -860,6 +882,14 @@ Documents are kept, not just parsed: the gateway validates the file (`.csv` UTF-
 | `DOCUMENT_MAX_PAGES` | `500` | Most PDF pages read in one request; a longer report needs the `pages` choice. |
 | `DOCUMENT_TIMEOUT_SECONDS` | `60` | Time allowed to receive and read one document (the usual request timeout stays short). |
 | `DOCUMENT_CONCURRENCY` | `2` | Documents read at the same time; more get a `429` and are asked to retry. |
+| `AI_ASSIST` | `off` | `on` enables the balance-sheet AI reader (Claude on Amazon Bedrock; Textract for scans). |
+| `AWS_REGION` | *(empty)* | Region for Textract and S3 (and Bedrock unless `BEDROCK_REGION` is set). Credentials come from the default AWS chain. |
+| `BEDROCK_REGION` | `AWS_REGION` | Region of the Bedrock endpoint. |
+| `BEDROCK_MODEL` | `anthropic.claude-sonnet-5-5` | Model the AI reader asks. |
+| `AI_DOC_BUCKET` | *(empty)* | S3 bucket that holds a scan while Textract reads it; empty means scans are not read. |
+| `AI_TIMEOUT_SECONDS` | `240` | Budget for one AI reading, on top of `DOCUMENT_TIMEOUT_SECONDS`. |
+| `AI_MAX_PAGES` | `12` | Most pages shown to the model in one reading. |
+| `TEXTRACT_MAX_PAGES` | `100` | Largest scanned PDF sent to Textract, in pages. |
 | `AUTO_MIGRATE` | `false` | If `true`, applies pending Goose migrations on server startup. |
 | `GIN_MODE` | `release` | Gin server mode (`release` or `debug`). |
 | `AUTH_MODE` | `off` | `off`: no sign-in, default workspace. `required`: bearer tokens, workspaces and roles (the OpenTofu deployment also defaults to `off`, since the bundled frontend has no sign-in screen). |

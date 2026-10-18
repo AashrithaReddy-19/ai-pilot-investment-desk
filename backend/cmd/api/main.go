@@ -23,6 +23,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
+	"c23desk/internal/aiassist"
 	"c23desk/internal/cache"
 	"c23desk/internal/config"
 	"c23desk/internal/httpapi"
@@ -104,7 +105,13 @@ func run(log *slog.Logger, args []string) error {
 		go w.Run(ctx)
 	}
 
+	var ai *aiassist.Reader
+	if cfg.AIAssist {
+		ai = newAIReader(ctx, cfg, log)
+	}
+
 	router := httpapi.NewRouter(httpapi.Deps{
+		AI:       ai,
 		Cfg:      cfg,
 		Store:    st,
 		Rules:    engine,
@@ -225,4 +232,24 @@ func bootstrap(ctx context.Context, cfg config.Config, args []string) error {
 	fmt.Printf("user       %s (%s)\nworkspace  %s\nrole       %s\ntoken      %s\n\n", u.Email, u.ID, wsID, *role, raw)
 	fmt.Println("Store the token now: only its hash is kept. Send it as  Authorization: Bearer <token>  and the workspace as  X-Workspace-ID.")
 	return nil
+}
+
+// newAIReader builds the balance-sheet AI reader. A failure leaves the gateway running without it.
+func newAIReader(ctx context.Context, cfg config.Config, log *slog.Logger) *aiassist.Reader {
+	finder, err := aiassist.NewClaude(ctx, cfg.BedrockRegion, cfg.BedrockModel)
+	if err != nil {
+		log.Error("AI reader disabled: Bedrock client could not be built", "err", err)
+		return nil
+	}
+	var ocr aiassist.OCR
+	if cfg.AIDocBucket != "" {
+		tx, err := aiassist.NewTextract(ctx, cfg.AWSRegion, cfg.AIDocBucket)
+		if err != nil {
+			log.Error("AI reader: scans cannot be read, Textract client could not be built", "err", err)
+		} else {
+			ocr = tx
+		}
+	}
+	log.Info("AI reader on", "model", cfg.BedrockModel, "bedrock_region", cfg.BedrockRegion, "ocr", ocr != nil)
+	return aiassist.New(finder, ocr, aiassist.Config{MaxPagesToModel: cfg.AIMaxPages, OCRMaxPages: cfg.TextractMaxPages, DocMaxPages: cfg.DocumentMaxPages})
 }

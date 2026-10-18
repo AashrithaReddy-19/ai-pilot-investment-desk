@@ -35,6 +35,17 @@ type Config struct {
 	DocumentMaxPages    int           // most PDF pages read in one request
 	DocumentTimeout     time.Duration // deadline for receiving, reading and parsing one document
 	DocumentConcurrency int           // documents read at the same time; more get a 429
+
+	// The AI reader (Claude on Amazon Bedrock, Amazon Textract for scans) for balance-sheet documents the
+	// ordinary reader cannot help with. Off unless AI_ASSIST=on; AWS credentials come from the default chain.
+	AIAssist         bool
+	AWSRegion        string        // Textract and S3 region (AWS_REGION)
+	BedrockRegion    string        // Bedrock region (BEDROCK_REGION, default AWS_REGION)
+	BedrockModel     string        // Bedrock model id
+	AIDocBucket      string        // S3 bucket that holds a scan while Textract reads it; empty = no OCR
+	AITimeout        time.Duration // budget for one AI reading, on top of DocumentTimeout
+	AIMaxPages       int           // most pages shown to the model
+	TextractMaxPages int           // largest scan sent to Textract, in pages
 }
 
 // Load reads and validates the environment. All problems are reported together.
@@ -107,6 +118,38 @@ func Load() (Config, error) {
 	}
 	if cfg.DatabaseURL == "" {
 		errs = append(errs, errors.New("DATABASE_URL is required"))
+	}
+	switch v := strings.ToLower(env("AI_ASSIST", "off")); v {
+	case "on", "true":
+		cfg.AIAssist = true
+	case "off", "false":
+	default:
+		errs = append(errs, fmt.Errorf("AI_ASSIST must be on or off, got %q", v))
+	}
+	cfg.AWSRegion = os.Getenv("AWS_REGION")
+	cfg.BedrockRegion = env("BEDROCK_REGION", cfg.AWSRegion)
+	cfg.BedrockModel = env("BEDROCK_MODEL", "anthropic.claude-sonnet-5-5")
+	cfg.AIDocBucket = os.Getenv("AI_DOC_BUCKET")
+	if cfg.AIAssist && cfg.BedrockRegion == "" {
+		errs = append(errs, errors.New("AI_ASSIST=on needs AWS_REGION (or BEDROCK_REGION)"))
+	}
+	if cfg.AIAssist && cfg.AIDocBucket != "" && cfg.AWSRegion == "" {
+		errs = append(errs, errors.New("AI_DOC_BUCKET needs AWS_REGION"))
+	}
+	if secs, err := intEnv("AI_TIMEOUT_SECONDS", 240, 10, 900); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.AITimeout = time.Duration(secs) * time.Second
+	}
+	if n, err := intEnv("AI_MAX_PAGES", 12, 1, 40); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.AIMaxPages = n
+	}
+	if n, err := intEnv("TEXTRACT_MAX_PAGES", 100, 1, 3000); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.TextractMaxPages = n
 	}
 	if secs, err := intEnv("REQUEST_TIMEOUT_SECONDS", 5, 1, 120); err != nil {
 		errs = append(errs, err)

@@ -11,13 +11,16 @@ import (
 	"mime"
 	"mime/multipart"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 
+	"c23desk/internal/aiassist"
 	"c23desk/internal/docparse"
+	"c23desk/internal/model"
 )
 
 // Balance-sheet documents. POST /balance-sheet/parse and /balance-sheet/confirm take a CSV (passed to the
@@ -26,9 +29,25 @@ import (
 // decides which rows look like AI spending; the gateway adds where each row came from and why it was
 // flagged. Nothing is stored and no document content is logged. Confirm re-reads the same file the same
 // way, so the row numbers the engine returned still point at the same rows.
+//
+// When the ordinary reader cannot help (a scan, no recognisable table, or no line the engine's keywords
+// match) and the AI reader is on, it proposes the rows instead; see package aiassist. Its reading is kept
+// in memory for an hour so that confirm, sent with ai_assist=on, sees exactly the rows parse proposed.
 
 // statementFields are consumed here and never sent to the engine.
-var statementFields = map[string]bool{"sheet": true, "pages": true}
+var statementFields = map[string]bool{"sheet": true, "pages": true, "ai_assist": true}
+
+// aiMode reads the ai_assist field: auto (the default: the AI reader runs when the ordinary reader cannot
+// help), on (use the AI reader's rows; confirm needs the reading parse made) or off.
+func aiMode(v string) (string, bool) {
+	switch m := strings.ToLower(strings.TrimSpace(v)); m {
+	case "", "auto":
+		return "auto", true
+	case "on", "off":
+		return m, true
+	}
+	return "", false
+}
 
 type statementRequest struct {
 	body        []byte            // the request exactly as received
@@ -115,6 +134,7 @@ func docStatus(code string) int {
 
 // statementUpload serves /balance-sheet/parse and /balance-sheet/confirm.
 func (h *Handlers) statementUpload(enginePath string) gin.HandlerFunc {
+	confirm := strings.HasSuffix(enginePath, "/confirm")
 	return func(c *gin.Context) {
 		// A document can take longer to receive and read than an ordinary request. Only this route gets the
 		// longer read/write deadline and a request context that is not cut at the usual few seconds.
@@ -122,9 +142,13 @@ func (h *Handlers) statementUpload(enginePath string) gin.HandlerFunc {
 		if timeout <= 0 {
 			timeout = h.cfg.RequestTimeout
 		}
+		budget := timeout
+		if h.ai != nil {
+			budget += h.cfg.AITimeout // the AI reader may run after the ordinary reader
+		}
 		rc := http.NewResponseController(c.Writer)
 		_ = rc.SetReadDeadline(time.Now().Add(timeout))
-		_ = rc.SetWriteDeadline(time.Now().Add(timeout + 10*time.Second))
+		_ = rc.SetWriteDeadline(time.Now().Add(budget + 10*time.Second))
 
 		req, ok := h.readStatement(c)
 		if !ok {
@@ -133,14 +157,21 @@ func (h *Handlers) statementUpload(enginePath string) gin.HandlerFunc {
 		// The global request deadline is only a few seconds and a document can take longer than that to
 		// arrive, so everything after the upload (reading it, the engine call) gets its own budget that
 		// starts now and is not tied to the request's expired context.
-		ctx, cancel := context.WithTimeout(context.WithoutCancel(c.Request.Context()), timeout)
+		ctx, cancel := context.WithTimeout(context.WithoutCancel(c.Request.Context()), budget)
 		defer cancel()
 		if req.file == nil { // not a form we recognise: the engine answers it, as before
 			if int64(len(req.body)) > h.cfg.MaxBodyBytes {
 				fail(c, http.StatusRequestEntityTooLarge, "payload_too_large", fmt.Sprintf("request body exceeds %d bytes", h.cfg.MaxBodyBytes), "")
 				return
 			}
-			h.forwardStatement(ctx, c, enginePath, req.body, req.contentType, nil, nil)
+			if r, ok := h.engineStatement(ctx, c, enginePath, req.body, req.contentType, nil); ok {
+				h.writeStatement(c, r.Body, nil, fieldsOf(req.body, req.contentType), nil)
+			}
+			return
+		}
+		mode, ok := aiMode(req.fields["ai_assist"])
+		if !ok {
+			fail(c, http.StatusUnprocessableEntity, "invalid_value", "ai_assist must be auto, on or off", "ai_assist")
 			return
 		}
 		format, err := docparse.Detect(req.fileName, req.file)
@@ -148,12 +179,39 @@ func (h *Handlers) statementUpload(enginePath string) gin.HandlerFunc {
 			h.statementError(c, err)
 			return
 		}
+		opt := docparse.Options{Sheet: req.fields["sheet"], Pages: req.fields["pages"], MaxPages: h.cfg.DocumentMaxPages}
+		aiReq := aiassist.Request{Format: format, Doc: req.file, Opt: opt}
+		if mode == "on" {
+			if h.ai == nil {
+				fail(c, http.StatusUnprocessableEntity, aiassist.CodeUnavailable, "the AI reader is not set up on this server", "ai_assist")
+				return
+			}
+			aiReq.Trigger = aiassist.TriggerRequested
+			if handled, _, err := h.readByAI(ctx, c, enginePath, req, aiReq, confirm); !handled {
+				h.aiError(c, err)
+			}
+			return
+		}
+		autoAI := h.ai != nil && mode == "auto" && !confirm
+
 		if format == docparse.FormatCSV {
 			if int64(len(req.body)) > h.cfg.MaxBodyBytes {
 				fail(c, http.StatusRequestEntityTooLarge, "payload_too_large", fmt.Sprintf("request body exceeds %d bytes", h.cfg.MaxBodyBytes), "")
 				return
 			}
-			h.forwardStatement(ctx, c, enginePath, req.body, req.contentType, nil, req.file)
+			r, ok := h.engineStatement(ctx, c, enginePath, req.body, req.contentType, req.file)
+			if !ok {
+				return
+			}
+			var info *aiassist.Info
+			if autoAI && noCandidates(r.Body) {
+				aiReq.Trigger = aiassist.TriggerNoCandidates
+				var handled bool
+				if handled, info, _ = h.readByAI(ctx, c, enginePath, req, aiReq, false); handled {
+					return
+				}
+			}
+			h.writeStatement(c, r.Body, nil, fieldsOf(req.body, req.contentType), info)
 			return
 		}
 
@@ -168,23 +226,143 @@ func (h *Handlers) statementUpload(enginePath string) gin.HandlerFunc {
 				return
 			}
 		}
-		opt := docparse.Options{Sheet: req.fields["sheet"], Pages: req.fields["pages"], MaxPages: h.cfg.DocumentMaxPages}
 		start := time.Now()
-		res, err := h.convertDocument(ctx, format, req.file, opt)
+		convCtx, convCancel := context.WithTimeout(ctx, timeout)
+		res, err := h.convertDocument(convCtx, format, req.file, opt)
+		convCancel()
 		if err != nil {
 			h.log.Info("document not converted", "format", format, "bytes", len(req.file), "ms", time.Since(start).Milliseconds(), "request_id", reqID(c))
+			var de *docparse.Error
+			if autoAI && errors.As(err, &de) && (de.Code == docparse.CodeScanned || de.Code == docparse.CodeNoTable) {
+				aiReq.Trigger, aiReq.Scanned = aiassist.TriggerNoTable, de.Code == docparse.CodeScanned
+				if aiReq.Scanned {
+					aiReq.Trigger = aiassist.TriggerScanned
+				}
+				handled, _, aerr := h.readByAI(ctx, c, enginePath, req, aiReq, false)
+				if handled {
+					return
+				}
+				var ae *aiassist.Error
+				if errors.As(aerr, &ae) {
+					fail(c, docStatus(de.Code), de.Code, de.Message+". The AI reader could not help either: "+ae.Message, de.Field)
+					return
+				}
+			}
 			h.statementError(c, err)
 			return
 		}
 		h.log.Info("document converted", "format", format, "bytes", len(req.file), "rows", res.Rows, "ms", time.Since(start).Milliseconds(), "request_id", reqID(c))
 
-		body, ct, err := rebuildStatement(req, res.CSV)
+		body, ct, err := rebuildStatement(req, res.CSV, nil)
 		if err != nil {
 			fail(c, http.StatusInternalServerError, "internal_error", "the document could not be prepared for the rules engine", "")
 			return
 		}
-		h.forwardStatement(ctx, c, enginePath, body, ct, res, nil)
+		r, ok := h.engineStatement(ctx, c, enginePath, body, ct, nil)
+		if !ok {
+			return
+		}
+		var info *aiassist.Info
+		if autoAI && noCandidates(r.Body) {
+			aiReq.Trigger = aiassist.TriggerNoCandidates
+			var handled bool
+			if handled, info, _ = h.readByAI(ctx, c, enginePath, req, aiReq, false); handled {
+				return
+			}
+		}
+		h.writeStatement(c, r.Body, res, fieldsOf(body, ct), info)
 	}
+}
+
+// readByAI runs the AI reader (on confirm: takes the reading parse made) and, when it proposes rows, has
+// the engine parse them and answers. handled is false, with nothing written, when the reader could not
+// help; info and err then say why.
+func (h *Handlers) readByAI(ctx context.Context, c *gin.Context, enginePath string, req *statementRequest, q aiassist.Request, confirm bool) (handled bool, info *aiassist.Info, err error) {
+	start := time.Now()
+	var res *docparse.Result
+	if confirm {
+		var ok bool
+		if res, info, ok = h.ai.Cached(aiassist.Key(q.Format, q.Doc, q.Opt)); !ok {
+			fail(c, http.StatusConflict, aiassist.CodeExpired, "the AI reader's reading of this file has expired or was made with other pages or sheet; read the file again, then confirm", "file")
+			return true, nil, nil
+		}
+	} else {
+		aiCtx, cancel := context.WithTimeout(ctx, h.cfg.AITimeout)
+		defer cancel()
+		res, info, err = h.ai.Read(aiCtx, q)
+		h.log.Info("AI reader", "trigger", q.Trigger, "format", q.Format, "ok", err == nil, "cached", info != nil && info.Cached,
+			"pages_sent", len(infoPages(info)), "proposed", infoInt(info, false), "kept", infoInt(info, true),
+			"ms", time.Since(start).Milliseconds(), "request_id", reqID(c))
+		if err != nil {
+			return false, info, err
+		}
+	}
+	body, ct, err := rebuildStatement(req, res.CSV, map[string]string{"propose": "all"})
+	if err != nil {
+		fail(c, http.StatusInternalServerError, "internal_error", "the AI reader's rows could not be prepared for the rules engine", "")
+		return true, info, nil
+	}
+	if r, ok := h.engineStatement(ctx, c, enginePath, body, ct, nil); ok {
+		h.writeStatement(c, r.Body, res, fieldsOf(body, ct), info)
+	}
+	return true, info, nil
+}
+
+func infoPages(i *aiassist.Info) []int {
+	if i == nil {
+		return nil
+	}
+	return i.PagesSent
+}
+
+func infoInt(i *aiassist.Info, kept bool) int {
+	switch {
+	case i == nil:
+		return 0
+	case kept:
+		return i.Kept
+	}
+	return i.Proposed
+}
+
+// aiError answers a request that asked for the AI reader when it could not help.
+func (h *Handlers) aiError(c *gin.Context, err error) {
+	var ae *aiassist.Error
+	if errors.As(err, &ae) {
+		status := http.StatusUnprocessableEntity
+		if ae.Code == aiassist.CodeFailed {
+			status = http.StatusBadGateway
+		}
+		fail(c, status, ae.Code, ae.Message, "file")
+		return
+	}
+	h.log.Error("AI reader failed", "err", err, "request_id", reqID(c))
+	fail(c, http.StatusBadGateway, aiassist.CodeFailed, "the AI reader could not read the document", "file")
+}
+
+// noCandidates reports whether a parse answer proposed nothing that could be counted: no rows at all, or
+// only rows without a readable amount (on a long report, garbled text can match a keyword by chance).
+func noCandidates(body []byte) bool {
+	var top map[string]json.RawMessage
+	if json.Unmarshal(body, &top) != nil {
+		return false
+	}
+	raw, ok := top["candidates"]
+	if !ok {
+		return false // a confirm answer, or something else entirely
+	}
+	var list []struct {
+		Amount *float64 `json:"amount_inr"`
+	}
+	if json.Unmarshal(raw, &list) != nil {
+		return false
+	}
+	for _, c := range list {
+		if c.Amount != nil {
+			return false
+		}
+	}
+	return true
 }
 
 // convertDocument runs the conversion where it can be abandoned: the reader checks the context between
@@ -223,15 +401,26 @@ func (h *Handlers) statementError(c *gin.Context, err error) {
 }
 
 // rebuildStatement is the original form with the document replaced by its CSV and the gateway-only fields
-// (sheet, pages) removed. Every other field reaches the engine as the person sent it.
-func rebuildStatement(req *statementRequest, csvBytes []byte) ([]byte, string, error) {
+// (sheet, pages, ai_assist) removed. Every other field reaches the engine as the person sent it; extra
+// fields (propose=all for the AI reader's rows) are set on top.
+func rebuildStatement(req *statementRequest, csvBytes []byte, extra map[string]string) ([]byte, string, error) {
 	var buf bytes.Buffer
 	w := multipart.NewWriter(&buf)
 	for _, name := range req.order {
-		if statementFields[name] {
+		if _, overridden := extra[name]; statementFields[name] || overridden {
 			continue
 		}
 		if err := w.WriteField(name, req.fields[name]); err != nil {
+			return nil, "", err
+		}
+	}
+	extraNames := make([]string, 0, len(extra))
+	for name := range extra {
+		extraNames = append(extraNames, name)
+	}
+	sort.Strings(extraNames)
+	for _, name := range extraNames {
+		if err := w.WriteField(name, extra[name]); err != nil {
 			return nil, "", err
 		}
 	}
@@ -251,8 +440,8 @@ func rebuildStatement(req *statementRequest, csvBytes []byte) ([]byte, string, e
 	return buf.Bytes(), w.FormDataContentType(), nil
 }
 
-// forwardStatement sends the body to the engine and returns its answer, adding what the gateway knows.
-func (h *Handlers) forwardStatement(ctx context.Context, c *gin.Context, enginePath string, body []byte, contentType string, res *docparse.Result, csvFile []byte) {
+// engineStatement sends the body to the engine. ok is false when an error answer has been written.
+func (h *Handlers) engineStatement(ctx context.Context, c *gin.Context, enginePath string, body []byte, contentType string, csvFile []byte) (*model.Upstream, bool) {
 	if contentType == "" {
 		contentType = "multipart/form-data"
 	}
@@ -263,18 +452,18 @@ func (h *Handlers) forwardStatement(ctx context.Context, c *gin.Context, engineP
 		if why := diagnoseCSV(csvFile); why != "" {
 			h.log.Warn("rules engine failed on a CSV with rows wider than its header", "request_id", reqID(c))
 			fail(c, http.StatusUnprocessableEntity, "csv_row_too_wide", why, "file")
-			return
+			return nil, false
 		}
 	}
 	if !h.upstreamOK(c, r, err) {
-		return
+		return nil, false
 	}
-	var set map[string]string
-	if sheetOrPages := fieldsOf(body, contentType); sheetOrPages != nil {
-		set = sheetOrPages
-	}
-	out := augmentStatement(r.Body, res, set)
-	c.Data(http.StatusOK, "application/json", out)
+	return r, true
+}
+
+// writeStatement answers with the engine's body plus what the gateway knows about the reading.
+func (h *Handlers) writeStatement(c *gin.Context, body []byte, res *docparse.Result, form map[string]string, ai *aiassist.Info) {
+	c.Data(http.StatusOK, "application/json", augmentStatement(body, res, form, ai, h.ai != nil))
 }
 
 // fieldsOf reads the plain form fields of a multipart body (used to learn what the person chose).

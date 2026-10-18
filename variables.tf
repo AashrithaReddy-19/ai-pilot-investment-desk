@@ -172,3 +172,38 @@ variable "rate_limit_per_minute" {
   type        = number
   default     = 600
 }
+
+variable "ai_assist" {
+  description = "Balance-sheet AI reader: Claude on Amazon Bedrock proposes AI-spend rows when the ordinary reader finds none (or the reviewer asks), and Amazon Textract reads scanned PDFs. Creates an S3 bucket for scans and an IAM role for the instance. Enable access to the Bedrock model in the AWS console first."
+  type        = bool
+  default     = true
+}
+
+variable "bedrock_model" {
+  description = "Bedrock model id for the AI reader"
+  type        = string
+  default     = "anthropic.claude-sonnet-5-5"
+}
+
+variable "bedrock_region" {
+  description = "Region of the Bedrock endpoint (empty = aws_region). In ap-south-1 Claude is served through Bedrock's global endpoint, so a request may be processed in another region."
+  type        = string
+  default     = ""
+}
+
+variable "ai_timeout_seconds" {
+  description = "Most time one AI reading may take (Textract plus the model), on top of the ordinary reader's 60 seconds"
+  type        = number
+  default     = 240
+
+  validation {
+    condition     = var.ai_timeout_seconds >= 10 && var.ai_timeout_seconds <= 900
+    error_message = "ai_timeout_seconds must be between 10 and 900."
+  }
+}
+
+variable "textract_max_pages" {
+  description = "Largest scanned PDF sent to Textract, in pages (table analysis is billed per page, about $0.015)"
+  type        = number
+  default     = 100
+}

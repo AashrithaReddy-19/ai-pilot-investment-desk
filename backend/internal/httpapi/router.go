@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"c23desk/internal/aiassist"
 	"c23desk/internal/config"
 	"c23desk/internal/model"
 )
@@ -70,6 +71,7 @@ func (noAudit) ListAuditEvents(context.Context, model.AuditFilter) ([]model.Audi
 }
 
 type Deps struct {
+	AI       *aiassist.Reader // balance-sheet AI reader; nil = off
 	Cfg      config.Config
 	Store    Store
 	Rules    Rules
@@ -100,7 +102,7 @@ func NewRouter(d Deps) *gin.Engine {
 		version = func() string { return "" }
 	}
 	h := &Handlers{cfg: d.Cfg, store: d.Store, rules: d.Rules, cache: d.Cache, audit: audit, platform: d.Platform,
-		uploads: d.Uploads, notify: d.Notify, version: version, log: d.Log}
+		uploads: d.Uploads, notify: d.Notify, version: version, log: d.Log, ai: d.AI}
 	if n := d.Cfg.DocumentConcurrency; n > 0 {
 		h.docSlots = make(chan struct{}, n)
 	}

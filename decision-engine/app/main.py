@@ -385,9 +385,10 @@ async def _upload(file: UploadFile) -> bytes:
 
 @app.post("/balance-sheet/parse")
 async def balance_sheet_parse(file: UploadFile = File(...), unit: str = Form("auto"),
-                              amount_column: Optional[str] = Form(None), period: str = Form("auto")):
+                              amount_column: Optional[str] = Form(None), period: str = Form("auto"),
+                              propose: str = Form("keywords")):
     try:
-        return ingest.parse_balance_sheet(await _upload(file), unit, amount_column, period)
+        return ingest.parse_balance_sheet(await _upload(file), unit, amount_column, period, propose)
     except ingest.ParseError as exc:
         raise HTTPException(422, str(exc))
 
@@ -395,7 +396,8 @@ async def balance_sheet_parse(file: UploadFile = File(...), unit: str = Form("au
 @app.post("/balance-sheet/confirm")
 async def balance_sheet_confirm(file: UploadFile = File(...), rows: str = Form(...), unit: str = Form("auto"),
                                 amount_column: Optional[str] = Form(None), defaults: str = Form(""),
-                                period: str = Form("auto"), overrides: str = Form("")):
+                                period: str = Form("auto"), overrides: str = Form(""),
+                                propose: str = Form("keywords")):
     raw = await _upload(file)
     try:
         row_ids = [int(x.strip()) for x in rows.split(",") if x.strip()]
@@ -406,7 +408,7 @@ async def balance_sheet_confirm(file: UploadFile = File(...), rows: str = Form(.
     if not isinstance(d, dict):
         raise HTTPException(422, "defaults (when sent) must be a JSON object of token assumptions.")
     try:
-        return ingest.confirm_balance_sheet(raw, row_ids, unit, amount_column, d, period, overrides)
+        return ingest.confirm_balance_sheet(raw, row_ids, unit, amount_column, d, period, overrides, propose)
     except ingest.ParseError as exc:
         raise HTTPException(422, str(exc))
 
