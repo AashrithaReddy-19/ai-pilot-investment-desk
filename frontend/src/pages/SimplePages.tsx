@@ -10,6 +10,7 @@ import { ObservationTools } from '../features/observations/ObservationTools'
 import { SavedPortfolios } from '../features/portfolios/SavedPortfolios'
 import { Interviews } from '../features/interviews/Interviews'
 import { Proposals } from '../features/proposals/Proposals'
+import { History } from '../features/history/History'
 
 function Head({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
   return (
@@ -138,6 +139,17 @@ export function ProposalsPage() {
         Each proposal is a named pilot candidate with versioned inputs and its own evidence. Later observations and decisions attach to the proposal, so measurements stay comparable over time.
       </Head>
       <Proposals />
+    </>
+  )
+}
+
+export function HistoryPage() {
+  return (
+    <>
+      <Head eyebrow="History and audit" title="What changed, and when.">
+        The evaluation and decision timeline, every stored evaluation with the proposal version it used, and the audit trail of changes and downloads.
+      </Head>
+      <History />
     </>
   )
 }

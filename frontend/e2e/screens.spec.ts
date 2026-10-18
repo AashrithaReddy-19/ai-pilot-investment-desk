@@ -20,6 +20,7 @@ const screens: [string, RegExp][] = [
   ['/evidence', /how strong the evidence/i],
   ['/tracker', /30-day plan/i],
   ['/memo', /one page for the decision record/i],
+  ['/history', /what changed, and when/i],
 ]
 
 for (const [route, heading] of screens) {

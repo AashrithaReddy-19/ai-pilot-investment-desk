@@ -162,7 +162,36 @@ export interface PortfolioResult {
 }
 export interface ManualCheck { ok: boolean; problems: string[] }
 export interface DefaultsDoc { starting_state: Fixture; extension: Extension; pipeline_rules?: PipelineRules }
-export interface EvaluateResponse { pilots: PilotsResponse; independent: PortfolioResult; conservative: PortfolioResult }
+export interface EvaluateResponse {
+  pilots: PilotsResponse
+  independent: PortfolioResult
+  conservative: PortfolioResult
+  /** Row id in the evaluations log; null when the history write failed (the answer still stands). */
+  evaluation_id?: number | null
+  proposal_id?: string | null
+  proposal_version?: number | null
+}
+
+/** One row of the evaluations log (no bodies). */
+export interface EvaluationSummary {
+  id: number
+  portfolio_id: string | null
+  proposal_id: string | null
+  proposal_version: number | null
+  created_at: string
+}
+
+/** One successful edit or export. actor stays null until sign-in exists. */
+export interface AuditEvent {
+  id: number
+  action: string
+  entity_type: string
+  entity_id: string | null
+  actor: string | null
+  request_id: string | null
+  details: Record<string, unknown>
+  created_at: string
+}
 
 /* ───────── Persisted by the gateway (PostgreSQL) ───────── */
 export interface PortfolioPilotRow {
@@ -240,6 +269,8 @@ export interface ProposalSummary {
   id: string
   name: string
   status: ProposalStatus
+  /** Inputs version: starts at 1 and goes up each time the stored inputs change. */
+  version: number
   notes: string | null
   created_at: string
   updated_at: string

@@ -117,7 +117,7 @@ flowchart TD
 ## System Components
 
 ### Decision Engine (FastAPI)
-- **Directory**: [`decision-engine/`](file:///home/aarush/Projects/fynd/decision-engine)
+- **Directory**: [`decision-engine/`](decision-engine)
 - **Runtime**: Python 3.10+ (tested on Python 3.14)
 - **Framework**: FastAPI, Uvicorn, Pydantic
 - **Role**: Pure financial modeling, sensitivity analysis, knapsack portfolio optimization, CSV/Markdown dossier generation.
@@ -125,15 +125,15 @@ flowchart TD
 - **Swagger Docs**: `http://localhost:8000/docs`
 
 ### Backend API Gateway (Go Gin)
-- **Directory**: [`backend/`](file:///home/aarush/Projects/fynd/backend)
-- **Runtime**: Go 1.22+ (tested on Go 1.24 / 1.26)
+- **Directory**: [`backend/`](backend)
+- **Runtime**: Go 1.25+ (required by `backend/go.mod`; tested on Go 1.27)
 - **Framework**: Gin, pgx v5, go-redis v9, goose v3
 - **Role**: CORS, transaction management, persistence of portfolios, proposals, audit evaluations, qualitative interviews, and caching.
 - **Port**: `8080`
 
 ### Frontend Web Dashboard (React / Vite)
-- **Directory**: [`frontend/`](file:///home/aarush/Projects/fynd/frontend)
-- **Runtime**: Node.js 18+
+- **Directory**: [`frontend/`](frontend)
+- **Runtime**: Node.js 20+ (CI uses 22)
 - **Framework**: React 18, TypeScript, Vite, Zustand
 - **Role**: Single-page application for real-time pilot portfolio evaluation, budget constraints, qualitative interviews, health telemetry, and decision auditing. The operating screens (Phase 7) are:
   - **Decision workspace** (`/`): pilot table, assumptions, portfolio builder, stop-rule panel, advice and next-best actions per pilot.
@@ -259,7 +259,8 @@ Before running the application, ensure the following tools are installed:
 
 | Tool | Minimum Version | Description |
 | :--- | :--- | :--- |
-| **Go** | 1.22+ | Backend server runtime |
+| **Go** | 1.25+ | Backend server runtime |
+| **Node.js** | 20+ | Frontend build and dev server |
 | **Python** | 3.10+ | Decision engine runtime |
 | **PostgreSQL** | 14+ | Primary database |
 | **Redis** | 6.0+ | Deterministic caching engine |
@@ -370,7 +371,7 @@ cd frontend
 
 > **What `start.sh` does automatically:**
 > - Verifies Node.js 20+ and npm.
-> - Runs `npm install` when `node_modules` is missing (only needed on the first run).
+> - Runs `npm ci` when `node_modules` is missing (only needed on the first run). `npm ci` installs exactly what `package-lock.json` pins and never rewrites it.
 > - Checks the Go gateway on `:8080` (the Vite proxy target) and warns when it is not up yet.
 > - Checks if port `5173` is available (Vite picks the next free port when taken).
 > - Starts the Vite dev server: `npm run dev` → `http://localhost:5173`.
@@ -413,7 +414,7 @@ If any check fails (e.g. Go missing, Python venv missing), the script exits with
 
 ### Integration Test Scripts (`test.sh` & `test.ps1`)
 
-Located at the repository root, [`test.sh`](file:///home/aarush/Projects/fynd/test.sh) and [`test.ps1`](file:///home/aarush/Projects/fynd/test.ps1) run automated end-to-end integration tests using `curl` and `jq`.
+Located at the repository root, [`test.sh`](test.sh) and [`test.ps1`](test.ps1) run automated end-to-end integration tests using `curl` and `jq`.
 
 ```bash
 # Linux / macOS
@@ -495,10 +496,10 @@ npm run test:e2e
 ```
 
 ### 5. Continuous Integration (GitHub Actions)
-Automated testing is orchestrated via [`.github/workflows/ci.yml`](file:///home/aarush/Projects/fynd/.github/workflows/ci.yml) on push, pull requests, and manual dispatch:
+Automated testing is orchestrated via [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on push, pull requests, and manual dispatch:
 - **`test-decision-engine`**: Installs dependencies and executes all Pytest tests for the Python decision engine (`python -m pytest -v`, 131 at the time of writing).
 - **`test-backend`**: Starts PostgreSQL 16 and Redis 7 service containers and runs all Go unit tests and store integration tests with race detection (`go test -v -race ./internal/...`).
-- **`test-integration`**: Boots live PostgreSQL and Redis services, executes database migrations (`go run ./cmd/api migrate up`), starts both the Decision Engine and Gin API Gateway in the background, runs [`test.sh`](file:///home/aarush/Projects/fynd/test.sh) (all 10 checks), and verifies guaranteed cleanup.
+- **`test-integration`**: Boots live PostgreSQL and Redis services, executes database migrations (`go run ./cmd/api migrate up`), starts both the Decision Engine and Gin API Gateway in the background, runs [`test.sh`](test.sh) (all 10 checks), and verifies guaranteed cleanup.
 - **`test-frontend`**: Typechecks (tsc), builds the production bundle and runs the Vitest unit tests.
 - **`test-browser-e2e`**: Builds the frontend, serves it with `vite preview`, boots the full stack behind it and runs the Playwright browser checks (`frontend/e2e/`).
 
@@ -512,7 +513,7 @@ The repository includes complete OpenTofu Infrastructure-as-Code to provision an
 
 OpenTofu provisions:
 - **Compute**: An EC2 instance (Ubuntu 24.04 LTS, `t3.small` with 20 GB gp3 storage).
-- **Networking & Security**: A dedicated security group opening port `22` (SSH), port `8080` (Go Gin API Gateway), and port `8000` (FastAPI Decision Engine).
+- **Networking & Security**: A dedicated security group opening port `8080` (Go Gin API Gateway). Port `22` (SSH) opens only for the CIDRs in `allowed_ssh_cidr`, and port `8000` (FastAPI Decision Engine) only for the CIDRs in `decision_engine_public_cidr`. Both default to closed: the gateway reaches the engine on `localhost`.
 - **Automated Cloud-Init (`user_data`)**:
   - Automatically installs Go, Python 3, PostgreSQL, and Redis on boot.
   - Configures PostgreSQL role `c23` and databases `c23` & `c23_test`.
@@ -552,8 +553,9 @@ OpenTofu provisions:
    ```
    - **Backend API**: `http://<PUBLIC_IP>:8080/health`
    - **Readiness Check**: `http://<PUBLIC_IP>:8080/ready`
-   - **Decision Engine API Docs**: `http://<PUBLIC_IP>:8000/docs`
-   - **SSH Access**: `ssh ubuntu@<PUBLIC_IP>`
+   - **Decision Engine API Docs**: `http://<PUBLIC_IP>:8000/docs` (only when `decision_engine_public_cidr` includes your IP)
+   - **SSH Access**: `ssh ubuntu@<PUBLIC_IP>` (only when `allowed_ssh_cidr` includes your IP)
+   - **Browser origins**: set `allowed_origins` (comma-separated, exact origins) when a frontend on another origin calls the gateway
 
 5. **Teardown**:
    To destroy all provisioned AWS resources and stop charges:
@@ -565,11 +567,11 @@ OpenTofu provisions:
 
 ## Knowledge Graph & Architecture Map
 
-An automated, persistent knowledge graph of the entire repository is maintained in [`graphify-out/`](file:///home/aarush/Projects/fynd/graphify-out):
+An automated, persistent knowledge graph of the entire repository is maintained in [`graphify-out/`](graphify-out):
 
-- **Interactive Visualizer**: Open [`graphify-out/graph.html`](file:///home/aarush/Projects/fynd/graphify-out/graph.html) directly in any browser for an interactive visualization of all 69 communities, god nodes, cross-package bridges, and data flows.
-- **GraphRAG Dataset**: [`graphify-out/graph.json`](file:///home/aarush/Projects/fynd/graphify-out/graph.json) provides the complete knowledge graph (1,359 nodes, 3,722 edges) for GraphRAG indexing, network analytics, and automated queries.
-- **Audit & Cohesion Report**: [`graphify-out/GRAPH_REPORT.md`](file:///home/aarush/Projects/fynd/graphify-out/GRAPH_REPORT.md) details community cohesion scores, centrality measurements, knowledge gaps, and architectural insights.
+- **Interactive Visualizer**: Open [`graphify-out/graph.html`](graphify-out/graph.html) directly in any browser for an interactive visualization of all 69 communities, god nodes, cross-package bridges, and data flows.
+- **GraphRAG Dataset**: [`graphify-out/graph.json`](graphify-out/graph.json) provides the complete knowledge graph (1,359 nodes, 3,722 edges) for GraphRAG indexing, network analytics, and automated queries.
+- **Audit & Cohesion Report**: [`graphify-out/GRAPH_REPORT.md`](graphify-out/GRAPH_REPORT.md) details community cohesion scores, centrality measurements, knowledge gaps, and architectural insights.
 
 ---
 
@@ -784,7 +786,7 @@ curl -s -X POST http://localhost:8080/api/v1/proposals \
 
 ## Database Schema & Migrations
 
-The backend uses [Goose](https://github.com/pressly/goose) migrations located in [`backend/internal/migrations/`](file:///home/aarush/Projects/fynd/backend/internal/migrations).
+The backend uses [Goose](https://github.com/pressly/goose) migrations located in [`backend/internal/migrations/`](backend/internal/migrations).
 
 ### Tables
 

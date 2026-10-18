@@ -244,13 +244,23 @@ func (s *Store) History(ctx context.Context, pilotID string, limit int) (*model.
 func (s *Store) SaveEvaluation(ctx context.Context, e model.EvaluationIn) (int64, error) {
 	var id int64
 	err := s.pool.QueryRow(ctx, `
-		INSERT INTO evaluations (request, independent, conservative) VALUES ($1, $2, $3) RETURNING id`,
-		[]byte(e.Request), []byte(e.Independent), []byte(e.Conservative)).Scan(&id)
+		INSERT INTO evaluations (request, independent, conservative, proposal_id, proposal_version)
+		VALUES ($1, $2, $3, $4::uuid, $5) RETURNING id`,
+		[]byte(e.Request), []byte(e.Independent), []byte(e.Conservative), e.ProposalID, e.ProposalVersion).Scan(&id)
 	return id, err
 }
 
 // ListEvaluations returns the newest evaluation audit rows (no bodies). limit is clamped to 1..50.
 func (s *Store) ListEvaluations(ctx context.Context, limit int) ([]model.EvaluationSummary, error) {
+	return s.evaluationSummaries(ctx, "", limit)
+}
+
+// ListProposalEvaluations returns the evaluations run for one proposal, newest first. limit is clamped to 1..50.
+func (s *Store) ListProposalEvaluations(ctx context.Context, proposalID string, limit int) ([]model.EvaluationSummary, error) {
+	return s.evaluationSummaries(ctx, proposalID, limit)
+}
+
+func (s *Store) evaluationSummaries(ctx context.Context, proposalID string, limit int) ([]model.EvaluationSummary, error) {
 	if limit < 1 {
 		limit = 20
 	}
@@ -258,7 +268,9 @@ func (s *Store) ListEvaluations(ctx context.Context, limit int) ([]model.Evaluat
 		limit = 50
 	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, portfolio_id::text, created_at FROM evaluations ORDER BY created_at DESC, id DESC LIMIT $1`, limit)
+		SELECT id, portfolio_id::text, proposal_id::text, proposal_version, created_at FROM evaluations
+		WHERE $1 = '' OR proposal_id::text = $1
+		ORDER BY created_at DESC, id DESC LIMIT $2`, proposalID, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -266,7 +278,7 @@ func (s *Store) ListEvaluations(ctx context.Context, limit int) ([]model.Evaluat
 	out := []model.EvaluationSummary{}
 	for rows.Next() {
 		var e model.EvaluationSummary
-		if err := rows.Scan(&e.ID, &e.PortfolioID, &e.CreatedAt); err != nil {
+		if err := rows.Scan(&e.ID, &e.PortfolioID, &e.ProposalID, &e.ProposalVersion, &e.CreatedAt); err != nil {
 			return nil, err
 		}
 		out = append(out, e)
@@ -277,8 +289,9 @@ func (s *Store) ListEvaluations(ctx context.Context, limit int) ([]model.Evaluat
 func (s *Store) GetEvaluation(ctx context.Context, id int64) (*model.Evaluation, error) {
 	var e model.Evaluation
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, portfolio_id::text, request, independent, conservative, created_at FROM evaluations WHERE id = $1`, id,
-	).Scan(&e.ID, &e.PortfolioID, &e.Request, &e.Independent, &e.Conservative, &e.CreatedAt)
+		SELECT id, portfolio_id::text, proposal_id::text, proposal_version, request, independent, conservative, created_at
+		FROM evaluations WHERE id = $1`, id,
+	).Scan(&e.ID, &e.PortfolioID, &e.ProposalID, &e.ProposalVersion, &e.Request, &e.Independent, &e.Conservative, &e.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
 	}
@@ -493,9 +506,9 @@ func (s *Store) CreateProposal(ctx context.Context, in model.ProposalIn) (*model
 	var p model.Proposal
 	err := s.pool.QueryRow(ctx, `
 		INSERT INTO proposals (name, inputs, notes) VALUES ($1, $2, $3)
-		RETURNING id::text, name, status, inputs, notes, created_at, updated_at`,
+		RETURNING id::text, name, status, version, inputs, notes, created_at, updated_at`,
 		in.Name, []byte(in.Inputs), in.Notes,
-	).Scan(&p.ID, &p.Name, &p.Status, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
+	).Scan(&p.ID, &p.Name, &p.Status, &p.Version, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -505,8 +518,8 @@ func (s *Store) CreateProposal(ctx context.Context, in model.ProposalIn) (*model
 func (s *Store) GetProposal(ctx context.Context, id string) (*model.Proposal, error) {
 	var p model.Proposal
 	err := s.pool.QueryRow(ctx, `
-		SELECT id::text, name, status, inputs, notes, created_at, updated_at FROM proposals WHERE id::text = $1`, id,
-	).Scan(&p.ID, &p.Name, &p.Status, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
+		SELECT id::text, name, status, version, inputs, notes, created_at, updated_at FROM proposals WHERE id::text = $1`, id,
+	).Scan(&p.ID, &p.Name, &p.Status, &p.Version, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
 	}
@@ -523,7 +536,7 @@ func (s *Store) ListProposals(ctx context.Context, includeArchived bool) ([]mode
 		where = ""
 	}
 	rows, err := s.pool.Query(ctx, `
-		SELECT id::text, name, status, notes, created_at, updated_at FROM proposals`+where+`
+		SELECT id::text, name, status, version, notes, created_at, updated_at FROM proposals`+where+`
 		ORDER BY (status = 'active') DESC, updated_at DESC LIMIT 200`)
 	if err != nil {
 		return nil, err
@@ -532,7 +545,7 @@ func (s *Store) ListProposals(ctx context.Context, includeArchived bool) ([]mode
 	out := []model.ProposalSummary{}
 	for rows.Next() {
 		var r model.ProposalSummary
-		if err := rows.Scan(&r.ID, &r.Name, &r.Status, &r.Notes, &r.CreatedAt, &r.UpdatedAt); err != nil {
+		if err := rows.Scan(&r.ID, &r.Name, &r.Status, &r.Version, &r.Notes, &r.CreatedAt, &r.UpdatedAt); err != nil {
 			return nil, err
 		}
 		out = append(out, r)
@@ -541,17 +554,20 @@ func (s *Store) ListProposals(ctx context.Context, includeArchived bool) ([]mode
 }
 
 // UpdateProposal patches name / inputs / notes. Nil fields keep their stored value.
+// The inputs version goes up by one only when the inputs actually change (jsonb equality, so key
+// order and whitespace do not count); a rename or a notes edit keeps the version.
 func (s *Store) UpdateProposal(ctx context.Context, id string, in model.ProposalIn) (*model.Proposal, error) {
 	var p model.Proposal
 	err := s.pool.QueryRow(ctx, `
 		UPDATE proposals SET
-			name   = COALESCE($2, name),
-			inputs = COALESCE($3, inputs),
-			notes  = COALESCE($4, notes)
+			name    = COALESCE($2, name),
+			version = CASE WHEN $3::jsonb IS NOT NULL AND $3::jsonb IS DISTINCT FROM inputs THEN version + 1 ELSE version END,
+			inputs  = COALESCE($3, inputs),
+			notes   = COALESCE($4, notes)
 		WHERE id::text = $1
-		RETURNING id::text, name, status, inputs, notes, created_at, updated_at`,
+		RETURNING id::text, name, status, version, inputs, notes, created_at, updated_at`,
 		id, nameOrNull(in.Name), in.Inputs, in.Notes,
-	).Scan(&p.ID, &p.Name, &p.Status, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
+	).Scan(&p.ID, &p.Name, &p.Status, &p.Version, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
 	}
@@ -577,9 +593,9 @@ func (s *Store) ArchiveProposal(ctx context.Context, id string, restore bool) (*
 	var p model.Proposal
 	err := s.pool.QueryRow(ctx, `
 		UPDATE proposals SET status = $2 WHERE id::text = $1
-		RETURNING id::text, name, status, inputs, notes, created_at, updated_at`,
+		RETURNING id::text, name, status, version, inputs, notes, created_at, updated_at`,
 		id, status,
-	).Scan(&p.ID, &p.Name, &p.Status, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
+	).Scan(&p.ID, &p.Name, &p.Status, &p.Version, &p.Inputs, &p.Notes, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
 	}
@@ -722,9 +738,9 @@ func (s *Store) DeletePlan(ctx context.Context, pilotID string) error {
 func (s *Store) LatestEvaluationWithPilot(ctx context.Context, pilotID string) (*model.Evaluation, error) {
 	var e model.Evaluation
 	err := s.pool.QueryRow(ctx, `
-		SELECT id, portfolio_id::text, request, independent, conservative, created_at FROM evaluations
-		WHERE independent->'selected' ? $1 ORDER BY created_at DESC, id DESC LIMIT 1`, pilotID,
-	).Scan(&e.ID, &e.PortfolioID, &e.Request, &e.Independent, &e.Conservative, &e.CreatedAt)
+		SELECT id, portfolio_id::text, proposal_id::text, proposal_version, request, independent, conservative, created_at
+		FROM evaluations WHERE independent->'selected' ? $1 ORDER BY created_at DESC, id DESC LIMIT 1`, pilotID,
+	).Scan(&e.ID, &e.PortfolioID, &e.ProposalID, &e.ProposalVersion, &e.Request, &e.Independent, &e.Conservative, &e.CreatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
 	}
@@ -732,4 +748,51 @@ func (s *Store) LatestEvaluationWithPilot(ctx context.Context, pilotID string) (
 		return nil, err
 	}
 	return &e, nil
+}
+
+// ---------- audit trail ----------
+
+// AddAuditEvent appends one row. Rows are never updated or deleted by the application.
+func (s *Store) AddAuditEvent(ctx context.Context, e model.AuditEventIn) error {
+	details := []byte(e.Details)
+	if len(details) == 0 {
+		details = []byte(`{}`)
+	}
+	var reqID *string
+	if e.RequestID != "" {
+		reqID = &e.RequestID
+	}
+	_, err := s.pool.Exec(ctx, `
+		INSERT INTO audit_events (action, entity_type, entity_id, actor, request_id, details)
+		VALUES ($1, $2, $3, $4, $5, $6)`,
+		e.Action, e.EntityType, e.EntityID, e.Actor, reqID, details)
+	return err
+}
+
+// ListAuditEvents returns the newest audit rows, optionally for one entity type and id. limit is clamped to 1..50.
+func (s *Store) ListAuditEvents(ctx context.Context, f model.AuditFilter) ([]model.AuditEvent, error) {
+	limit := f.Limit
+	if limit < 1 {
+		limit = 25
+	}
+	if limit > 50 {
+		limit = 50
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT id, action, entity_type, entity_id, actor, request_id, details, created_at FROM audit_events
+		WHERE ($1 = '' OR entity_type = $1) AND ($2 = '' OR entity_id = $2)
+		ORDER BY created_at DESC, id DESC LIMIT $3`, f.EntityType, f.EntityID, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := []model.AuditEvent{}
+	for rows.Next() {
+		var a model.AuditEvent
+		if err := rows.Scan(&a.ID, &a.Action, &a.EntityType, &a.EntityID, &a.Actor, &a.RequestID, &a.Details, &a.CreatedAt); err != nil {
+			return nil, err
+		}
+		out = append(out, a)
+	}
+	return out, rows.Err()
 }

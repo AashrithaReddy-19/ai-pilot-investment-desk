@@ -24,6 +24,7 @@ const GROUPS: { label: string; items: Item[] }[] = [
     { to: '/proposals', label: 'Proposals', icon: 'optimize', title: 'Proposals' },
     { to: '/observations', label: 'Observations and stop rules', icon: 'observe', title: 'Observations and stop rules' },
     { to: '/interviews', label: 'Interviews', icon: 'interviews', title: 'Interviews' },
+    { to: '/history', label: 'History and audit', icon: 'saved', title: 'History and audit' },
   ] },
   { label: 'System', items: [
     { to: '/checks', label: 'API and system checks', icon: 'checks', title: 'API and system checks' },

@@ -78,6 +78,7 @@ func run(log *slog.Logger, args []string) error {
 		Store: st,
 		Rules: rules.New(cfg.RulesEngineURL, cfg.RequestTimeout),
 		Cache: cch,
+		Audit: st,
 		Log:   log,
 	})
 	srv := &http.Server{
