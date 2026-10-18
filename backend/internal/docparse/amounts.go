@@ -176,10 +176,11 @@ var unitRes = []struct {
 }{
 	{unitCrore, regexp.MustCompile(`(?i)` + unitContext + `[^.;:\n]{0,30}?\b(?:crores?|crs?)\b`)},
 	{unitLakh, regexp.MustCompile(`(?i)` + unitContext + `[^.;:\n]{0,30}?\b(?:lakhs?|lacs?)\b`)},
-	{unitThousands, regexp.MustCompile(`(?i)` + unitContext + `[^.;:\n]{0,30}?(?:\bthousands?\b|['’]000s?\b|\(000s?\)|\b000s?\b)`)},
+	// "'000" or "(000)", but never the last digit group of a figure such as 60,000 or ₹90,00,000
+	{unitThousands, regexp.MustCompile(`(?i)` + unitContext + `[^.;:\n]{0,30}?(?:\bthousands?\b|['’‘]000s?\b|(?:^|[^\d,.'’‘])000s?\b)|\(\s*(?:(?:₹|rs\.?|inr)\s*(?:in\s+)?)?['’‘]?000s?\s*\)`)},
 	{unitMillions, regexp.MustCompile(`(?i)` + unitContext + `[^.;:\n]{0,30}?\b(?:millions?|mn|mm)\b`)},
 	{unitBillions, regexp.MustCompile(`(?i)` + unitContext + `[^.;:\n]{0,30}?\b(?:billions?|bn)\b`)},
-	{unitRupees, regexp.MustCompile(`(?i)\b(?:in|amounts?\s+in|figures?\s+in|stated\s+in|expressed\s+in)\s+(?:indian\s+)?(?:rupees|inr|rs\.?)\b(?:\s+(?:only|actuals?))?`)},
+	{unitRupees, regexp.MustCompile(`(?i)\b(?:in|amounts?\s+in|figures?\s+in|stated\s+in|expressed\s+in)\s+(?:(?:full|whole|absolute|actual)\s+)?(?:indian\s+)?(?:rupees|inr|rs\.?)\b(?:\s+(?:only|actuals?))?`)},
 }
 
 // unitsIn lists the units a piece of text states, in a stable order. It is meant for titles and column

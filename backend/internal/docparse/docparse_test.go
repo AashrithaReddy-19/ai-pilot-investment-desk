@@ -209,11 +209,17 @@ func TestUnitsIn(t *testing.T) {
 		"Amounts in millions of dollars":        {unitMillions},
 		"(in INR crores) and (in INR lakh)":     {unitCrore, unitLakh},
 		"Amount in rupees":                      {unitRupees},
-		"Software licences and subscriptions":   nil,
-		"Cr and Dr columns":                     nil,
-		"The lakh economy grew":                 nil,
-		"Particulars":                           nil,
-		"31 March 2026":                         nil,
+		"Amounts are in full rupees (₹), using Indian digit grouping.": {unitRupees},
+		"Credit files processed per year (in scope) 60,000 files":      nil, // a digit group is not "'000"
+		"Knowledge-base ingestion | ₹90,00,000 [Assumption]":           nil,
+		"(000)":                               {unitThousands},
+		"(₹ in '000)":                         {unitThousands},
+		"` in ‘000s":                          {unitThousands},
+		"Software licences and subscriptions": nil,
+		"Cr and Dr columns":                   nil,
+		"The lakh economy grew":               nil,
+		"Particulars":                         nil,
+		"31 March 2026":                       nil,
 	} {
 		if got := unitsIn(in); !reflect.DeepEqual(got, want) {
 			t.Errorf("unitsIn(%q) = %v, want %v", in, got, want)
@@ -737,5 +743,40 @@ func TestCancelledContextStopsEarly(t *testing.T) {
 	_, err := Convert(ctx, FormatPDF, statementPDF(3), Options{})
 	if e, ok := err.(*Error); !ok || e.Code != CodeTimeout {
 		t.Fatalf("a cancelled context should stop extraction: %v", err)
+	}
+}
+
+// A table with a text column after the amounts ("Source": [Assumption], Calculated), as the proposal
+// documents print their AI-spend overview: the text must not be glued to the amounts, and a row whose
+// description contains "year" ("3-year total cost") is data, not a column heading. (The fixture font is
+// ASCII only, so the rupee sign is left out.)
+func TestPDFTrailingTextColumnStaysOutOfTheAmounts(t *testing.T) {
+	const xAmt, xSrc = 430.0, 450.0
+	rows := [][]string{
+		{"Implementation and integration", "1,80,00,000", "[Assumption]"},
+		{"Platform licence", "1,20,00,000", "[Assumption]"},
+		{"Private-cloud hosting", "60,00,000", "[Assumption]"},
+		{"Total recurring annual AI cost", "2,10,00,000", "Calculated"},
+		{"3-year total cost of ownership", "9,30,00,000", "Calculated"},
+	}
+	ls := []tline{
+		{y: 790, cells: []tcell{{x: xLabel, text: "Amounts are in full rupees, using Indian digit grouping."}}},
+		{y: 760, cells: []tcell{{x: xLabel, text: "Outlay"}, {x: xAmt, right: true, text: "Amount (Rs.)"}, {x: xSrc, text: "Source"}}},
+	}
+	y := 740.0
+	for _, r := range rows {
+		ls = append(ls, tline{y: y, cells: []tcell{{x: xLabel, text: r[0]}, {x: xAmt, right: true, text: r[1]}, {x: xSrc, text: r[2]}}})
+		y -= 16
+	}
+	res := convert(t, FormatPDF, buildPDF([]tpage{{lines: ls}}, pdfOpts{}), Options{})
+	rs := records(t, res)
+	if len(rs) != len(rows)+1 || res.Unit != unitRupees {
+		t.Fatalf("unit %q rows %q", res.Unit, rs)
+	}
+	for i, r := range rows {
+		got := rs[i+1]
+		if got[1] != r[1] || !strings.HasPrefix(got[0], r[0]) {
+			t.Fatalf("row %d: %q, want the amount %s on its own", i+1, got, r[1])
+		}
 	}
 }

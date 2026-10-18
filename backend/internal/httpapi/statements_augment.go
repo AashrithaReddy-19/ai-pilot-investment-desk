@@ -127,7 +127,9 @@ func augmentStatement(body []byte, res *docparse.Result, form map[string]string,
 		Choice string `json:"choice"`
 		Source string `json:"source"`
 	}
-	if json.Unmarshal(top["unit"], &unit) == nil && unit.Choice == "auto" && strings.HasPrefix(unit.Source, "default") {
+	// (the engine calls rupees its default even when the heading says so: a unit the document states is not assumed)
+	stated := res != nil && res.Unit != ""
+	if json.Unmarshal(top["unit"], &unit) == nil && unit.Choice == "auto" && strings.HasPrefix(unit.Source, "default") && !stated {
 		extraFlags = append(extraFlags, docparse.Flag{Code: "UNIT_ASSUMED", Message: "No unit is stated in the file, so the amounts were read as rupees. If the figures are in thousands, lakh or crore, choose that unit and parse again."})
 	}
 	if hasCandidates {

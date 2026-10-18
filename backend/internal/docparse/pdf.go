@@ -311,11 +311,13 @@ func convertPDF(ctx context.Context, b []byte, opt Options) (res *Result, err er
 			}
 			cells := make([]string, width)
 			label := []string{}
-			firstNum := -1
+			firstNum, lastNum := -1, -1
 			for k := range l.cells {
 				if l.numeric[k] {
-					firstNum = k
-					break
+					if firstNum < 0 {
+						firstNum = k
+					}
+					lastNum = k
 				}
 			}
 			for k, c := range l.cells {
@@ -333,7 +335,11 @@ func convertPDF(ctx context.Context, b []byte, opt Options) (res *Result, err er
 				case l.tableish && l.numeric[k]:
 					// an amount always belongs to the nearest column
 				case l.tableish:
-					if dist > 80 { // text to the right of the amounts that is not under a column
+					// Text after the row's last amount is a trailing text column ("Source", "Remarks":
+					// "[Assumption]", "Calculated"), not part of an amount: glued to one it would make the
+					// figure unreadable. A bare suffix such as "Cr" stays with its amount.
+					trailing := k > lastNum && !suffixRe.MatchString(strings.TrimSpace(c.text))
+					if dist > 80 || trailing { // text to the right of the amounts that is not under a column
 						label = append(label, c.text)
 						continue
 					}
