@@ -29,6 +29,12 @@ type Config struct {
 	WorkerEnabled   bool   // run the upload processing worker in this process
 	WorkerPoll      time.Duration
 	VersionPoll     time.Duration // how often the engine's rules_version is re-read
+
+	// Balance-sheet documents (PDF, XLSX, XLS) are read in the gateway and handed to the engine as CSV.
+	DocumentMaxBytes    int64         // largest document accepted on /balance-sheet/parse and /confirm
+	DocumentMaxPages    int           // most PDF pages read in one request
+	DocumentTimeout     time.Duration // deadline for receiving, reading and parsing one document
+	DocumentConcurrency int           // documents read at the same time; more get a 429
 }
 
 // Load reads and validates the environment. All problems are reported together.
@@ -61,6 +67,26 @@ func Load() (Config, error) {
 		errs = append(errs, err)
 	} else {
 		cfg.UploadMaxBytes = int64(n)
+	}
+	if n, err := intEnv("DOCUMENT_MAX_BYTES", 25<<20, 1<<20, 64<<20); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.DocumentMaxBytes = int64(n)
+	}
+	if n, err := intEnv("DOCUMENT_MAX_PAGES", 500, 1, 2000); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.DocumentMaxPages = n
+	}
+	if secs, err := intEnv("DOCUMENT_TIMEOUT_SECONDS", 60, 5, 600); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.DocumentTimeout = time.Duration(secs) * time.Second
+	}
+	if n, err := intEnv("DOCUMENT_CONCURRENCY", 2, 1, 16); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.DocumentConcurrency = n
 	}
 	if n, err := intEnv("WORKER_POLL_MS", 1000, 100, 60_000); err != nil {
 		errs = append(errs, err)

@@ -48,7 +48,7 @@ export function BalanceSheetPage() {
   return (
     <>
       <Head eyebrow="Balance sheet" title="What the AI has burned so far">
-        Upload the previous-year balance sheet as a CSV. The parser only proposes rows that look like AI spend — you decide which count. Nothing is stored, and the AI burn stays unknown until you confirm a row.
+        Upload the previous-year balance sheet or annual report as a PDF, an Excel workbook or a CSV. The service only proposes rows that look like AI spend — you decide which count. Nothing is stored, and the AI burn stays unknown until you confirm a row.
       </Head>
       <BalancePanel onConfirmed={() => { /* the panel shows its own results; this page is balance-sheet-only */ }} />
     </>

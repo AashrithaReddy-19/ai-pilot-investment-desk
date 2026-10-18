@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/joho/godotenv v1.5.1
+	github.com/ledongthuc/pdf v0.0.0-20260907135840-6c8c28e0e8a0
 	github.com/pressly/goose/v3 v3.22.1
 	github.com/redis/go-redis/v9 v9.7.0
 	golang.org/x/sync v0.10.0

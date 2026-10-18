@@ -1,21 +1,17 @@
 import { useState } from 'react'
 import { api } from '../../api/client'
-import type { BalanceSheetConfirm, BalanceSheetParse, BalanceUnit, CompareProposalRow, CompareResponse, Mode, PilotsImportParse } from '../../api/types'
+import type { BalanceSheetConfirm, CompareProposalRow, CompareResponse, Mode, PilotsImportParse } from '../../api/types'
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
+import { BalancePanel } from './BalancePanel'
+import { Stat, inr } from './shared'
 import { SelectField, TextField } from '../../components/ui/Fields'
 
-const inr = (n: number | null | undefined) => (n === null || n === undefined ? '—' : n.toLocaleString('en-IN', { maximumFractionDigits: 0 }))
 const num = (s: string): number | null => {
   if (s === '') return null
   const t = s.replace(/[,\s₹]/g, '')
   if (!Number.isFinite(Number(t))) return null
   return Number(t)
 }
-const UNITS: { value: BalanceUnit; label: string }[] = [
-  { value: 'auto', label: 'Detect from header (₹ / thousand / lakh / crore)' },
-  { value: 'rupees', label: 'Rupees' }, { value: 'thousands', label: 'Thousands' },
-  { value: 'lakh', label: 'Lakh' }, { value: 'crore', label: 'Crore' },
-]
 const TYPES = [
   { value: 'cashable', label: 'Cash savings' },
   { value: 'time freed', label: 'Time freed (capacity)' },
@@ -26,6 +22,8 @@ const LINE_COLORS = ['#1d4ed8', '#b45309', '#15803d', '#9333ea', '#dc2626', '#08
 interface CfRow { name: string; setup: string; benefit: string; run: string; type: string; group: string }
 const blankRow = (): CfRow => ({ name: '', setup: '', benefit: '', run: '', type: 'cashable', group: '' })
 
+export { BalancePanel }
+
 /** Compare proposals: balance-sheet burn beside a section-2 ranking made by the same rules engine. */
 export function Compare() {
   const [burn, setBurn] = useState<BalanceSheetConfirm | null>(null)
@@ -33,103 +31,6 @@ export function Compare() {
     <div className="stack" style={{ gap: 20 }}>
       <BalancePanel onConfirmed={setBurn} />
       <ComparePanel burn={burn} />
-    </div>
-  )
-}
-
-function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
-  return (
-    <div style={{ flex: '1 1 160px', minWidth: 150 }}>
-      <div className="caption">{label}</div>
-      <div className="strong" style={{ fontSize: 'var(--t-lg)' }}>{value}</div>
-      {sub && <div className="caption">{sub}</div>}
-    </div>
-  )
-}
-
-/* -------------------------------------------------- balance sheet */
-
-export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetConfirm) => void }) {
-  const [file, setFile] = useState<File | null>(null)
-  const [unit, setUnit] = useState<BalanceUnit>('auto')
-  const [parse, setParse] = useState<BalanceSheetParse | null>(null)
-  const [checked, setChecked] = useState<Set<number>>(new Set())
-  const [res, setRes] = useState<BalanceSheetConfirm | null>(null)
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState<unknown>(null)
-
-  const doParse = async () => {
-    if (!file) return
-    setBusy(true); setErr(null); setParse(null); setRes(null); setChecked(new Set())
-    try {
-      setParse((await api.balanceSheetParse(file, unit)).data)
-    } catch (e) { setErr(e) } finally { setBusy(false) }
-  }
-  const doConfirm = async () => {
-    if (!file || checked.size === 0) return
-    setBusy(true); setErr(null)
-    try {
-      const r = (await api.balanceSheetConfirm(file, [...checked], unit)).data
-      setRes(r); onConfirmed(r)
-    } catch (e) { setErr(e) } finally { setBusy(false) }
-  }
-
-  const flags = parse?.flags ?? res?.flags ?? []
-  return (
-    <div className="panel">
-      <h3 className="h3">Balance sheet: what the AI has burned</h3>
-      <p className="hint">Upload the previous-year balance sheet as CSV. The parser only <em>proposes</em> rows that look like AI spend
-        (keywords: ai, software, cloud, licence, token) — you decide which count. Nothing is stored.</p>
-      <div className="row" style={{ flexWrap: 'wrap', gap: 12, alignItems: 'flex-end' }}>
-        <input type="file" accept=".csv,text/csv" onChange={(e) => { setFile(e.target.files?.[0] ?? null); setParse(null); setRes(null) }} />
-        <div style={{ minWidth: 230 }}>
-          <SelectField id="bs-unit" label="Money unit" value={unit} onChange={(v) => setUnit(v as BalanceUnit)} options={UNITS} />
-        </div>
-        <button className="btn" onClick={() => void doParse()} disabled={!file || busy}>{busy ? 'Working…' : parse ? 'Re-parse' : 'Parse'}</button>
-        {parse && parse.candidates.length > 0 && (
-          <button className="btn btn-primary" onClick={() => void doConfirm()} disabled={busy || checked.size === 0}>Confirm selected rows</button>
-        )}
-      </div>
-
-      {err != null && <ErrorNotice title="The balance sheet could not be read." error={err} />}
-      {flags.map((f, i) => <div key={i} className="notice notice-warn"><div><span className="mono">{f.code}</span> — {f.message}</div></div>)}
-
-      {parse && parse.candidates.length === 0 && (
-        <p className="muted">No line item matched the AI-spend keywords, so the AI burn is unknown. Rename the relevant line items or extend the keyword set (visible in /defaults).</p>
-      )}
-
-      {parse && parse.candidates.length > 0 && (
-        <>
-          <p className="hint">Unit: <span className="strong">{parse.unit.unit}</span> ({parse.unit.source}) · amount column <span className="mono">{parse.amount_column_used}</span>{parse.amount_columns.length > 1 && <> · others: {parse.amount_columns.filter((c) => c !== parse.amount_column_used).join(', ')}</>}</p>
-          <div className="tbl-wrap"><table className="tbl">
-            <caption className="sr">Candidate AI-spend rows</caption>
-            <thead><tr><th scope="col">Row</th><th scope="col">Line item</th><th scope="col">Matched keywords</th><th scope="col">Amount</th><th scope="col">AI spend?</th></tr></thead>
-            <tbody>{parse.candidates.map((c) => (
-              <tr key={c.row}>
-                <td className="mono">{c.row}</td>
-                <td className="strong">{c.label}</td>
-                <td>{c.matched.join(', ')}</td>
-                <td>{c.amount_inr === null ? <span className="tag">not readable</span> : inr(c.amount_inr)}</td>
-                <td><input type="checkbox" aria-label={`Count row ${c.row} (${c.label}) as AI spend`}
-                  checked={checked.has(c.row)}
-                  onChange={(e) => { const n = new Set(checked); if (e.target.checked) n.add(c.row); else n.delete(c.row); setChecked(n) }} /></td>
-              </tr>))}</tbody>
-          </table></div>
-        </>
-      )}
-
-      {res && (
-        <div className="row" style={{ flexWrap: 'wrap', gap: 8 }}>
-          <Stat label="AI burn to date (observed)" value={`₹ ${inr(res.ai_burn_to_date)}`} sub={`rows ${res.rows_confirmed.join(', ')}`} />
-          <Stat label="AI run cost this year" value={res.next_fy.ai_run_cost_inr === null ? 'unknown' : `₹ ${inr(res.next_fy.ai_run_cost_inr)}`}
-            sub={res.next_fy.ai_run_cost_inr === null ? 'tokens or price not recorded' : 'from token assumptions'} />
-          <Stat label="Next-FY AI plan" value={res.next_fy.next_fy_cost_inr === null ? 'unknown' : `₹ ${inr(res.next_fy.next_fy_cost_inr)}`}
-            sub={res.next_fy.inflation_flag === null ? undefined : (res.next_fy.inflation_flag ? 'inflation: spend carries into next FY' : 'usage falls; no inflation')} />
-        </div>
-      )}
-      {res && res.next_fy.ai_run_cost_inr === null && (
-        <p className="hint">Record monthly token usage and the price per 1M tokens (team assumptions in /defaults) to see the next-FY plan; it is never guessed as zero.</p>
-      )}
     </div>
   )
 }

@@ -101,6 +101,9 @@ func NewRouter(d Deps) *gin.Engine {
 	}
 	h := &Handlers{cfg: d.Cfg, store: d.Store, rules: d.Rules, cache: d.Cache, audit: audit, platform: d.Platform,
 		uploads: d.Uploads, notify: d.Notify, version: version, log: d.Log}
+	if n := d.Cfg.DocumentConcurrency; n > 0 {
+		h.docSlots = make(chan struct{}, n)
+	}
 
 	r.GET("/health", h.health)
 	r.GET("/ready", h.ready)
@@ -140,8 +143,9 @@ func NewRouter(d Deps) *gin.Engine {
 	view.POST("/forecast/usage", h.forward("/forecast/usage", fwdOpts{cacheable: true}))
 
 	// Multipart uploads: nothing stored, never cached, MAX_BODY_BYTES enforced
-	view.POST("/balance-sheet/parse", h.uploadForward("/balance-sheet/parse"))
-	view.POST("/balance-sheet/confirm", h.uploadForward("/balance-sheet/confirm"))
+	// Balance sheets also accept PDF, XLSX and XLS: read in the gateway, handed to the engine as CSV
+	view.POST("/balance-sheet/parse", h.statementUpload("/balance-sheet/parse"))
+	view.POST("/balance-sheet/confirm", h.statementUpload("/balance-sheet/confirm"))
 	view.POST("/pilots/import/parse", h.uploadForward("/pilots/import/parse"))
 	view.POST("/pilots/import/confirm", h.uploadForward("/pilots/import/confirm"))
 	view.POST("/export/csv", h.forward("/export/csv", fwdOpts{contentType: "text/csv; charset=utf-8", filename: "pilots.csv"}))

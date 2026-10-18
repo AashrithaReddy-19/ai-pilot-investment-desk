@@ -37,6 +37,7 @@ type Handlers struct {
 	notify   func()
 	version  func() string
 	log      *slog.Logger
+	docSlots chan struct{} // limits how many documents are read at once; nil = unlimited
 }
 
 type fwdOpts struct {
@@ -181,7 +182,7 @@ func (h *Handlers) upstreamOK(c *gin.Context, r *model.Upstream, err error) bool
 		fail(c, http.StatusBadGateway, "rules_error", "rules engine failed", "")
 		return false
 	case r.Status >= 400:
-		fail(c, r.Status, "rules_rejected", truncate(string(r.Body), 500), "")
+		fail(c, r.Status, "rules_rejected", truncate(engineDetail(r.Body), 500), "")
 		return false
 	}
 	return true

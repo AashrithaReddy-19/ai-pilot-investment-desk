@@ -378,13 +378,50 @@ export interface HistoryEvent {
 
 export type BalanceUnit = 'auto' | 'rupees' | 'thousands' | 'lakh' | 'crore'
 
+/** Where a row came from in the original document (added by the gateway for PDF, XLSX and XLS). */
+export interface StatementSource { sheet?: string; row?: number; page?: number; text?: string }
+
 export interface BalanceCandidate {
   row: number
   label: string
   matched: string[]
   raw: string | null
   amount_inr: number | null
+  annualised_amount_inr?: number | null
+  /** Why the row was flagged, e.g. "Matched keyword: software". */
+  reason?: string
+  source?: StatementSource
 }
+
+export interface SheetInfo { name: string; hidden: boolean; rows: number; usable: boolean; suggested: boolean }
+export interface PageInfo {
+  total: number
+  selected: number[]
+  with_tables: number[]
+  no_text: number[]
+  /** Unit stated on each table page ("" = none stated). Keys are page numbers. */
+  units: Record<string, string>
+}
+export type StatementFormat = 'csv' | 'pdf' | 'xlsx' | 'xls'
+/** How the gateway read the document before the engine saw it. */
+export interface Extraction {
+  source_format: StatementFormat
+  sheet?: string
+  sheets?: SheetInfo[]
+  pages?: PageInfo
+  dropped_columns?: { header: string; reason: string }[]
+  currency?: string
+  unit_detected?: string
+  unit_source?: string
+  converted_rows?: number
+  notes?: string[]
+  /** False when the engine's row numbers could not be tied to source rows, so no source is shown. */
+  sources_matched: boolean
+}
+export interface ParseFinding { severity: string; code: string; line: number | null; field: string | null; message: string }
+
+/** Optional document choices sent beside the file: a worksheet name and/or PDF pages like "3-5,9". */
+export interface StatementOptions { sheet?: string; pages?: string }
 
 export interface ParseUnit { choice: string; unit: string; multiplier: number; source: string }
 
@@ -399,13 +436,15 @@ export interface BalanceSheetParse {
   candidates: BalanceCandidate[]
   warnings: string[]
   flags: Flag[]
+  findings?: ParseFinding[]
+  extraction?: Extraction
 }
 
 export interface BalanceSheetConfirm {
   ai_burn_to_date: number | null
   source: string
   rows_confirmed: number[]
-  confirmations: { row: number; label: string; amount_inr: number | null }[]
+  confirmations: { row: number; label: string; amount_inr: number | null; source?: StatementSource }[]
   amount_column_used: string
   unit: ParseUnit
   next_fy: {
@@ -416,6 +455,7 @@ export interface BalanceSheetConfirm {
   }
   warnings: string[]
   flags: Flag[]
+  extraction?: Extraction
 }
 
 export interface ImportPilotRow {
