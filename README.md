@@ -812,7 +812,77 @@ go run ./cmd/api bootstrap -email you@example.com -workspace "Finance"   # print
 
 ### Stored uploads and review
 
-Documents are kept, not just parsed: the gateway validates the file (`.csv` UTF-8 or `.xlsx`, checked against the bytes, at most `UPLOAD_MAX_BYTES`), stores the original with its SHA-256 (the same file uploaded again is the same upload), and a background worker sends it to the engine parser, retrying outages with backoff (5 s, 20 s, 45 s; three attempts). A file the engine rejects fails at once with the engine's reason. Status moves `received → processing → parsed | failed → confirmed`.
+Documents are kept, not just parsed: the gateway validates the extension against the file signature (UTF-8 `.csv`, PDF, XLSX, XLS or DOCX), enforces `UPLOAD_MAX_BYTES`, stores the original with its SHA-256 (the same file uploaded again is the same upload), and a background worker sends it to the engine parser, retrying outages with backoff (5 s, 20 s, 45 s; three attempts). A file the engine rejects fails at once with the engine's reason. Status moves `pending_upload → received → processing → parsed | failed → confirmed` for S3 uploads and `received → processing → parsed | failed → confirmed` for legacy PostgreSQL uploads. Upload validation never trusts the browser MIME type.
+
+When `S3_DOCUMENTS_BUCKET` is configured, the frontend requests a presigned PUT session from `/documents/upload-session`, uploads directly to private S3, and calls `/documents/:id/complete`. Completion verifies size, content type, SHA-256 metadata and the file signature before queueing the existing worker. Existing PostgreSQL-backed uploads remain readable and are not deleted or migrated automatically.
+
+Proposal-document extraction is available for an uploaded proposal document through the workspace-scoped
+routes below. It is deterministic and evidence-preserving by default. When Bedrock is explicitly enabled,
+the same route uses the Bedrock Converse API; the stored warnings include `extraction_mode: deterministic`
+or `extraction_mode: bedrock` so the source of each result is visible. PDF text layers, XLS/XLSX tables,
+DOCX text, and CSV are read when possible.
+Scanned PDFs and fields that are not stated clearly remain `missing` or `ambiguous` and must be corrected by
+an analyst before confirmation. Every extracted value includes a source reference and excerpt.
+
+| `POST` | `/api/v1/uploads/:id/proposal-extraction` | Start an idempotent extraction. Returns a `review` result with the exact 11 fields and evidence metadata. |
+| `GET` | `/api/v1/uploads/:id/proposal-extraction` | Read the workspace-scoped extraction result and status. |
+| `PATCH` | `/api/v1/uploads/:id/proposal-extraction` | `{field, value, note?}` records an analyst correction and marks that field explicitly reviewed. |
+| `POST` | `/api/v1/uploads/:id/proposal-extraction/confirm` | Requires all 11 fields to be explicit; returns validated proposal `inputs` using `ai_running_cost_inr` for the engine contract. |
+
+The extraction result is stored separately from `proposals.inputs` in migration `00015_proposal_extractions.sql`.
+The review screen submits the returned `name` and `inputs` through the existing `POST /api/v1/proposals`
+contract after confirmation, so normal proposal name and input validation still applies. The extraction
+endpoint itself does not write proposal rows or evidence metadata into `proposals.inputs`.
+
+#### Bedrock status and live-test setup
+
+The Bedrock adapter uses the AWS SDK for Go v2 `Converse` operation and therefore requires a configured model
+that supports Converse in the selected region. It sends extracted text and source references in a strict
+JSON-only prompt, then validates the exact 11-field response, enums, null handling, and evidence server-side.
+Missing credentials or model access never produces fabricated or success-shaped AI output. If Bedrock is
+disabled, the deterministic extractor is used instead.
+Server validation rejects model-derived INR amounts; annual benefits and operating costs must be explicitly
+stated with evidence or remain null, so time-saved and productivity claims cannot become cash values.
+
+The configuration boundary is opt-in and fails clearly when enabled without the required settings:
+
+| Variable | Current meaning |
+|---|---|
+| `BEDROCK_ENABLED` | Set `true` only to select the Bedrock adapter; default `false`, which selects deterministic extraction. |
+| `BEDROCK_REGION` | AWS region for Bedrock. There is no repository default; use a region where the selected model is available. |
+| `BEDROCK_MODEL_ID` | Exact model ID enabled for the AWS account in `BEDROCK_REGION`; do not copy a model ID from another account or region. |
+| `AWS_REGION` | Existing S3 region. Used as the Bedrock region fallback only when `BEDROCK_REGION` is empty. |
+
+For a live Bedrock test, first enable model access in the AWS account for the selected region, then
+configure `BEDROCK_ENABLED=true`, `BEDROCK_REGION` (or `AWS_REGION`), and the provider's exact
+`BEDROCK_MODEL_ID`. The runtime IAM role should receive only `bedrock:InvokeModel` for that model's
+resource ARN, in addition to the existing scoped S3 permissions documented above. Use the standard AWS
+credential/provider chain; never put access keys in source or frontend configuration. The selected model
+must support the Converse API; model-specific native `InvokeModel` request bodies are intentionally not
+guessed. The adapter applies a 45-second timeout and relies on the SDK's bounded retry behavior for transient
+failures. No live test has been run in this environment.
+
+Live setup checklist:
+
+1. Choose an AWS region where both the private documents bucket and an approved Bedrock Converse model
+   are available. Record the exact model ID from the account's Bedrock model-access page; this repository
+   intentionally does not prescribe a provider or model ID.
+2. Run the API with the standard AWS credential chain: an attached task/instance role in deployment, or
+   a locally configured AWS profile. Do not put access keys in `.env`, source control, or frontend code.
+   Verify the identity separately with the operator's approved AWS tooling before starting the API.
+3. Create or select a private S3 bucket with Block Public Access, default encryption, and CORS restricted
+   to the deployed frontend origin. Grant the API role the scoped S3 object actions described below.
+4. Grant the API role `bedrock:InvokeModel` only for the selected model resource. Confirm model access is
+   enabled in the selected region.
+5. Set `AWS_REGION`, `S3_DOCUMENTS_BUCKET`, `BEDROCK_ENABLED=true`, `BEDROCK_REGION` (unless it equals
+   `AWS_REGION`), and `BEDROCK_MODEL_ID`. Restart the API; invalid or incomplete Bedrock settings fail
+   startup with an actionable error.
+6. Upload a non-sensitive proposal, complete the S3 object, start extraction, and verify the review result.
+   Confirm that the stored warning identifies `extraction_mode: bedrock`, evidence references are present,
+   unsupported fields remain missing or ambiguous, and the analyst confirmation is required before the
+   existing proposal endpoint is called.
+
+S3 setup requires a private bucket with Block Public Access enabled, default encryption (SSE-S3 or SSE-KMS), and CORS allowing only the deployed frontend origin for `PUT` and `HEAD` with the `Content-Type`, `Content-Length` and `x-amz-meta-sha256` headers. The gateway IAM role needs `s3:PutObject`, `s3:AbortMultipartUpload`, `s3:HeadObject`, `s3:GetObject` and `s3:DeleteObject` only on `arn:aws:s3:::BUCKET/workspaces/*`; it does not need `s3:*` or bucket-wide access. Set `AWS_REGION`, `S3_DOCUMENTS_BUCKET` and optionally `PRESIGNED_URL_EXPIRY_SECONDS`; credentials come from the standard AWS provider chain or the instance/task IAM role.
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
@@ -822,6 +892,14 @@ Documents are kept, not just parsed: the gateway validates the file (`.csv` UTF-
 | `POST` | `/api/v1/uploads/:id/corrections` | *(analyst)* `{row_ref, field, value, note?}`: a reviewed value. The original is kept; balance sheets correct `amount_inr`, pilot imports correct money, benefit type, overlap group, ramp/delay, adoption, readiness or task. |
 | `POST` | `/api/v1/uploads/:id/confirm` | *(analyst)* `{rows: [...]}` (balance sheet) or `{keep: [...]}` (pilots). The engine re-reads the stored file with the corrections applied, so the burn and the imported rows are still computed by the engine. |
 | `POST` | `/api/v1/uploads/:id/retry` | *(analyst)* Puts a failed upload back in the queue. |
+
+With S3 configured, the direct-upload contract is:
+
+| Method | Endpoint | Request / response |
+| :--- | :--- | :--- |
+| `POST` | `/api/v1/documents/upload-session` | *(analyst)* `{filename, kind, size_bytes, content_type, sha256, unit?, period?, amount_column?}`. Returns `{upload, duplicate, upload_url, headers}`. The URL is short-lived and the key is generated by the gateway. |
+| `PUT` | `upload_url` | Browser sends the original bytes directly to S3 with the returned `headers`; no gateway or AWS credentials are exposed. |
+| `POST` | `/api/v1/documents/:id/complete` | No body. The gateway checks private-object existence, exact size/content type, SHA-256 metadata, and the file signature before moving `pending_upload` to `received`. Repeating a successful completion returns `duplicate: true`. |
 
 ---
 
@@ -850,7 +928,10 @@ Documents are kept, not just parsed: the gateway validates the file (`.csv` UTF-
 | `AUTH_MODE` | `off` | `off`: no sign-in, default workspace. `required`: bearer tokens, workspaces and roles (the OpenTofu deployment defaults to `required`). |
 | `RATE_LIMIT_PER_MINUTE` | `600` | Requests per minute per client IP; `0` disables rate limiting. |
 | `RATE_LIMIT_BURST` | `120` | Requests allowed at once above the per-minute rate. |
-| `UPLOAD_MAX_BYTES` | `2000000` | Largest stored upload (the engine parses at most 2 MB). |
+| `UPLOAD_MAX_BYTES` | `2000000` | Largest stored upload in bytes. The current rules-engine upload contract parses at most 2 MB; increase only when that contract and database capacity are updated together. |
+| `AWS_REGION` | *unset* | AWS region used by the standard SDK credential/provider chain. Required with `S3_DOCUMENTS_BUCKET`. |
+| `S3_DOCUMENTS_BUCKET` | *unset* | Private bucket for S3-backed document originals. When unset, legacy PostgreSQL byte-backed uploads remain available. |
+| `PRESIGNED_URL_EXPIRY_SECONDS` | `600` | Presigned PUT lifetime, bounded to 60–3600 seconds. |
 | `WORKER_ENABLED` | `true` | Run the upload processing worker in this gateway process. |
 | `WORKER_POLL_MS` | `1000` | How often the worker looks for queued uploads (new uploads also wake it immediately). |
 

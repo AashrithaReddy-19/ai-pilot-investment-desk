@@ -5,7 +5,7 @@ import type { PortfolioSummary, SavedPortfolio } from '../../api/types'
 import { draftsFromScope } from '../../domain/draft'
 import { formatDateTime, formatINR, formatPayback, formatPct } from '../../domain/format'
 import { useWorkspace } from '../../state/useWorkspace'
-import { AssumedTag, Empty, Skeleton, SyntheticTag } from '../../components/ui/Bits'
+import { AssumedTag, Empty, Skeleton } from '../../components/ui/Bits'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
 
@@ -89,11 +89,10 @@ function Viewer({ doc }: { doc: SavedPortfolio }) {
   const scope = doc.negotiated_scope
   const ext = new Map(scope.extension.pilots.map((p) => [p.id, p]))
   const pf = doc.final_evidence.portfolio
-  const synthetic = doc.starting_state.synthetic === true
 
   const reopen = () => {
     loadScope(draftsFromScope(scope.fixture_as_used, scope.extension), doc.mode, doc.budget_inr)
-    nav('/')
+    nav('/workspace')
   }
 
   return (
@@ -133,7 +132,7 @@ function Viewer({ doc }: { doc: SavedPortfolio }) {
       </div>
 
       <div className="notice notice-info" role="note"><div>
-        <strong>About the stored starting state.</strong> The service records its shipped case file {synthetic && <SyntheticTag />} as the “starting state” of every saved portfolio, even when you supplied your own pilots. The pilots that were actually evaluated are the ones listed above under negotiated scope.
+        <strong>About the stored starting state.</strong> The service records its own case file as the “starting state” of every saved portfolio, even when you supplied your own pilots. The pilots that were actually evaluated are the ones listed above under negotiated scope.
       </div></div>
     </div>
   )

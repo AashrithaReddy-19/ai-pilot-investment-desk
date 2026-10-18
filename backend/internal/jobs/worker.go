@@ -6,11 +6,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
 	"time"
 
 	"c23desk/internal/model"
 	"c23desk/internal/rules"
+	"c23desk/internal/storage"
 )
 
 // Queue is the store surface the worker needs.
@@ -35,6 +37,7 @@ type Worker struct {
 	Poll        time.Duration
 	CallTimeout time.Duration
 	Log         *slog.Logger
+	Storage     storage.Store
 	wake        chan struct{}
 }
 
@@ -129,7 +132,24 @@ func (w *Worker) process(ctx context.Context, job *model.UploadJob) (json.RawMes
 	if w.Fields != nil {
 		fields = w.Fields(job.Options)
 	}
-	body, ctype, err := rules.Multipart(fields, job.Filename, job.ContentType, job.Content)
+	content := job.Content
+	if job.StorageProvider == "s3" {
+		if w.Storage == nil || job.ObjectKey == "" {
+			return nil, "document storage is not configured", false
+		}
+		rctx, cancel := context.WithTimeout(ctx, w.CallTimeout)
+		defer cancel()
+		obj, err := w.Storage.Open(rctx, job.ObjectKey)
+		if err != nil {
+			return nil, "document storage unavailable: " + err.Error(), false
+		}
+		content, err = io.ReadAll(io.LimitReader(obj, 2_000_001))
+		_ = obj.Close()
+		if err != nil || len(content) > 2_000_000 {
+			return nil, "stored document exceeds the processing limit", true
+		}
+	}
+	body, ctype, err := rules.Multipart(fields, job.Filename, job.ContentType, content)
 	if err != nil {
 		return nil, "could not prepare the file for the engine", true
 	}

@@ -4,6 +4,8 @@ import type { Readiness, ScenarioBody, SweepParameter, WhatIfOverrides, WhatIfRe
 import { formatINR, formatPayback, formatPct } from '../../domain/format'
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
 import { SelectField, TextField } from '../../components/ui/Fields'
+import { LeftOutNote, NeedsProposals } from '../../components/fynd/NeedsProposals'
+import { useStoredScenario } from '../../state/useStoredScenario'
 
 const READINESS: { value: Readiness; label: string }[] = [
   { value: 'low', label: 'Low' }, { value: 'medium', label: 'Medium' }, { value: 'high', label: 'High' },
@@ -22,29 +24,16 @@ type Strs = Record<string, string>
 const num = (v?: string): number | undefined => (v === undefined || v.trim() === '' ? undefined : Number(v))
 
 export function WhatIf() {
-  const [scenario, setScenario] = useState<ScenarioBody | null>(null)
+  const stored = useStoredScenario()
   const [pilotId, setPilotId] = useState('')
-  const [ready, setReady] = useState(false)
-  const [loadErr, setLoadErr] = useState<unknown>(null)
-
-  useEffect(() => { void load() }, [])
-  const load = async () => {
-    setLoadErr(null); setReady(false)
-    try {
-      const doc = (await api.defaults()).data
-      const body: ScenarioBody = { fixture: doc.starting_state, extension: doc.extension }
-      setScenario(body)
-      const first = doc.starting_state.records.pilots[0]
-      if (first) setPilotId(first.id)
-      setReady(true)
-    } catch (e) { setLoadErr(e) }
-  }
-
-  return ready && scenario
-    ? <WhatIfInner scenario={scenario} pilotId={pilotId} setPilotId={setPilotId} />
-    : loadErr != null
-      ? <ErrorNotice title="The default scenario could not be loaded." error={loadErr} onRetry={() => void load()} />
-      : <p className="muted">Loading the shipped scenario…</p>
+  useEffect(() => { if (stored.pilots.length > 0 && !stored.pilots.some((p) => p.id === pilotId)) setPilotId(stored.pilots[0].id) }, [stored.pilots, pilotId])
+  return (
+    <div className="stack" style={{ gap: 16 }}>
+      <NeedsProposals loaded={stored.loaded} error={stored.error} empty={stored.scenario === null} leftOut={stored.leftOut} onRetry={() => void stored.reload()} />
+      <LeftOutNote leftOut={stored.leftOut} />
+      {stored.scenario && pilotId && <WhatIfInner scenario={stored.scenario} pilotId={pilotId} setPilotId={setPilotId} />}
+    </div>
+  )
 }
 
 function WhatIfInner({ scenario, pilotId, setPilotId }: { scenario: ScenarioBody; pilotId: string; setPilotId: (v: string) => void }) {
@@ -105,7 +94,7 @@ function WhatIfInner({ scenario, pilotId, setPilotId }: { scenario: ScenarioBody
     <div className="stack" style={{ gap: 20 }}>
       <div className="panel">
         <h3 className="h3">Pilot and overrides</h3>
-        <p className="hint">Defaults come from the shipped scenario. Leave a field empty to keep its current value; type
+        <p className="hint">The values shown come from your stored proposal. Leave a field empty to keep its current value; type
           <code> null</code> for the running cost to withdraw a recorded figure. Overrides never change stored data.</p>
         <div className="row" style={{ flexWrap: 'wrap', gap: 12, alignItems: 'flex-end' }}>
           <div style={{ minWidth: 260 }}>

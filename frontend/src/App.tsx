@@ -7,12 +7,35 @@ import {
 } from './pages/SimplePages'
 import { ChecksPage } from './features/system/ChecksPage'
 import { AboutPage } from './features/system/AboutPage'
+import Home from './pages/fynd/Home'
+import Processing from './pages/fynd/Processing'
+import Baseline from './pages/fynd/Baseline'
+import Dashboard from './pages/fynd/Dashboard'
+import AiProposals from './pages/fynd/AiProposals'
+import Comparison from './pages/fynd/Comparison'
+import Scenarios from './pages/fynd/Scenarios'
+import Analysis from './pages/fynd/Analysis'
+import Reports from './pages/fynd/Reports'
+import Settings from './pages/fynd/Settings'
 
 export default function App() {
   return (
     <Routes>
       <Route element={<AppShell />}>
-        <Route index element={<Workspace />} />
+        {/* FYND workflow */}
+        <Route index element={<Home />} />
+        <Route path="processing" element={<Processing />} />
+        <Route path="processing/:id" element={<Processing />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="baseline" element={<Baseline />} />
+        <Route path="ai-proposals" element={<AiProposals />} />
+        <Route path="comparison" element={<Comparison />} />
+        <Route path="scenarios" element={<Scenarios />} />
+        <Route path="analysis" element={<Analysis />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="settings" element={<Settings />} />
+        {/* Workbench: the existing tools, unchanged */}
+        <Route path="workspace" element={<Workspace />} />
         <Route path="optimize" element={<OptimizePage />} />
         <Route path="compare" element={<ComparePage />} />
         <Route path="balance-sheet" element={<BalanceSheetPage />} />

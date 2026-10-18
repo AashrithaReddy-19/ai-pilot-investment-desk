@@ -402,7 +402,7 @@ export interface PageInfo {
   /** Unit stated on each table page ("" = none stated). Keys are page numbers. */
   units: Record<string, string>
 }
-export type StatementFormat = 'csv' | 'pdf' | 'xlsx' | 'xls'
+export type StatementFormat = 'csv' | 'pdf' | 'xlsx' | 'xls' | 'docx'
 /** How the gateway read the document before the engine saw it. */
 export interface Extraction {
   source_format: StatementFormat

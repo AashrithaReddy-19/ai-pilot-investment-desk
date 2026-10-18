@@ -11,9 +11,9 @@ import { StageHead } from './PilotsStage'
 /** Stage 3. The service chooses the portfolio; this screen only collects the budget and shows its answer and reasons. */
 export function OptimizeStage({ standalone = false }: { standalone?: boolean }) {
   const s = useWorkspace()
-  const { source, drafts, synthetic, budgetInput, mode, optimization: run, setBudgetInput, setMode, optimize } = s
+  const { source, drafts, budgetInput, mode, optimization: run, setBudgetInput, setMode, optimize } = s
   const [budgetError, setBudgetError] = useState<string | null>(null)
-  const pilots = scenarioPilots({ source, drafts, synthetic })
+  const pilots = scenarioPilots({ source, drafts })
   const hasScenario = pilots.length > 0
   const current = run.key !== null && run.key === currentOptKey(s)
   const loading = run.status === 'loading'
@@ -33,13 +33,13 @@ export function OptimizeStage({ standalone = false }: { standalone?: boolean }) 
       <h2 id="h-stage-3" className="sr">Optimize the portfolio</h2>
 
       {!hasScenario ? (
-        <Empty title="Nothing to optimize yet">{standalone ? 'Add pilots in the decision workspace first.' : 'Add a pilot in stage 1, or explore the synthetic C23 case.'}</Empty>
+        <Empty title="Nothing to optimize yet">{standalone ? 'Add pilots in the decision workspace first.' : 'Add a pilot in stage 1.'}</Empty>
       ) : (
         <>
           <form className="row" style={{ alignItems: 'flex-end', gap: 20 }} onSubmit={(e) => { e.preventDefault(); run1() }} noValidate>
             <div style={{ width: 260, maxWidth: '100%' }}>
               <TextField id="budget" label="Budget for setup costs" required unit="INR" inputMode="numeric" value={budgetInput} onChange={(v) => { setBudgetInput(v); setBudgetError(null) }}
-                error={budgetError ?? undefined} hint={source === 'synthetic' ? 'Blank uses the service’s shipped case budget only for evaluation; enter one here to optimize.' : undefined} />
+                error={budgetError ?? undefined} />
             </div>
             <div className="field">
               <span className="label" id="mode-l">Rank pilots by</span>
@@ -68,10 +68,10 @@ export function OptimizeStage({ standalone = false }: { standalone?: boolean }) 
 
 function Allocation() {
   const s = useWorkspace()
-  const { optimization: run, source, drafts, synthetic } = s
+  const { optimization: run, source, drafts } = s
   const data = run.data!
   const pf = data.portfolio
-  const names = new Map(scenarioPilots({ source, drafts, synthetic }).map((p) => [p.id, p.task]))
+  const names = new Map(scenarioPilots({ source, drafts }).map((p) => [p.id, p.task]))
   const byId = new Map(data.pilots.pilots.map((p) => [p.id, p]))
   const view = (id: string) => byId.get(id)?.[pf.mode]
   const selected = pf.selected
@@ -140,9 +140,9 @@ function Allocation() {
 /** Test your own pick against the budget and the shared-benefit rule, using POST /api/v1/portfolio/check. */
 function ManualCheckPanel() {
   const s = useWorkspace()
-  const { source, drafts, synthetic, mode } = s
+  const { source, drafts, mode } = s
   const budget = s.optimization.data?.portfolio.budget
-  const pilots = scenarioPilots({ source, drafts, synthetic })
+  const pilots = scenarioPilots({ source, drafts })
   const [picked, setPicked] = useState<string[]>([])
   const [result, setResult] = useState<ManualCheck | null>(null)
   const [error, setError] = useState<unknown>(null)

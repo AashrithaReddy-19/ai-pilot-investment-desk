@@ -9,7 +9,7 @@ describe('statementFormat', () => {
     expect(statementFormat('export.csv')).toBe('csv')
   })
   it('rejects everything else', () => {
-    for (const n of ['notes.docx', 'photo.png', 'archive.zip', 'noextension', 'report.pdf.exe', '.csv.bak']) expect(statementFormat(n)).toBeNull()
+    for (const n of ['photo.png', 'archive.zip', 'noextension', 'report.pdf.exe', '.csv.bak']) expect(statementFormat(n)).toBeNull()
   })
 })
 
@@ -19,7 +19,7 @@ describe('validateStatementFile', () => {
     expect(validateStatementFile({ name: 'a.csv', size: 25 * 1024 * 1024 })).toBeNull() // exactly the limit
   })
   it('names the problem in plain words', () => {
-    expect(validateStatementFile({ name: 'a.docx', size: 10 })).toMatch(/PDF, an Excel workbook \(\.xlsx or \.xls\) or a CSV/)
+    expect(validateStatementFile({ name: 'a.docx', size: 10 })).toBeNull()
     expect(validateStatementFile({ name: 'a.pdf', size: 0 })).toMatch(/empty/)
     const big = validateStatementFile({ name: 'big.pdf', size: 30 * 1024 * 1024 })
     expect(big).toMatch(/30\.0 MB/)

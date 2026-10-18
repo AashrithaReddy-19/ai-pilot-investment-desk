@@ -19,6 +19,8 @@ import (
 
 	"c23desk/internal/config"
 	"c23desk/internal/model"
+	"c23desk/internal/proposalextract"
+	"c23desk/internal/storage"
 )
 
 var (
@@ -27,17 +29,30 @@ var (
 )
 
 type Handlers struct {
-	cfg      config.Config
-	store    Store
-	rules    Rules
-	cache    Cache
-	audit    Auditor
-	platform Platform
-	uploads  Uploads
-	notify   func()
-	version  func() string
-	log      *slog.Logger
-	docSlots chan struct{} // limits how many documents are read at once; nil = unlimited
+	cfg           config.Config
+	store         Store
+	rules         Rules
+	cache         Cache
+	audit         Auditor
+	platform      Platform
+	uploads       Uploads
+	objectUploads ObjectUploads
+	objects       storage.Store
+	extractions   ProposalExtractions
+	aiExtractor   ExtractionProvider
+	notify        func()
+	version       func() string
+	log           *slog.Logger
+	docSlots      chan struct{} // limits how many documents are read at once; nil = unlimited
+}
+
+type ProposalExtractions interface {
+	GetProposalExtraction(context.Context, string) (*model.ProposalExtraction, error)
+	SaveProposalExtraction(context.Context, string, string, json.RawMessage, json.RawMessage, *string) (*model.ProposalExtraction, error)
+}
+
+type ExtractionProvider interface {
+	Extract(context.Context, string, []byte) (proposalextract.Result, error)
 }
 
 type fwdOpts struct {

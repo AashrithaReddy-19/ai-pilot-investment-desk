@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { api } from '../../api/client'
 import type { BalanceSheetConfirm, BalanceSheetParse, BalanceUnit, StatementOptions } from '../../api/types'
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
@@ -20,7 +20,7 @@ interface Choices { unit: BalanceUnit; amountColumn: string; sheet: string; page
 
 /* -------------------------------------------------- balance sheet */
 
-export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetConfirm) => void }) {
+export function BalancePanel({ onConfirmed, initialFile }: { onConfirmed: (b: BalanceSheetConfirm) => void; initialFile?: File | null }) {
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState<string | null>(null)
   const [choices, setChoices] = useState<Choices>({ unit: 'auto', amountColumn: '', sheet: '', pages: '' })
@@ -61,6 +61,14 @@ export function BalancePanel({ onConfirmed }: { onConfirmed: (b: BalanceSheetCon
     setFileError(problem)
     setFile(problem ? null : f)
   }
+
+  // a file handed over from another screen (FYND Home) is read once, exactly as if it had been picked here
+  useEffect(() => {
+    if (!initialFile) return
+    const problem = validateStatementFile(initialFile)
+    setFileError(problem)
+    if (!problem) { setFile(initialFile); void doParse(choices, initialFile) }
+  }, [initialFile]) // only when a new file is handed over; later choices re-read through change()
 
   const x = parse?.extraction
   const flags = parse?.flags ?? res?.flags ?? []

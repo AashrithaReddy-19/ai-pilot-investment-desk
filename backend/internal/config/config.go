@@ -35,19 +35,24 @@ type Config struct {
 	DocumentMaxPages    int           // most PDF pages read in one request
 	DocumentTimeout     time.Duration // deadline for receiving, reading and parsing one document
 	DocumentConcurrency int           // documents read at the same time; more get a 429
+	AWSRegion           string
+	S3DocumentsBucket   string
+	PresignedURLExpiry  time.Duration
 }
 
 // Load reads and validates the environment. All problems are reported together.
 func Load() (Config, error) {
 	cfg := Config{
-		Port:           env("PORT", "8080"),
-		DatabaseURL:    os.Getenv("DATABASE_URL"),
-		RedisURL:       os.Getenv("REDIS_URL"),
-		RulesEngineURL: strings.TrimRight(env("RULES_ENGINE_URL", "http://localhost:8000"), "/"),
-		RulesVersion:   env("RULES_VERSION", "fallback"),
-		AllowedOrigins: splitCSV(env("ALLOWED_ORIGINS", "http://localhost:5173")),
-		AuthMode:       strings.ToLower(env("AUTH_MODE", "off")),
-		WorkerEnabled:  true,
+		Port:              env("PORT", "8080"),
+		DatabaseURL:       os.Getenv("DATABASE_URL"),
+		RedisURL:          os.Getenv("REDIS_URL"),
+		RulesEngineURL:    strings.TrimRight(env("RULES_ENGINE_URL", "http://localhost:8000"), "/"),
+		RulesVersion:      env("RULES_VERSION", "fallback"),
+		AllowedOrigins:    splitCSV(env("ALLOWED_ORIGINS", "http://localhost:5173")),
+		AuthMode:          strings.ToLower(env("AUTH_MODE", "off")),
+		WorkerEnabled:     true,
+		AWSRegion:         env("AWS_REGION", ""),
+		S3DocumentsBucket: env("S3_DOCUMENTS_BUCKET", ""),
 	}
 	var errs []error
 	if cfg.AuthMode != "off" && cfg.AuthMode != "required" {
@@ -88,6 +93,11 @@ func Load() (Config, error) {
 	} else {
 		cfg.DocumentConcurrency = n
 	}
+	if secs, err := intEnv("PRESIGNED_URL_EXPIRY_SECONDS", 600, 60, 3600); err != nil {
+		errs = append(errs, err)
+	} else {
+		cfg.PresignedURLExpiry = time.Duration(secs) * time.Second
+	}
 	if n, err := intEnv("WORKER_POLL_MS", 1000, 100, 60_000); err != nil {
 		errs = append(errs, err)
 	} else {
@@ -107,6 +117,9 @@ func Load() (Config, error) {
 	}
 	if cfg.DatabaseURL == "" {
 		errs = append(errs, errors.New("DATABASE_URL is required"))
+	}
+	if (cfg.AWSRegion == "") != (cfg.S3DocumentsBucket == "") {
+		errs = append(errs, errors.New("AWS_REGION and S3_DOCUMENTS_BUCKET must be set together"))
 	}
 	if secs, err := intEnv("REQUEST_TIMEOUT_SECONDS", 5, 1, 120); err != nil {
 		errs = append(errs, err)

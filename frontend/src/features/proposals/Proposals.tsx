@@ -102,8 +102,7 @@ export function Proposals({ refreshKey = 0 }: { refreshKey?: number }) {
       <form className="panel" onSubmit={create}>
         <h3 className="h3">New proposal</h3>
         <p className="hint">A proposal is a named AI pilot candidate. Its inputs are versioned with it, so later observations and decisions attach to the same idea over time.</p>
-        <TextField id="prop-name" label="Name" required value={name} onChange={setName} maxLength={80} error={errs.name}
-          placeholder="e.g. Invoice field extraction" />
+        <TextField id="prop-name" label="Name" required value={name} onChange={setName} maxLength={80} error={errs.name} />
         <TextArea id="prop-notes" label="Notes" value={notes} onChange={setNotes} maxLength={2000} error={errs.notes}
           hint="What the pilot is for and how you intend to measure it. Optional." />
         <button className="btn btn-primary" disabled={busy}>{busy ? 'Creating…' : 'Create proposal'}</button>
@@ -246,7 +245,7 @@ function ProposalDetail({ doc: received }: { doc: Proposal }) {
             </div>
             <div style={{ flex: 1, minWidth: 220 }}>
               <TextField id={`ev-source-${doc.id}`} label="Source" required value={source} onChange={setSource} maxLength={200} error={evErrs.source}
-                hint="Who or what provided this. Record a role, not a person’s name." placeholder="e.g. finance clerk" />
+                hint="Who or what provided this. Record a role, not a person’s name." />
             </div>
           </div>
           <TextArea id={`ev-note-${doc.id}`} label="Note" value={note} onChange={setNote} maxLength={2000} error={evErrs.note}

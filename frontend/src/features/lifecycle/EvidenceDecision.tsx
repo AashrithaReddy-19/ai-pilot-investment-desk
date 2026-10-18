@@ -3,24 +3,23 @@ import { api, saveDownload } from '../../api/client'
 import type { AdviceOutcome, CheckpointOutcome, EvidenceBand, PilotsResponse, ScenarioBody, StopDecision } from '../../api/types'
 import { formatINR } from '../../domain/format'
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
-import { Skeleton, Status, SyntheticTag } from '../../components/ui/Bits'
+import { Skeleton, Status } from '../../components/ui/Bits'
+import { LeftOutNote, NeedsProposals } from '../../components/fynd/NeedsProposals'
+import { useStoredScenario } from '../../state/useStoredScenario'
 
 /** Evidence and decision: the per-pilot evidence band, advice outcome, stop rule and checkpoint
- *  from one /pilots run on the shipped scenario, plus the downloadable dossier and CSV. */
+ *  from one /pilots run on your stored proposals, plus the downloadable dossier and CSV. */
 export function EvidenceDecision() {
+  const stored = useStoredScenario()
+  const scenario: ScenarioBody | null = stored.scenario
   const [pilots, setPilots] = useState<PilotsResponse | null>(null)
-  const [scenario, setScenario] = useState<ScenarioBody | null>(null)
   const [err, setErr] = useState<unknown>(null)
 
-  useEffect(() => { void reload() }, [])
+  useEffect(() => { void reload() }, [scenario]) // eslint-disable-line react-hooks/exhaustive-deps
   const reload = async () => {
     setErr(null); setPilots(null)
-    try {
-      const doc = (await api.defaults()).data
-      const body: ScenarioBody = { fixture: doc.starting_state, extension: doc.extension }
-      setScenario(body)
-      setPilots((await api.pilots(body)).data)
-    } catch (e) { setErr(e) }
+    if (!scenario) return
+    try { setPilots((await api.pilots(scenario)).data) } catch (e) { setErr(e) }
   }
 
   const download = async (kind: 'csv' | 'evidence') => {
@@ -34,9 +33,10 @@ export function EvidenceDecision() {
         <button className="btn" onClick={() => void download('evidence')} disabled={!scenario}>Download evidence dossier (MD)</button>
         <button className="btn" onClick={() => void download('csv')} disabled={!scenario}>Download pilot metrics (CSV)</button>
       </div>
+      <NeedsProposals loaded={stored.loaded} error={stored.error} empty={stored.scenario === null} leftOut={stored.leftOut} onRetry={() => void stored.reload()} />
+      <LeftOutNote leftOut={stored.leftOut} />
       {err != null && <ErrorNotice title="The pilots could not be loaded." error={err} onRetry={() => void reload()} />}
-      {!err && !pilots && <Skeleton rows={4} />}
-      {pilots && pilots.pilots.length === 0 && <p className="muted">No pilots in the shipped scenario.</p>}
+      {!err && scenario && !pilots && <Skeleton rows={4} />}
       {pilots?.pilots.map((p) => {
         const adv = p.advice
         const cp = p.checkpoint
@@ -49,7 +49,6 @@ export function EvidenceDecision() {
               {adv && <Status tone={bandTone(adv.evidence.band)}>Evidence: {adv.evidence.band} ({adv.evidence.observed_weight}/{adv.evidence.total_weight} inputs real)</Status>}
               {cp && <Status tone={checkpointTone(cp.checkpoint)}>Checkpoint: {cp.checkpoint}</Status>}
               <Status tone={p.independent.net > 0 ? 'ok' : 'bad'}>Net {formatINR(p.independent.net)}/yr</Status>
-              {scenariosOwn(p.advice?.evidence.band_capped_by_fixture ?? false)}
             </div>
             {adv && (
               <>
@@ -86,10 +85,6 @@ export function EvidenceDecision() {
       <button className="btn" onClick={() => void reload()}>Re-run</button>
     </div>
   )
-}
-
-function scenariosOwn(capped: boolean): React.ReactNode {
-  return capped ? <SyntheticTag /> : null
 }
 
 type TagTone = 'ok' | 'warn' | 'bad' | 'accent' | 'off'

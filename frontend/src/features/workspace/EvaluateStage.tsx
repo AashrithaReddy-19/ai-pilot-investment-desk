@@ -12,7 +12,7 @@ const ASSUMED_LINES = new Set(['RUN_COST_ASSUMED', 'ADOPTION_ASSUMED', 'READINES
 export function EvaluateStage() {
   const s = useWorkspace()
   const { evaluation: run, source, drafts, evaluate } = s
-  const hasScenario = source === 'synthetic' || (source === 'drafts' && drafts.length > 0)
+  const hasScenario = source === 'drafts' && drafts.length > 0
   const current = run.key !== null && run.key === currentEvalKey(s)
   const loading = run.status === 'loading'
 
@@ -23,7 +23,7 @@ export function EvaluateStage() {
       </StageHead>
       <h2 id="h-stage-2" className="sr">Evaluate pilots</h2>
 
-      {!hasScenario && <Empty title="Nothing to evaluate yet">Add a pilot in stage 1, or explore the synthetic C23 case, then come back here.</Empty>}
+      {!hasScenario && <Empty title="Nothing to evaluate yet">Add a pilot in stage 1, then come back here.</Empty>}
 
       <div aria-live="polite" className="stack">
         {hasScenario && run.status === 'idle' && <Empty title="Not evaluated yet">Press “Evaluate pilots” to see independent and conservative results side by side.</Empty>}

@@ -110,45 +110,62 @@ type UploadIn struct {
 	Kind        string // balance_sheet | pilots
 	Filename    string
 	ContentType string
-	Format      string // csv | xlsx
+	Format      string // csv | pdf | xlsx | xls | docx
 	SHA256      string
 	Content     []byte
 	Options     json.RawMessage
 }
 
+type ObjectUploadIn struct {
+	ID          string
+	Kind        string
+	Filename    string
+	ContentType string
+	Format      string
+	SizeBytes   int
+	SHA256      string
+	ObjectKey   string
+	Options     json.RawMessage
+}
+
 // Upload is the job row without the file bytes.
 type Upload struct {
-	ID            string          `json:"id"`
-	Kind          string          `json:"kind"`
-	Filename      string          `json:"filename"`
-	ContentType   string          `json:"content_type"`
-	Format        string          `json:"format"`
-	SizeBytes     int             `json:"size_bytes"`
-	SHA256        string          `json:"sha256"`
-	Options       json.RawMessage `json:"options"`
-	Status        string          `json:"status"`
-	Attempts      int             `json:"attempts"`
-	MaxAttempts   int             `json:"max_attempts"`
-	NextAttemptAt time.Time       `json:"next_attempt_at"`
-	LastError     *string         `json:"last_error"`
-	Result        json.RawMessage `json:"result"`
-	Confirmed     json.RawMessage `json:"confirmed"`
-	CreatedBy     *string         `json:"created_by"`
-	CreatedAt     time.Time       `json:"created_at"`
-	UpdatedAt     time.Time       `json:"updated_at"`
+	ID              string          `json:"id"`
+	Kind            string          `json:"kind"`
+	Filename        string          `json:"filename"`
+	ContentType     string          `json:"content_type"`
+	Format          string          `json:"format"`
+	SizeBytes       int             `json:"size_bytes"`
+	SHA256          string          `json:"sha256"`
+	Options         json.RawMessage `json:"options"`
+	Status          string          `json:"status"`
+	Attempts        int             `json:"attempts"`
+	MaxAttempts     int             `json:"max_attempts"`
+	NextAttemptAt   time.Time       `json:"next_attempt_at"`
+	LastError       *string         `json:"last_error"`
+	Result          json.RawMessage `json:"result"`
+	Confirmed       json.RawMessage `json:"confirmed"`
+	CreatedBy       *string         `json:"created_by"`
+	CreatedAt       time.Time       `json:"created_at"`
+	UpdatedAt       time.Time       `json:"updated_at"`
+	StorageProvider string          `json:"storage_provider,omitempty"`
+	ObjectKey       *string         `json:"-"`
+	UploadedAt      *time.Time      `json:"uploaded_at,omitempty"`
 }
 
 // UploadJob is what the worker claims: the row's identity, the options and the original bytes.
 type UploadJob struct {
-	ID          string
-	WorkspaceID string
-	Kind        string
-	Filename    string
-	ContentType string
-	Options     json.RawMessage
-	Content     []byte
-	Attempts    int
-	MaxAttempts int
+	ID              string
+	WorkspaceID     string
+	Kind            string
+	Filename        string
+	ContentType     string
+	Options         json.RawMessage
+	Content         []byte
+	StorageProvider string
+	ObjectKey       string
+	Attempts        int
+	MaxAttempts     int
 }
 
 type CorrectionIn struct {

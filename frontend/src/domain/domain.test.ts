@@ -52,8 +52,7 @@ describe('request payloads', () => {
     expect(e.defaults).toEqual({})
     expect(e.pilots[0]).toMatchObject({ id: 'P1', adoption_pct: 60, readiness: 'high', observed_adoption_pct: null })
   })
-  it('sends nothing for the synthetic case and nothing at all with no scenario', () => {
-    expect(overridesOf('synthetic', [])).toEqual({})
+  it('sends nothing at all with no scenario', () => {
     expect(overridesOf('none', [])).toBeNull()
     expect(overridesOf('drafts', [])).toBeNull()
     expect(overridesOf('drafts', [draft])).toEqual(overridesFor([draft]))

@@ -12,19 +12,47 @@ import (
 )
 
 const uploadCols = `id::text, kind, filename, content_type, format, size_bytes, sha256, options, status, attempts, max_attempts,
-	next_attempt_at, last_error, result, confirmed, created_by::text, created_at, updated_at`
+	next_attempt_at, last_error, result, confirmed, created_by::text, created_at, updated_at, storage_provider, object_key, uploaded_at`
 
 func scanUpload(row pgx.Row) (*model.Upload, error) {
 	var u model.Upload
 	err := row.Scan(&u.ID, &u.Kind, &u.Filename, &u.ContentType, &u.Format, &u.SizeBytes, &u.SHA256, &u.Options, &u.Status,
-		&u.Attempts, &u.MaxAttempts, &u.NextAttemptAt, &u.LastError, &u.Result, &u.Confirmed, &u.CreatedBy, &u.CreatedAt, &u.UpdatedAt)
+		&u.Attempts, &u.MaxAttempts, &u.NextAttemptAt, &u.LastError, &u.Result, &u.Confirmed, &u.CreatedBy, &u.CreatedAt, &u.UpdatedAt,
+		&u.StorageProvider, &u.ObjectKey, &u.UploadedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
 	}
+
 	if err != nil {
 		return nil, err
 	}
 	return &u, nil
+}
+
+func (s *Store) CreateObjectUpload(ctx context.Context, in model.ObjectUploadIn) (*model.Upload, bool, error) {
+	opts := []byte(in.Options)
+	if len(opts) == 0 {
+		opts = []byte(`{}`)
+	}
+	u, err := scanUpload(s.pool.QueryRow(ctx, `
+		INSERT INTO uploads (id, workspace_id, kind, filename, content_type, format, size_bytes, sha256, content, object_key, storage_provider, options, status, created_by)
+		VALUES ($1::uuid, $2, $3, $4, $5, $6, $7, $8, NULL, $9, 's3', $10, 'pending_upload', $11::uuid)
+		ON CONFLICT (workspace_id, kind, sha256) DO NOTHING
+		RETURNING `+uploadCols,
+		in.ID, model.WorkspaceID(ctx), in.Kind, in.Filename, in.ContentType, in.Format, in.SizeBytes, in.SHA256,
+		in.ObjectKey, opts, model.ActorID(ctx)))
+	if errors.Is(err, model.ErrNotFound) {
+		existing, getErr := scanUpload(s.pool.QueryRow(ctx, `SELECT `+uploadCols+` FROM uploads
+			WHERE workspace_id = $1 AND kind = $2 AND sha256 = $3`, model.WorkspaceID(ctx), in.Kind, in.SHA256))
+		return existing, false, getErr
+	}
+	return u, err == nil, err
+}
+
+func (s *Store) CompleteObjectUpload(ctx context.Context, id string) (*model.Upload, error) {
+	return scanUpload(s.pool.QueryRow(ctx, `UPDATE uploads SET status = 'received', uploaded_at = now(), last_error = NULL
+		WHERE id::text = $1 AND workspace_id = $2 AND storage_provider = 's3' AND status = 'pending_upload'
+		RETURNING `+uploadCols, id, model.WorkspaceID(ctx)))
 }
 
 // CreateUpload stores the original file and queues it. The same bytes uploaded again for the same kind
@@ -56,9 +84,11 @@ func (s *Store) GetUpload(ctx context.Context, id string) (*model.Upload, error)
 // UploadContent returns the original bytes and metadata needed to serve or re-send the file.
 func (s *Store) UploadContent(ctx context.Context, id string) (*model.UploadJob, error) {
 	var j model.UploadJob
-	err := s.pool.QueryRow(ctx, `SELECT id::text, workspace_id::text, kind, filename, content_type, options, content, attempts, max_attempts
+	err := s.pool.QueryRow(ctx, `SELECT id::text, workspace_id::text, kind, filename, content_type, options, content, attempts, max_attempts,
+		storage_provider, COALESCE(object_key, '')
 		FROM uploads WHERE id::text = $1 AND workspace_id = $2`, id, model.WorkspaceID(ctx),
-	).Scan(&j.ID, &j.WorkspaceID, &j.Kind, &j.Filename, &j.ContentType, &j.Options, &j.Content, &j.Attempts, &j.MaxAttempts)
+	).Scan(&j.ID, &j.WorkspaceID, &j.Kind, &j.Filename, &j.ContentType, &j.Options, &j.Content, &j.Attempts, &j.MaxAttempts,
+		&j.StorageProvider, &j.ObjectKey)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, model.ErrNotFound
 	}
@@ -110,8 +140,10 @@ func (s *Store) ClaimUploadJob(ctx context.Context) (*model.UploadJob, error) {
 			WHERE (status = 'received' OR (status = 'failed' AND attempts < max_attempts)) AND next_attempt_at <= now()
 			ORDER BY next_attempt_at, created_at LIMIT 1
 			FOR UPDATE SKIP LOCKED)
-		RETURNING id::text, workspace_id::text, kind, filename, content_type, options, content, attempts, max_attempts`,
-	).Scan(&j.ID, &j.WorkspaceID, &j.Kind, &j.Filename, &j.ContentType, &j.Options, &j.Content, &j.Attempts, &j.MaxAttempts)
+	RETURNING id::text, workspace_id::text, kind, filename, content_type, options, content, attempts, max_attempts,
+		storage_provider, COALESCE(object_key, '')`,
+	).Scan(&j.ID, &j.WorkspaceID, &j.Kind, &j.Filename, &j.ContentType, &j.Options, &j.Content, &j.Attempts, &j.MaxAttempts,
+		&j.StorageProvider, &j.ObjectKey)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}

@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import { api, ApiError } from '../api/client'
-import type { DefaultsDoc, EvaluateResponse, Mode, PilotsResponse, PortfolioResult, ScenarioBody, ScenarioOverrides } from '../api/types'
+import type { EvaluateResponse, Mode, PilotsResponse, PortfolioResult, ScenarioBody, ScenarioOverrides } from '../api/types'
 import { DraftPilot, overridesFor } from '../domain/draft'
 
-export type Source = 'none' | 'drafts' | 'synthetic'
+export type Source = 'none' | 'drafts'
 export type RunStatus = 'idle' | 'loading' | 'done' | 'error'
 export interface Run<T> { status: RunStatus; data: T | null; error: ApiError | null; key: string | null; requestId?: string; cache?: string }
 const idle = <T,>(): Run<T> => ({ status: 'idle', data: null, error: null, key: null })
@@ -19,23 +19,19 @@ export function parseBudget(input: string): number | null | undefined {
   return Number.isFinite(n) && n >= 0 ? n : undefined
 }
 
-/** The overrides every scenario call carries. null means there is nothing to evaluate yet. Synthetic sends none, so the engine uses its shipped case. */
+/** The overrides every scenario call carries. null means there is nothing to evaluate yet. */
 export function overridesOf(source: Source, drafts: DraftPilot[]): ScenarioOverrides | null {
   if (source === 'drafts') return drafts.length > 0 ? overridesFor(drafts) : null
-  if (source === 'synthetic') return {}
   return null
 }
 
 /** Identifies the exact inputs behind a result. A result whose key differs from the current one is stale and must not be shown as current. */
 export const scenarioKey = (source: Source, drafts: DraftPilot[]): string =>
-  source === 'drafts' ? `d:${JSON.stringify(drafts)}` : source === 'synthetic' ? 's' : ''
+  source === 'drafts' ? `d:${JSON.stringify(drafts)}` : ''
 
 interface State {
   source: Source
   drafts: DraftPilot[]
-  synthetic: DefaultsDoc | null
-  syntheticStatus: 'idle' | 'loading' | 'ready' | 'error'
-  syntheticError: ApiError | null
   budgetInput: string
   mode: Mode
   evaluation: Run<EvaluateResponse>
@@ -45,8 +41,6 @@ interface State {
   updateDraft: (oldId: string, d: DraftPilot) => void
   removeDraft: (id: string) => void
   startFresh: () => void
-  loadSynthetic: () => Promise<void>
-  copySyntheticToDrafts: () => void
   loadScope: (drafts: DraftPilot[], mode: Mode, budget: number | null) => void
   setBudgetInput: (v: string) => void
   setMode: (m: Mode) => void
@@ -59,9 +53,6 @@ const asApiError = (e: unknown): ApiError => (e instanceof ApiError ? e : new Ap
 export const useWorkspace = create<State>((set, get) => ({
   source: 'none',
   drafts: [],
-  synthetic: null,
-  syntheticStatus: 'idle',
-  syntheticError: null,
   budgetInput: '',
   mode: 'independent',
   evaluation: idle(),
@@ -75,31 +66,6 @@ export const useWorkspace = create<State>((set, get) => ({
   }),
   startFresh: () => set({ source: 'none', drafts: [], evaluation: idle(), optimization: idle() }),
 
-  loadSynthetic: async () => {
-    set({ syntheticStatus: 'loading', syntheticError: null })
-    try {
-      const { data } = await api.defaults()
-      set({ synthetic: data, syntheticStatus: 'ready', source: 'synthetic' })
-    } catch (e) {
-      set({ syntheticStatus: 'error', syntheticError: asApiError(e) })
-    }
-  },
-  copySyntheticToDrafts: () => {
-    const doc = get().synthetic
-    if (!doc) return
-    const ext = new Map(doc.extension.pilots.map((p) => [p.id, p]))
-    const drafts: DraftPilot[] = doc.starting_state.records.pilots.map((p) => {
-      const e = ext.get(p.id)
-      return {
-        id: p.id, task: p.task, description: e?.description ?? '', setup_cost_inr: p.setup_cost_inr,
-        annual_running_cost_inr: p.annual_running_cost_inr, annual_benefit_inr: p.annual_benefit_inr,
-        benefit_type: p.benefit_type === 'time freed' ? 'time freed' : 'cashable assumption', overlap_group: p.overlap_group,
-        adoption_pct: e?.adoption_pct ?? null, readiness: e?.readiness ?? null,
-        observed_adoption_pct: e?.observed_adoption_pct ?? null, observed_quality_pct: e?.observed_quality_pct ?? null,
-      }
-    })
-    set({ source: 'drafts', drafts })
-  },
   loadScope: (drafts, mode, budget) => set({ source: drafts.length ? 'drafts' : 'none', drafts, mode, budgetInput: budget === null ? '' : String(budget), evaluation: idle(), optimization: idle() }),
   setBudgetInput: (budgetInput) => set({ budgetInput }),
   setMode: (mode) => set({ mode }),
@@ -148,8 +114,7 @@ export const currentOptKey = (s: Pick<State, 'source' | 'drafts' | 'budgetInput'
 }
 
 /** The pilots in the current scenario, as id and name, for pickers. Comes from user input or the service's own defaults. */
-export function scenarioPilots(s: Pick<State, 'source' | 'drafts' | 'synthetic'>): { id: string; task: string }[] {
+export function scenarioPilots(s: Pick<State, 'source' | 'drafts'>): { id: string; task: string }[] {
   if (s.source === 'drafts') return s.drafts.map((d) => ({ id: d.id, task: d.task }))
-  if (s.source === 'synthetic' && s.synthetic) return s.synthetic.starting_state.records.pilots.map((p) => ({ id: p.id, task: p.task }))
   return []
 }

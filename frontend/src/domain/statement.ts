@@ -1,21 +1,21 @@
 import type { BalanceCandidate, Extraction, Flag, ParseFinding, StatementFormat, StatementSource } from '../api/types'
 
 /** What the balance-sheet upload accepts. The gateway checks the bytes again; this only gives instant feedback. */
-export const STATEMENT_ACCEPT = '.pdf,.xlsx,.xls,.csv,application/pdf,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+export const STATEMENT_ACCEPT = '.pdf,.xlsx,.xls,.docx,.csv,application/pdf,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 export const MAX_STATEMENT_MB = 25
 
-export const FORMAT_LABEL: Record<StatementFormat, string> = { pdf: 'PDF', xlsx: 'Excel (.xlsx)', xls: 'Excel (.xls)', csv: 'CSV' }
+export const FORMAT_LABEL: Record<StatementFormat, string> = { pdf: 'PDF', xlsx: 'Excel (.xlsx)', xls: 'Excel (.xls)', docx: 'Word (.docx)', csv: 'CSV' }
 
 export function statementFormat(name: string): StatementFormat | null {
   const m = /\.([A-Za-z0-9]+)$/.exec(name.trim())
   const ext = m?.[1].toLowerCase()
-  return ext === 'pdf' || ext === 'xlsx' || ext === 'xls' || ext === 'csv' ? ext : null
+  return ext === 'pdf' || ext === 'xlsx' || ext === 'xls' || ext === 'docx' || ext === 'csv' ? ext : null
 }
 
 /** A plain-language reason the file cannot be used, or null when it can be tried. */
 export function validateStatementFile(f: { name: string; size: number }, maxMB = MAX_STATEMENT_MB): string | null {
   if (!statementFormat(f.name)) {
-    return `“${f.name}” is not a supported file. Upload a PDF, an Excel workbook (.xlsx or .xls) or a CSV file.`
+    return `“${f.name}” is not a supported file. Upload a PDF, an Excel workbook (.xlsx or .xls), a Word document (.docx) or a CSV file.`
   }
   if (f.size === 0) return `“${f.name}” is empty.`
   if (f.size > maxMB * 1024 * 1024) {

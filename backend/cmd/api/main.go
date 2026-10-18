@@ -23,12 +23,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
+	"c23desk/internal/bedrock"
 	"c23desk/internal/cache"
 	"c23desk/internal/config"
 	"c23desk/internal/httpapi"
 	"c23desk/internal/jobs"
 	"c23desk/internal/model"
 	"c23desk/internal/rules"
+	"c23desk/internal/storage"
 	"c23desk/internal/store"
 )
 
@@ -91,6 +93,24 @@ func run(log *slog.Logger, args []string) error {
 	defer func() { _ = cch.Close() }()
 
 	engine := rules.New(cfg.RulesEngineURL, cfg.RequestTimeout)
+	var objectStore storage.Store
+	var aiExtractor httpapi.ExtractionProvider
+	if cfg.S3DocumentsBucket != "" {
+		objectStore, err = storage.NewS3(ctx, cfg.AWSRegion, cfg.S3DocumentsBucket)
+		if err != nil {
+			return fmt.Errorf("document storage: %w", err)
+		}
+	}
+	bedrockCfg, err := bedrock.LoadFromEnv()
+	if err != nil {
+		return fmt.Errorf("Bedrock configuration: %w", err)
+	}
+	if bedrockCfg.Enabled {
+		aiExtractor, err = bedrock.NewExtractor(ctx, bedrockCfg)
+		if err != nil {
+			return fmt.Errorf("Bedrock client: %w", err)
+		}
+	}
 
 	// The cache key follows the engine's own rules_version, re-read periodically, so an engine upgrade
 	// retires every cached answer without anybody editing RULES_VERSION.
@@ -99,22 +119,26 @@ func run(log *slog.Logger, args []string) error {
 	var notify func()
 	if cfg.WorkerEnabled {
 		w := (&jobs.Worker{Queue: st, Engine: engine, ParsePath: httpapi.ParsePath, Fields: httpapi.UploadFields,
-			Poll: cfg.WorkerPoll, CallTimeout: 30 * time.Second, Log: log}).Init()
+			Poll: cfg.WorkerPoll, CallTimeout: 30 * time.Second, Log: log, Storage: objectStore}).Init()
 		notify = w.Notify
 		go w.Run(ctx)
 	}
 
 	router := httpapi.NewRouter(httpapi.Deps{
-		Cfg:      cfg,
-		Store:    st,
-		Rules:    engine,
-		Cache:    cch,
-		Audit:    st,
-		Platform: st,
-		Uploads:  st,
-		Notify:   notify,
-		Version:  cch.Version,
-		Log:      log,
+		Cfg:           cfg,
+		Store:         st,
+		Rules:         engine,
+		Cache:         cch,
+		Audit:         st,
+		Platform:      st,
+		Uploads:       st,
+		ObjectUploads: st,
+		Objects:       objectStore,
+		Extractions:   st,
+		AIExtractor:   aiExtractor,
+		Notify:        notify,
+		Version:       cch.Version,
+		Log:           log,
 	})
 	srv := &http.Server{
 		Addr:              ":" + cfg.Port,

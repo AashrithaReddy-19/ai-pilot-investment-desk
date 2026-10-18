@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"archive/zip"
 	"bytes"
 	"context"
 	"crypto/sha256"
@@ -40,6 +41,9 @@ type Uploads interface {
 }
 
 const xlsxMIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+const xlsMIME = "application/vnd.ms-excel"
+const pdfMIME = "application/pdf"
+const docxMIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
 var (
 	uploadKinds   = map[string]bool{"balance_sheet": true, "pilots": true}
@@ -66,11 +70,29 @@ func UploadFields(options json.RawMessage) map[string]string {
 // sniffFormat checks the bytes really are what the extension claims.
 func sniffFormat(name string, b []byte) (format, contentType string, err error) {
 	switch strings.ToLower(filepath.Ext(name)) {
+	case ".pdf":
+		if !bytes.HasPrefix(b, []byte("%PDF-")) {
+			return "", "", errors.New("the file is named .pdf but does not have a valid PDF signature")
+		}
+		return "pdf", pdfMIME, nil
 	case ".xlsx":
 		if !bytes.HasPrefix(b, []byte("PK\x03\x04")) {
 			return "", "", errors.New("the file is named .xlsx but is not an XLSX workbook")
 		}
+		if !zipHasFile(b, "[Content_Types].xml") {
+			return "", "", errors.New("the file is named .xlsx but is not an XLSX workbook")
+		}
 		return "xlsx", xlsxMIME, nil
+	case ".xls":
+		if !bytes.HasPrefix(b, []byte{0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1}) {
+			return "", "", errors.New("the file is named .xls but is not an XLS workbook")
+		}
+		return "xls", xlsMIME, nil
+	case ".docx":
+		if !bytes.HasPrefix(b, []byte("PK\x03\x04")) || !zipHasFile(b, "[Content_Types].xml") || !zipHasFile(b, "word/document.xml") {
+			return "", "", errors.New("the file is named .docx but is not a DOCX document")
+		}
+		return "docx", docxMIME, nil
 	case ".csv":
 		body := bytes.TrimPrefix(b, []byte("\xef\xbb\xbf"))
 		if bytes.IndexByte(body, 0) >= 0 || !utf8.Valid(body) {
@@ -78,7 +100,20 @@ func sniffFormat(name string, b []byte) (format, contentType string, err error) 
 		}
 		return "csv", "text/csv", nil
 	}
-	return "", "", errors.New("only .csv and .xlsx files are accepted")
+	return "", "", errors.New("only PDF, XLSX, XLS, DOCX and CSV files are accepted")
+}
+
+func zipHasFile(b []byte, want string) bool {
+	r, err := zip.NewReader(bytes.NewReader(b), int64(len(b)))
+	if err != nil {
+		return false
+	}
+	for _, f := range r.File {
+		if f.Name == want {
+			return true
+		}
+	}
+	return false
 }
 
 // createUpload — POST /api/v1/uploads (multipart: file, kind, unit?, period?, amount_column?).
@@ -211,22 +246,53 @@ func (h *Handlers) downloadUpload(c *gin.Context) {
 	if !ok {
 		return
 	}
-	j, err := h.uploads.UploadContent(c.Request.Context(), id)
+	u, err := h.uploads.GetUpload(c.Request.Context(), id)
 	if err != nil {
 		h.storeErr(c, err)
 		return
+	}
+	var legacyJob *model.UploadJob
+	filename := u.Filename
+	if filename == "" {
+		legacyJob, err = h.uploads.UploadContent(c.Request.Context(), id)
+		if err != nil {
+			h.storeErr(c, err)
+			return
+		}
+		filename = legacyJob.Filename
 	}
 	safe := strings.Map(func(r rune) rune {
 		if r == '"' || r == '\\' || r < 0x20 || r == 0x7f {
 			return '_'
 		}
 		return r
-	}, j.Filename)
+	}, filename)
 	c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, safe))
 	c.Header("X-Content-Type-Options", "nosniff")
 	c.Header("Cache-Control", "private, no-store")
 	h.record(c, "upload.download", "upload", id, nil)
-	c.Data(http.StatusOK, j.ContentType, j.Content)
+	if u.StorageProvider == "s3" && u.ObjectKey != nil {
+		if h.objects == nil {
+			fail(c, http.StatusServiceUnavailable, "not_configured", "S3 document storage is not configured on this gateway", "")
+			return
+		}
+		body, err := h.objects.Open(c.Request.Context(), *u.ObjectKey)
+		if err != nil {
+			fail(c, http.StatusBadGateway, "storage_unavailable", "document storage is unavailable", "")
+			return
+		}
+		defer body.Close()
+		c.DataFromReader(http.StatusOK, int64(u.SizeBytes), u.ContentType, body, nil)
+		return
+	}
+	if legacyJob == nil {
+		legacyJob, err = h.uploads.UploadContent(c.Request.Context(), id)
+		if err != nil {
+			h.storeErr(c, err)
+			return
+		}
+	}
+	c.Data(http.StatusOK, legacyJob.ContentType, legacyJob.Content)
 }
 
 func (h *Handlers) retryUpload(c *gin.Context) {

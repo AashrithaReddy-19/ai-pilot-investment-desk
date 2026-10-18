@@ -9,7 +9,7 @@ CREATE TABLE uploads (
     kind            TEXT NOT NULL CHECK (kind IN ('balance_sheet', 'pilots')),
     filename        TEXT NOT NULL CHECK (char_length(filename) BETWEEN 1 AND 200),
     content_type    TEXT NOT NULL,
-    format          TEXT NOT NULL CHECK (format IN ('csv', 'xlsx')),
+    format          TEXT NOT NULL CHECK (format IN ('csv', 'pdf', 'xlsx', 'xls', 'docx')),
     size_bytes      INT NOT NULL CHECK (size_bytes > 0),
     sha256          TEXT NOT NULL CHECK (sha256 ~ '^[0-9a-f]{64}$'),
     content         BYTEA NOT NULL,

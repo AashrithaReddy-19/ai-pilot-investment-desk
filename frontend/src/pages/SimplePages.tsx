@@ -26,7 +26,7 @@ export function OptimizePage() {
   return (
     <>
       <Head eyebrow="Portfolio optimization" title="Fund the best combination within budget.">
-        The same optimizer as stage 3 of the <Link to="/">decision workspace</Link>, using the pilots in that workspace.
+        The same optimizer as stage 3 of the <Link to="/workspace">decision workspace</Link>, using the pilots in that workspace.
       </Head>
       <OptimizeStage standalone />
     </>
@@ -70,7 +70,7 @@ export function EvidencePage() {
   return (
     <>
       <Head eyebrow="Evidence and decision" title="How strong the evidence is, and what the rule says.">
-        One run of the engine on the shipped scenario: the evidence band, the decision outcome and the next-best action per pilot, the stop rule, and the Phase 6 checkpoint — with the dossier and CSV downloads.
+        One run of the engine on your stored proposals: the evidence band, the decision outcome and the next-best action per pilot, the stop rule, and the Phase 6 checkpoint — with the dossier and CSV downloads.
       </Head>
       <EvidenceDecision />
     </>

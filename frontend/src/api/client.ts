@@ -13,6 +13,9 @@ import * as history from './history'
 import * as lifecycle from './lifecycle'
 import * as proposals from './proposals'
 import * as interviews from './interviews'
+import * as views from './views'
+import * as tracker from './tracker'
+import * as uploads from './uploads'
 
 export * from './http' // ApiError, describeError, parseErrorEnvelope, saveDownload, Download
 
@@ -26,4 +29,7 @@ export const api = {
   ...lifecycle,
   ...proposals,
   ...interviews,
+  ...views,
+  ...tracker,
+  ...uploads,
 }

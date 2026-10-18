@@ -1,6 +1,7 @@
 package httpapi
 
 import (
+	"archive/zip"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -26,6 +27,48 @@ type fakeUploads struct {
 	status  string
 	result  json.RawMessage
 	kind    string
+}
+
+func TestSniffFormatChecksDocumentSignatures(t *testing.T) {
+	var xlsx bytes.Buffer
+	zw := zip.NewWriter(&xlsx)
+	for _, name := range []string{"[Content_Types].xml"} {
+		f, err := zw.Create(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, _ = f.Write([]byte("ok"))
+	}
+	if err := zw.Close(); err != nil {
+		t.Fatal(err)
+	}
+	var docx bytes.Buffer
+	zw = zip.NewWriter(&docx)
+	for _, name := range []string{"[Content_Types].xml", "word/document.xml"} {
+		f, err := zw.Create(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, _ = f.Write([]byte("ok"))
+	}
+	if err := zw.Close(); err != nil {
+		t.Fatal(err)
+	}
+	tests := []struct {
+		name, format string
+		body         []byte
+	}{
+		{"statement.pdf", "pdf", []byte("%PDF-1.7")},
+		{"statement.xls", "xls", []byte{0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1}},
+		{"statement.xlsx", "xlsx", xlsx.Bytes()},
+		{"statement.docx", "docx", docx.Bytes()},
+	}
+	for _, tc := range tests {
+		format, _, err := sniffFormat(tc.name, tc.body)
+		if err != nil || format != tc.format {
+			t.Errorf("%s: got format=%q err=%v", tc.name, format, err)
+		}
+	}
 }
 
 func (f *fakeUploads) CreateUpload(_ context.Context, in model.UploadIn) (*model.Upload, bool, error) {
@@ -102,6 +145,7 @@ func TestUploadIsValidatedStoredAndDeduplicated(t *testing.T) {
 	if w.Code != 202 || !contains(w.Body.String(), `"duplicate":false`) || n != 1 {
 		t.Fatalf("first upload: %d %s notified=%d", w.Code, w.Body.String(), n)
 	}
+
 	if !contains(w.Body.String(), `"sha256":"`) || !contains(w.Body.String(), `"format":"csv"`) {
 		t.Fatalf("upload must carry checksum and format: %s", w.Body.String())
 	}
@@ -117,7 +161,7 @@ func TestUploadIsValidatedStoredAndDeduplicated(t *testing.T) {
 		want     int
 		contains string
 	}{
-		{map[string]string{"kind": "balance_sheet"}, "x.pdf", []byte("%PDF"), 415, "only .csv and .xlsx"},
+		{map[string]string{"kind": "balance_sheet"}, "x.pdf", []byte("%PDF"), 415, "valid PDF signature"},
 		{map[string]string{"kind": "balance_sheet"}, "x.xlsx", []byte("not a zip"), 415, "not an XLSX"},
 		{map[string]string{"kind": "balance_sheet"}, "x.csv", []byte("a,b\x00c"), 415, "not UTF-8"},
 		{map[string]string{"kind": "invoices"}, "x.csv", csv, 422, "kind must be"},
@@ -132,6 +176,7 @@ func TestUploadIsValidatedStoredAndDeduplicated(t *testing.T) {
 			t.Errorf("%s %v: want %d %q, got %d %s", tc.name, tc.fields, tc.want, tc.contains, w.Code, w.Body.String())
 		}
 	}
+
 }
 
 func TestUploadDownloadIsAnAttachment(t *testing.T) {

@@ -16,7 +16,6 @@ export function Empty({ title, children, actions }: { title: string; children?: 
 
 /** Marks a value the service filled in because the user left it blank. */
 export const AssumedTag = () => <span className="tag tag-assumed" title="Filled in by the service because it was left blank">assumed</span>
-export const SyntheticTag = () => <span className="tag tag-synthetic" title="Teaching data supplied with the case">synthetic</span>
 
 export const hasFlag = (flags: Flag[], code: string): boolean => flags.some((f) => f.code === code)
 

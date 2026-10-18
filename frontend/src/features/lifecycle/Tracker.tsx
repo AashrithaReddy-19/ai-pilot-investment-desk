@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
 import { api } from '../../api/client'
-import type { CreatePlanResponse, PilotPlan, PlanProgress, ReallocationResponse } from '../../api/types'
+import type { CreatePlanResponse, PilotPlan, PlanProgress, ReallocationResponse, ScenarioBody } from '../../api/types'
 import { formatINR, formatPct } from '../../domain/format'
 import { ErrorNotice } from '../../components/ui/ErrorNotice'
 import { SelectField, TextField } from '../../components/ui/Fields'
 import { Status } from '../../components/ui/Bits'
+import { LeftOutNote, NeedsProposals } from '../../components/fynd/NeedsProposals'
+import { useStoredScenario } from '../../state/useStoredScenario'
 
 /** Phase 6 tracker: 30-day plans, expected-vs-actual progress, status moves and the
  *  reallocation recommendation when a pilot is stopped. Recommendations never auto-apply. */
 export function Tracker() {
   const [plans, setPlans] = useState<PilotPlan[] | null>(null)
-  const [pilotIds, setPilotIds] = useState<string[]>([])
+  const stored = useStoredScenario()
+  const pilotIds = stored.pilots.map((p) => p.id)
   const [err, setErr] = useState<unknown>(null)
 
   const [selected, setSelected] = useState<string>('')
@@ -27,19 +30,14 @@ export function Tracker() {
       setPlans(await api.listPlans())
     } catch (e) { setErr(e) }
   }
-  useEffect(() => {
-    void load()
-    void (async () => {
-      try {
-        const doc = (await api.defaults()).data
-        setPilotIds(doc.starting_state.records.pilots.map((p) => p.id))
-      } catch { /* the create form simply stays empty; list still renders */ }
-    })()
-  }, [])
+  useEffect(() => { void load() }, [])
 
   const open = async (pid: string) => {
     setSelected(pid); setProgress(null); setProgressErr(null); setReallocation(null)
-    try { setProgress((await api.planProgress(pid)).data) } catch (e) { setProgressErr(e) }
+    try {
+      if (!stored.scenario) throw new Error('Add a usable proposal first: the checkpoint needs the proposal’s inputs.')
+      setProgress(await api.planProgressFor(pid, stored.scenario))
+    } catch (e) { setProgressErr(e) }
   }
   const move = async (status: PilotPlan['status']) => {
     if (!selected) return
@@ -57,7 +55,9 @@ export function Tracker() {
 
   return (
     <div className="stack" style={{ gap: 20 }}>
-      <NewPlan created={(pid) => { void load(); void open(pid) }} pilotIds={pilotIds} />
+      <NeedsProposals loaded={stored.loaded} error={stored.error} empty={stored.scenario === null} leftOut={stored.leftOut} onRetry={() => void stored.reload()} />
+      <LeftOutNote leftOut={stored.leftOut} />
+      <NewPlan created={(pid) => { void load(); void open(pid) }} pilotIds={pilotIds} scenario={stored.scenario} names={Object.fromEntries(stored.pilots.map((p) => [p.id, p.task]))} />
       {err != null && <ErrorNotice title="The plans could not be loaded." error={err} onRetry={() => void load()} />}
       {plans?.length === 0 && <p className="muted">No plans yet — generate one above for a funded pilot.</p>}
       {plans && plans.length > 0 && (
@@ -144,7 +144,7 @@ function statusTone(s: PilotPlan['status']) {
   return s === 'active' ? 'accent' : s === 'revise' ? 'warn' : s === 'stopped' ? 'bad' : s === 'completed' ? 'ok' : 'off'
 }
 
-function NewPlan({ created, pilotIds }: { created: (pilotId: string) => void; pilotIds: string[] }) {
+function NewPlan({ created, pilotIds, scenario, names }: { created: (pilotId: string) => void; pilotIds: string[]; scenario: ScenarioBody | null; names: Record<string, string> }) {
   const [pilot, setPilot] = useState(pilotIds[0] ?? '')
   const [owner, setOwner] = useState('')
   const [days, setDays] = useState('30')
@@ -158,7 +158,7 @@ function NewPlan({ created, pilotIds }: { created: (pilotId: string) => void; pi
   const create = async () => {
     setBusy(true); setErr(null)
     try {
-      const r = (await api.createPlan({ pilot_id: pilot, owner: owner.trim() === '' ? undefined : owner.trim(), duration_days: days.trim() === '' ? undefined : Number(days) })).data
+      const r = (await api.createPlan({ ...(scenario ?? {}), pilot_id: pilot, owner: owner.trim() === '' ? undefined : owner.trim(), duration_days: days.trim() === '' ? undefined : Number(days) })).data
       setDone(r); created(r.plan.pilot_id)
     } catch (e) { setErr(e) } finally { setBusy(false) }
   }
@@ -166,13 +166,13 @@ function NewPlan({ created, pilotIds }: { created: (pilotId: string) => void; pi
   return (
     <div className="panel">
       <h3 className="h3">Generate a 30-day plan</h3>
-      <p className="hint">Created when a pilot is funded; actuals come from the observations recorded for that pilot. Regenerating replaces the current plan.</p>
+      <p className="hint">Created when a proposal is funded; actuals come from the observations recorded for that pilot. Regenerating replaces the current plan.</p>
       <div className="row" style={{ flexWrap: 'wrap', gap: 12, alignItems: 'flex-end' }}>
         {pilotIds.length > 0 ? (
           <div style={{ minWidth: 280 }}>
-            <SelectField id="tp-pilot" label="Pilot" value={pilot} onChange={setPilot} required options={pilotIds.map((id) => ({ value: id, label: id }))} />
+            <SelectField id="tp-pilot" label="Proposal" value={pilot} onChange={setPilot} required options={pilotIds.map((id) => ({ value: id, label: `${names[id] ?? id} (${id})` }))} />
           </div>
-        ) : <p className="muted">Scenario could not be loaded; type the pilot id instead.</p>}
+        ) : <p className="muted">Add a usable proposal first: plans are generated for your stored proposals.</p>}
         <div style={{ minWidth: 160 }}>
           <TextField id="tp-owner" label="Owner" value={owner} onChange={setOwner} placeholder="service owner" />
         </div>

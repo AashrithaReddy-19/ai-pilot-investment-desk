@@ -46,10 +46,24 @@ export function parseErrorEnvelope(status: number, body: unknown, headerRequestI
 interface Meta { requestId?: string; cache?: string }
 export interface Result<T> { data: T; meta: Meta }
 
+/**
+ * fetch that repeats a call the gateway answered with 429 "too many requests". The gateway rejects those in
+ * its rate limiter before handling them, so nothing was read, parsed or stored and repeating is safe for every
+ * method. It waits as long as Retry-After says (at most 3 s) and gives up after 4 tries, returning the 429.
+ */
+async function fetchRetry(url: string, init: RequestInit): Promise<Response> {
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(url, init)
+    if (res.status !== 429 || attempt >= 4) return res
+    const asked = Number(res.headers.get('Retry-After'))
+    await new Promise((r) => setTimeout(r, Math.min(3000, Number.isFinite(asked) && asked > 0 ? asked * 1000 : 500 * attempt)))
+  }
+}
+
 async function send(method: string, path: string, body?: unknown): Promise<Response> {
   let res: Response
   try {
-    res = await fetch(`${BASE}${path}`, {
+    res = await fetchRetry(`${BASE}${path}`, {
       method,
       headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body),
@@ -86,7 +100,7 @@ async function text(path: string, body: unknown): Promise<Result<string>> {
 async function jsonUpload<T>(path: string, form: FormData): Promise<Result<T>> {
   let res: Response
   try {
-    res = await fetch(`${BASE}${path}`, { method: 'POST', body: form })
+    res = await fetchRetry(`${BASE}${path}`, { method: 'POST', body: form })
   } catch {
     throw new ApiError('Network request failed')
   }
@@ -103,10 +117,18 @@ async function file(path: string, body: unknown, fallbackName: string): Promise<
   return { blob: await res.blob(), filename: m?.[1] ?? fallbackName, requestId: res.headers.get('X-Request-ID') ?? undefined }
 }
 
+/** A GET download (e.g. a stored upload's original file), keeping the gateway's filename. */
+async function fileGet(path: string, fallbackName: string): Promise<Download> {
+  const res = await send('GET', path)
+  if (!res.ok) return fail(res)
+  const m = /filename="?([^";]+)"?/i.exec(res.headers.get('Content-Disposition') ?? '')
+  return { blob: await res.blob(), filename: m?.[1] ?? fallbackName, requestId: res.headers.get('X-Request-ID') ?? undefined }
+}
+
 export const enc = encodeURIComponent
 export const V1 = '/api/v1'
 
-export { json, jsonUpload, file, text }
+export { json, jsonUpload, file, fileGet, text }
 export { send }
 export type { Meta }
 

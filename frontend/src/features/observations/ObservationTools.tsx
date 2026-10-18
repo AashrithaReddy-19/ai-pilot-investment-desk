@@ -24,8 +24,8 @@ function pct(s: string): number | null | undefined {
  */
 export function ObservationTools() {
   const s = useWorkspace()
-  const { source, drafts, synthetic } = s
-  const pilots = scenarioPilots({ source, drafts, synthetic })
+  const { source, drafts } = s
+  const pilots = scenarioPilots({ source, drafts })
   const overrides = overridesOf(source, drafts) ?? {}
   const [pid, setPid] = useState('')
   const [adoption, setAdoption] = useState('')
@@ -81,7 +81,7 @@ export function ObservationTools() {
   const h = hist?.data
   return (
     <div className="stack" style={{ gap: 28 }}>
-      {pilots.length === 0 && <div className="notice notice-info" role="note"><div>No pilots are loaded in the workspace, so the service checks the ID against its own shipped synthetic case (AI1 to AI5). Add pilots in the decision workspace to use their IDs.</div></div>}
+      {pilots.length === 0 && <div className="notice notice-info" role="note"><div>No pilots are loaded in the decision workspace, so there are no pilot IDs to pick from. Add pilots there to use their IDs.</div></div>}
 
       <div className="split">
         <form className="stack" onSubmit={(e) => e.preventDefault()} noValidate>

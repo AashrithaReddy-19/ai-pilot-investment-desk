@@ -11,6 +11,7 @@ import (
 
 	"c23desk/internal/config"
 	"c23desk/internal/model"
+	"c23desk/internal/storage"
 )
 
 type Store interface {
@@ -70,16 +71,20 @@ func (noAudit) ListAuditEvents(context.Context, model.AuditFilter) ([]model.Audi
 }
 
 type Deps struct {
-	Cfg      config.Config
-	Store    Store
-	Rules    Rules
-	Cache    Cache
-	Audit    Auditor       // optional; nil records nothing
-	Platform Platform      // workspaces, people, settings, snapshots, approvals; nil = those routes answer 503
-	Uploads  Uploads       // stored uploads and review; nil = those routes answer 503
-	Notify   func()        // wakes the upload worker after a new upload or a retry
-	Version  func() string // the rules engine's current rules_version
-	Log      *slog.Logger
+	Cfg           config.Config
+	Store         Store
+	Rules         Rules
+	Cache         Cache
+	Audit         Auditor  // optional; nil records nothing
+	Platform      Platform // workspaces, people, settings, snapshots, approvals; nil = those routes answer 503
+	Uploads       Uploads  // stored uploads and review; nil = those routes answer 503
+	ObjectUploads ObjectUploads
+	Objects       storage.Store
+	Extractions   ProposalExtractions
+	AIExtractor   ExtractionProvider
+	Notify        func()        // wakes the upload worker after a new upload or a retry
+	Version       func() string // the rules engine's current rules_version
+	Log           *slog.Logger
 }
 
 func NewRouter(d Deps) *gin.Engine {
@@ -100,7 +105,7 @@ func NewRouter(d Deps) *gin.Engine {
 		version = func() string { return "" }
 	}
 	h := &Handlers{cfg: d.Cfg, store: d.Store, rules: d.Rules, cache: d.Cache, audit: audit, platform: d.Platform,
-		uploads: d.Uploads, notify: d.Notify, version: version, log: d.Log}
+		uploads: d.Uploads, objectUploads: d.ObjectUploads, objects: d.Objects, extractions: d.Extractions, aiExtractor: d.AIExtractor, notify: d.Notify, version: version, log: d.Log}
 	if n := d.Cfg.DocumentConcurrency; n > 0 {
 		h.docSlots = make(chan struct{}, n)
 	}
@@ -219,10 +224,16 @@ func NewRouter(d Deps) *gin.Engine {
 
 	// Stored uploads: original kept, parsed by the worker, reviewed, corrected, confirmed
 	edit.POST("/uploads", h.needUploads(), h.createUpload)
+	edit.POST("/documents/upload-session", h.needObjectUploads(), h.createObjectUpload)
+	edit.POST("/documents/:id/complete", h.needObjectUploads(), h.completeObjectUpload)
 	view.GET("/uploads", h.needUploads(), h.listUploads)
 	view.GET("/uploads/:id", h.needUploads(), h.getUpload)
+	view.GET("/uploads/:id/proposal-extraction", h.needUploads(), h.getProposalExtraction)
 	view.GET("/uploads/:id/file", h.needUploads(), h.downloadUpload)
 	edit.POST("/uploads/:id/retry", h.needUploads(), h.retryUpload)
+	edit.POST("/uploads/:id/proposal-extraction", h.needUploads(), h.startProposalExtraction)
+	edit.PATCH("/uploads/:id/proposal-extraction", h.needUploads(), h.correctProposalExtraction)
+	edit.POST("/uploads/:id/proposal-extraction/confirm", h.needUploads(), h.confirmProposalExtraction)
 	edit.POST("/uploads/:id/corrections", h.needUploads(), h.addCorrection)
 	edit.POST("/uploads/:id/confirm", h.needUploads(), h.confirmUpload)
 
@@ -246,6 +257,16 @@ func (h *Handlers) needUploads() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if h.uploads == nil {
 			fail(c, http.StatusServiceUnavailable, "not_configured", "stored uploads are not configured on this gateway", "")
+			return
+		}
+		c.Next()
+	}
+}
+
+func (h *Handlers) needObjectUploads() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if h.objectUploads == nil || h.objects == nil {
+			fail(c, http.StatusServiceUnavailable, "not_configured", "S3 document storage is not configured on this gateway", "")
 			return
 		}
 		c.Next()

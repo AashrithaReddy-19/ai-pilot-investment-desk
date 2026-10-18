@@ -17,6 +17,22 @@ const PATHS: Record<string, string> = {
   download: 'M12 4v11m0 0l-4-4m4 4l4-4M5 20h14',
   trash: 'M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13',
   edit: 'M4 20h4l11-11-4-4L4 16zM13 7l4 4',
+  home: 'M4 11l8-7 8 7M6 9.5V20h12V9.5M10 20v-6h4v6',
+  dashboard: 'M4 4h7v9H4zM13 4h7v5h-7zM13 11h7v9h-7zM4 15h7v5H4z',
+  baseline: 'M5 20V4h10l4 4v12zM15 4v4h4M8 12h8M8 16h5',
+  proposals: 'M4 6h16M4 12h16M4 18h10M18 16v4M16 18h4',
+  forecast: 'M4 19h16M5 15l4-4 3 3 7-7M15 7h4v4',
+  analysis: 'M11 4a7 7 0 100 14 7 7 0 000-14zM16 16l4 4M8 11h6M11 8v6',
+  reports: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6',
+  settings: 'M12 9a3 3 0 100 6 3 3 0 000-6zM19 12l2-1-1-3-2 .2-1.4-1.4.2-2-3-1-1 2h-2l-1-2-3 1 .2 2L5.6 7.2 3.6 7 3 10l2 1v2l-2 1 1 3 2-.2 1.4 1.4-.2 2 3 1 1-2h2l1 2 3-1-.2-2 1.4-1.4 2 .2 1-3-2-1z',
+  upload: 'M12 16V4m0 0l-4 4m4-4l4 4M5 20h14',
+  file: 'M6 3h8l4 4v14H6zM14 3v4h4',
+  chevron: 'M6 9l6 6 6-6',
+  user: 'M12 4a4 4 0 100 8 4 4 0 000-8zM4 20a8 8 0 0116 0',
+  more: 'M5 12h.01M12 12h.01M19 12h.01',
+  refresh: 'M20 11a8 8 0 10-2.3 5.7M20 4v7h-7',
+  alert: 'M12 4l9 16H3zM12 10v4M12 17v.01',
+  tools: 'M14 6l4 4M4 20l7-7M13 3l8 8-4 4-8-8z',
 }
 
 export function Icon({ name }: { name: string }) {
