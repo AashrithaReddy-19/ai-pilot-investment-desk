@@ -279,3 +279,46 @@ func TestEvaluationsReadPath(t *testing.T) {
 		t.Fatalf("missing id: want 404, got %d", w.Code)
 	}
 }
+
+// limitStore records the limit the handler passes to the store.
+type limitStore struct {
+	fakeStore
+	got int
+}
+
+func (s *limitStore) ListEvaluations(_ context.Context, limit int) ([]model.EvaluationSummary, error) {
+	s.got = limit
+	return []model.EvaluationSummary{}, nil
+}
+
+// The handler clamps limit to 1–50 (default 20) itself, so the query can never exceed 50.
+func TestEvaluationsLimitIsClampedInTheHandler(t *testing.T) {
+	for _, tc := range []struct {
+		query string
+		want  int
+	}{
+		{"", 20},                            // missing
+		{"?limit=", 20},                     // empty
+		{"?limit=abc", 20},                  // not a number
+		{"?limit=1.5", 20},                  // not an integer
+		{"?limit=99999999999999999999", 20}, // overflows int
+		{"?limit=0", 20},                    // below the minimum
+		{"?limit=-5", 20},                   // negative
+		{"?limit=1", 1},                     // minimum
+		{"?limit=20", 20},                   // default value
+		{"?limit=49", 49},
+		{"?limit=50", 50},  // maximum
+		{"?limit=51", 50},  // just above the maximum
+		{"?limit=999", 50}, // far above the maximum
+	} {
+		st := &limitStore{}
+		w := do(newRouter(&fakeRules{do: ok200(`{}`)}, st), "GET", "/api/v1/evaluations"+tc.query, "")
+		if w.Code != 200 {
+			t.Errorf("%q: want 200, got %d %s", tc.query, w.Code, w.Body.String())
+			continue
+		}
+		if st.got != tc.want {
+			t.Errorf("%q: store got limit %d, want %d", tc.query, st.got, tc.want)
+		}
+	}
+}

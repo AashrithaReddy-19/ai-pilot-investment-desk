@@ -350,6 +350,31 @@ func TestCORS(t *testing.T) {
 	}
 }
 
+// PATCH /proposals/:id is a registered route, so a cross-origin preflight must allow it.
+func TestCORSPreflightAllowsEveryRegisteredMethod(t *testing.T) {
+	h := newRouter(&fakeRules{do: ok200(`{}`)}, fakeStore{})
+	w := do(h, "OPTIONS", "/api/v1/proposals/"+testUUID, "",
+		"Origin", "http://localhost:5173", "Access-Control-Request-Method", "PATCH")
+	if w.Code != 204 || w.Header().Get("Access-Control-Allow-Origin") != "http://localhost:5173" {
+		t.Fatalf("PATCH preflight from an allowed origin must pass: %d %v", w.Code, w.Header())
+	}
+	allowed := map[string]bool{}
+	for _, m := range strings.Split(w.Header().Get("Access-Control-Allow-Methods"), ",") {
+		allowed[strings.TrimSpace(m)] = true
+	}
+	for _, m := range []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"} {
+		if !allowed[m] {
+			t.Errorf("Access-Control-Allow-Methods %q is missing %s", w.Header().Get("Access-Control-Allow-Methods"), m)
+		}
+	}
+	// the origin policy is unchanged: an unknown origin still gets no CORS headers, PATCH or not
+	w = do(h, "OPTIONS", "/api/v1/proposals/"+testUUID, "",
+		"Origin", "http://evil.example", "Access-Control-Request-Method", "PATCH")
+	if w.Header().Get("Access-Control-Allow-Origin") != "" || w.Header().Get("Access-Control-Allow-Methods") != "" {
+		t.Fatalf("unknown origin must not get CORS headers: %v", w.Header())
+	}
+}
+
 func TestUnknownRouteUsesErrorShape(t *testing.T) {
 	w := do(newRouter(&fakeRules{do: ok200(`{}`)}, fakeStore{}), "GET", "/nope", "")
 	if w.Code != 404 || !strings.Contains(w.Body.String(), `"code":"not_found"`) {

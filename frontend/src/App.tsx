@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import AppShell from './components/shell/AppShell'
 import Workspace from './pages/Workspace'
 import {
-  BalanceSheetPage, ComparePage, EvidencePage, InterviewsPage, MemoPage, ObservationsPage, OptimizePage,
+  BalanceSheetPage, ComparePage, EvidencePage, HistoryPage, InterviewsPage, MemoPage, ObservationsPage, OptimizePage,
   PortfoliosPage, ProposalsPage, TrackerPage, WhatIfPage,
 } from './pages/SimplePages'
 import { ChecksPage } from './features/system/ChecksPage'
@@ -24,6 +24,7 @@ export default function App() {
         <Route path="observations" element={<ObservationsPage />} />
         <Route path="interviews" element={<InterviewsPage />} />
         <Route path="proposals" element={<ProposalsPage />} />
+        <Route path="history" element={<HistoryPage />} />
         <Route path="checks" element={<ChecksPage />} />
         <Route path="about-limits" element={<AboutPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

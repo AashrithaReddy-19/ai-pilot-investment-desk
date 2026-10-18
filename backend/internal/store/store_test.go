@@ -465,3 +465,155 @@ func TestLatestEvaluationWithPilotSelectsTheNewestFundingEvaluation(t *testing.T
 		t.Fatalf("pilot never funded must be ErrNotFound, got %v", err)
 	}
 }
+
+// uniq is a name suffix that satisfies the proposals name check (letters, digits, space, _ and -).
+func uniq() string { return strings.ReplaceAll(time.Now().Format("150405.000000"), ".", "_") }
+
+func TestProposalVersionBumpsOnlyWhenInputsChange(t *testing.T) {
+	s := newTestStore(t)
+	ctx := context.Background()
+	p, err := s.CreateProposal(ctx, model.ProposalIn{
+		Name: "store_test_version " + uniq(), Inputs: json.RawMessage(`{"task":"a","volume":1}`),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = s.DeleteProposal(context.Background(), p.ID) })
+	if p.Version != 1 {
+		t.Fatalf("a new proposal starts at version 1, got %d", p.Version)
+	}
+	for _, step := range []struct {
+		name string
+		in   model.ProposalIn
+		want int
+	}{
+		{"rename keeps the version", model.ProposalIn{Name: "store_test_version renamed " + uniq()}, 1},
+		{"notes edit keeps the version", model.ProposalIn{Notes: str("edited")}, 1},
+		{"same inputs, other key order", model.ProposalIn{Inputs: json.RawMessage(`{ "volume": 1, "task": "a" }`)}, 1},
+		{"changed inputs bump it", model.ProposalIn{Inputs: json.RawMessage(`{"task":"a","volume":2}`)}, 2},
+		{"changed again", model.ProposalIn{Inputs: json.RawMessage(`{"task":"b"}`)}, 3},
+	} {
+		up, err := s.UpdateProposal(ctx, p.ID, step.in)
+		if err != nil {
+			t.Fatalf("%s: %v", step.name, err)
+		}
+		if up.Version != step.want {
+			t.Fatalf("%s: version %d, want %d", step.name, up.Version, step.want)
+		}
+	}
+	got, err := s.GetProposal(ctx, p.ID)
+	if err != nil || got.Version != 3 {
+		t.Fatalf("stored version: %+v %v", got, err)
+	}
+	list, err := s.ListProposals(ctx, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, r := range list {
+		if r.ID == p.ID && r.Version != 3 {
+			t.Fatalf("summary version %d, want 3", r.Version)
+		}
+	}
+}
+
+func TestEvaluationLinkedToProposalVersion(t *testing.T) {
+	s := newTestStore(t)
+	ctx := context.Background()
+	p, err := s.CreateProposal(ctx, model.ProposalIn{
+		Name: "store_test_eval_link " + uniq(), Inputs: json.RawMessage(`{"task":"x"}`),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	ver := p.Version
+	linked, err := s.SaveEvaluation(ctx, model.EvaluationIn{
+		Request: json.RawMessage(`{"budget":1}`), Independent: json.RawMessage(`{"selected":[]}`), Conservative: json.RawMessage(`{"selected":[]}`),
+		ProposalID: &p.ID, ProposalVersion: &ver,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	unlinked, err := s.SaveEvaluation(ctx, model.EvaluationIn{
+		Request: json.RawMessage(`{}`), Independent: json.RawMessage(`{}`), Conservative: json.RawMessage(`{}`),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		_, _ = s.pool.Exec(context.Background(), `DELETE FROM evaluations WHERE id IN ($1, $2)`, linked, unlinked)
+	})
+
+	full, err := s.GetEvaluation(ctx, linked)
+	if err != nil || full.ProposalID == nil || *full.ProposalID != p.ID || full.ProposalVersion == nil || *full.ProposalVersion != ver {
+		t.Fatalf("link not stored: %+v %v", full, err)
+	}
+	mine, err := s.ListProposalEvaluations(ctx, p.ID, 10)
+	if err != nil || len(mine) != 1 || mine[0].ID != linked {
+		t.Fatalf("proposal evaluations: %+v %v", mine, err)
+	}
+	all, err := s.ListEvaluations(ctx, 50)
+	if err != nil {
+		t.Fatal(err)
+	}
+	seen := map[int64]bool{}
+	for _, e := range all {
+		seen[e.ID] = true
+	}
+	if !seen[linked] || !seen[unlinked] {
+		t.Fatalf("the unfiltered list must still return both rows: %+v", all)
+	}
+
+	// deleting the proposal keeps the evaluation and clears the link
+	if err := s.DeleteProposal(ctx, p.ID); err != nil {
+		t.Fatal(err)
+	}
+	after, err := s.GetEvaluation(ctx, linked)
+	if err != nil || after.ProposalID != nil {
+		t.Fatalf("evaluation must survive with a NULL link: %+v %v", after, err)
+	}
+	if after.ProposalVersion == nil || *after.ProposalVersion != ver {
+		t.Fatalf("the recorded version is history and stays: %+v", after.ProposalVersion)
+	}
+}
+
+func TestAuditEventsAppendAndFilter(t *testing.T) {
+	s := newTestStore(t)
+	ctx := context.Background()
+	tag := "store_test_audit_" + uniq()
+	t.Cleanup(func() {
+		_, _ = s.pool.Exec(context.Background(), `DELETE FROM audit_events WHERE entity_id LIKE $1`, tag+"%")
+	})
+	for n, a := range []model.AuditEventIn{
+		{Action: "proposal.create", EntityType: "proposal", EntityID: str(tag + "_p"), RequestID: "req-1"},
+		{Action: "proposal.update", EntityType: "proposal", EntityID: str(tag + "_p"), Details: json.RawMessage(`{"version":2}`)},
+		{Action: "plan.status", EntityType: "plan", EntityID: str(tag + "_plan"), Details: json.RawMessage(`{"status":"stopped"}`)},
+	} {
+		if err := s.AddAuditEvent(ctx, a); err != nil {
+			t.Fatalf("event %d: %v", n, err)
+		}
+	}
+	got, err := s.ListAuditEvents(ctx, model.AuditFilter{EntityType: "proposal", EntityID: tag + "_p"})
+	if err != nil || len(got) != 2 {
+		t.Fatalf("filter by entity: %+v %v", got, err)
+	}
+	if got[0].Action != "proposal.update" || got[1].Action != "proposal.create" {
+		t.Fatalf("newest first expected: %s, %s", got[0].Action, got[1].Action)
+	}
+	if got[1].RequestID == nil || *got[1].RequestID != "req-1" || got[0].RequestID != nil {
+		t.Fatalf("request_id must be kept, and NULL when absent: %+v %+v", got[1].RequestID, got[0].RequestID)
+	}
+	if string(got[1].Details) != "{}" || got[0].Actor != nil {
+		t.Fatalf("empty details default to {} and actor stays NULL: %s %v", got[1].Details, got[0].Actor)
+	}
+	plans, err := s.ListAuditEvents(ctx, model.AuditFilter{EntityType: "plan", EntityID: tag + "_plan"})
+	if err != nil || len(plans) != 1 || string(plans[0].Details) != `{"status": "stopped"}` {
+		t.Fatalf("plan event: %+v %v", plans, err)
+	}
+	one, err := s.ListAuditEvents(ctx, model.AuditFilter{Limit: 1})
+	if err != nil || len(one) != 1 {
+		t.Fatalf("limit 1: %d %v", len(one), err)
+	}
+	if capped, err := s.ListAuditEvents(ctx, model.AuditFilter{Limit: 999}); err != nil || len(capped) > 50 {
+		t.Fatalf("limit must be capped at 50: %d %v", len(capped), err)
+	}
+}

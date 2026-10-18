@@ -31,6 +31,7 @@ type Handlers struct {
 	store Store
 	rules Rules
 	cache Cache
+	audit Auditor
 	log   *slog.Logger
 }
 
@@ -226,6 +227,7 @@ func (h *Handlers) forward(path string, o fwdOpts) gin.HandlerFunc {
 		}
 		if o.filename != "" {
 			c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, o.filename))
+			h.record(c, "export.download", "export", o.filename, nil)
 		}
 		c.Data(http.StatusOK, ct, r.Body)
 	}
@@ -283,6 +285,29 @@ func (h *Handlers) evaluate(c *gin.Context) {
 	if !ok {
 		return
 	}
+	// Optional link to a stored proposal: recorded with its current inputs version, never sent to the engine.
+	var proposalID *string
+	var proposalVersion *int
+	if raw, present := scen["proposal_id"]; present {
+		if !isNull(raw) {
+			var pid string
+			if json.Unmarshal(raw, &pid) != nil || !validUUID(pid) {
+				fail(c, http.StatusUnprocessableEntity, "invalid_value", "proposal_id must be a UUID", "proposal_id")
+				return
+			}
+			p, err := h.store.GetProposal(c.Request.Context(), pid)
+			if errors.Is(err, model.ErrNotFound) {
+				fail(c, http.StatusUnprocessableEntity, "unknown_proposal", "proposal_id does not match a stored proposal", "proposal_id")
+				return
+			}
+			if err != nil {
+				h.storeErr(c, err)
+				return
+			}
+			proposalID, proposalVersion = &p.ID, &p.Version
+		}
+		delete(scen, "proposal_id")
+	}
 	delete(scen, "mode") // this endpoint always computes both modes
 	reqBody, _ := json.Marshal(scen)
 
@@ -300,16 +325,26 @@ func (h *Handlers) evaluate(c *gin.Context) {
 		}
 		answers[mode] = r
 	}
-	// History is secondary: a failed write is logged, never shown as a failed evaluation.
-	if _, err := h.store.SaveEvaluation(c.Request.Context(), model.EvaluationIn{
+	// History is secondary: a failed write is logged, never shown as a failed evaluation
+	// (evaluation_id is then null).
+	var evaluationID *int64
+	if id, err := h.store.SaveEvaluation(c.Request.Context(), model.EvaluationIn{
 		Request: reqBody, Independent: answers["independent"].Body, Conservative: answers["conservative"].Body,
+		ProposalID: proposalID, ProposalVersion: proposalVersion,
 	}); err != nil {
 		h.log.Warn("could not save evaluation history", "err", err, "request_id", reqID(c))
+	} else {
+		evaluationID = &id
+		h.record(c, "evaluation.create", "evaluation", strconv.FormatInt(id, 10),
+			gin.H{"proposal_id": proposalID, "proposal_version": proposalVersion})
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"pilots":       json.RawMessage(pilots.Body),
-		"independent":  json.RawMessage(answers["independent"].Body),
-		"conservative": json.RawMessage(answers["conservative"].Body),
+		"pilots":           json.RawMessage(pilots.Body),
+		"independent":      json.RawMessage(answers["independent"].Body),
+		"conservative":     json.RawMessage(answers["conservative"].Body),
+		"evaluation_id":    evaluationID,
+		"proposal_id":      proposalID,
+		"proposal_version": proposalVersion,
 	})
 }
 
@@ -394,6 +429,7 @@ func (h *Handlers) savePortfolio(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "portfolio.save", "portfolio", saved.Name, gin.H{"id": saved.ID, "mode": mode})
 	c.JSON(http.StatusOK, saved)
 }
 
@@ -537,6 +573,7 @@ func (h *Handlers) deletePortfolio(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "portfolio.delete", "portfolio", name, nil)
 	c.Status(http.StatusNoContent)
 }
 
@@ -632,6 +669,8 @@ func (h *Handlers) addObservation(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "observation.create", "observation", strconv.FormatInt(obs.ID, 10),
+		gin.H{"pilot_id": id, "decision": dec.Decision, "proposal_id": proposalID})
 	c.JSON(http.StatusCreated, gin.H{"observation": obs, "decision": dec, "stop_rule": json.RawMessage(r.Body)})
 }
 
@@ -693,6 +732,7 @@ func (h *Handlers) addInterview(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "interview.create", "interview", strconv.Itoa(iv.ID), nil) // no quotes or roles in the audit row
 	c.JSON(http.StatusCreated, iv)
 }
 
@@ -831,6 +871,7 @@ func (h *Handlers) createPlan(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "plan.create", "plan", saved.PilotID, gin.H{"status": saved.Status})
 	c.JSON(http.StatusOK, gin.H{"plan": saved, "cost_limit_note": pl.CostLimitNote, "source": "engine plan generator"})
 }
 
@@ -849,6 +890,10 @@ func (h *Handlers) listPlans(c *gin.Context) {
 // pilot is not in it, plan and actuals are still returned with verdict: null.
 func (h *Handlers) planProgress(c *gin.Context) {
 	id := c.Param("id")
+	if !pilotRe.MatchString(id) {
+		fail(c, http.StatusUnprocessableEntity, "invalid_pilot_id", "pilot id must be 1-40 chars: letters, digits, _ . or -", "id")
+		return
+	}
 	plan, err := h.store.PilotPlan(c.Request.Context(), id)
 	if err != nil {
 		h.storeErr(c, err)
@@ -890,6 +935,10 @@ func (h *Handlers) planProgress(c *gin.Context) {
 // revised-before flag (status revise ⇒ one gate failure already accepted).
 func (h *Handlers) setPlanStatus(c *gin.Context) {
 	id := c.Param("id")
+	if !pilotRe.MatchString(id) {
+		fail(c, http.StatusUnprocessableEntity, "invalid_pilot_id", "pilot id must be 1-40 chars: letters, digits, _ . or -", "id")
+		return
+	}
 	in, ok := h.readObject(c)
 	if !ok {
 		return
@@ -909,6 +958,7 @@ func (h *Handlers) setPlanStatus(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "plan.status", "plan", id, gin.H{"status": status})
 	c.JSON(http.StatusOK, saved)
 }
 
@@ -1092,9 +1142,11 @@ func (h *Handlers) memoForward(c *gin.Context) {
 	if !ok {
 		return
 	}
+	var pilot gin.H // audit detail: only a valid pilot id is recorded
 	if raw, present := scen["pilot_id"]; present {
 		var pid string
 		if json.Unmarshal(raw, &pid) == nil && pilotRe.MatchString(pid) {
+			pilot = gin.H{"pilot_id": pid}
 			if plan, err := h.store.PilotPlan(c.Request.Context(), pid); err == nil {
 				scen["plan"] = mustJSON(plan)
 			}
@@ -1110,5 +1162,6 @@ func (h *Handlers) memoForward(c *gin.Context) {
 	}
 	c.Header("X-Cache", map[bool]string{true: "HIT", false: "MISS"}[hit])
 	c.Header("Content-Disposition", `attachment; filename="memo.md"`)
+	h.record(c, "export.download", "export", "memo.md", pilot)
 	c.Data(http.StatusOK, "text/markdown; charset=utf-8", r.Body)
 }

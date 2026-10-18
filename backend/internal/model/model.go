@@ -138,26 +138,32 @@ type HistoryEvent struct {
 }
 
 type EvaluationIn struct {
-	Request      json.RawMessage
-	Independent  json.RawMessage
-	Conservative json.RawMessage
+	Request         json.RawMessage
+	Independent     json.RawMessage
+	Conservative    json.RawMessage
+	ProposalID      *string // optional: the proposal this evaluation was run for
+	ProposalVersion *int    // that proposal's inputs version at the time
 }
 
 // EvaluationSummary is one row of the evaluations audit log (no bodies).
 type EvaluationSummary struct {
-	ID          int64     `json:"id"`
-	PortfolioID *string   `json:"portfolio_id"` // set when the evaluation's portfolio was saved
-	CreatedAt   time.Time `json:"created_at"`
+	ID              int64     `json:"id"`
+	PortfolioID     *string   `json:"portfolio_id"` // set when the evaluation's portfolio was saved
+	ProposalID      *string   `json:"proposal_id"`
+	ProposalVersion *int      `json:"proposal_version"`
+	CreatedAt       time.Time `json:"created_at"`
 }
 
 // Evaluation is the full audit row: the request and both answers, as received.
 type Evaluation struct {
-	ID           int64           `json:"id"`
-	PortfolioID  *string         `json:"portfolio_id"`
-	Request      json.RawMessage `json:"request"`
-	Independent  json.RawMessage `json:"independent"`
-	Conservative json.RawMessage `json:"conservative"`
-	CreatedAt    time.Time       `json:"created_at"`
+	ID              int64           `json:"id"`
+	PortfolioID     *string         `json:"portfolio_id"`
+	ProposalID      *string         `json:"proposal_id"`
+	ProposalVersion *int            `json:"proposal_version"`
+	Request         json.RawMessage `json:"request"`
+	Independent     json.RawMessage `json:"independent"`
+	Conservative    json.RawMessage `json:"conservative"`
+	CreatedAt       time.Time       `json:"created_at"`
 }
 
 // ---------- proposals ----------
@@ -172,7 +178,8 @@ type ProposalIn struct {
 type Proposal struct {
 	ID        string          `json:"id"`
 	Name      string          `json:"name"`
-	Status    string          `json:"status"` // active | archived
+	Status    string          `json:"status"`  // active | archived
+	Version   int             `json:"version"` // inputs version: +1 each time the stored inputs change
 	Inputs    json.RawMessage `json:"inputs"`
 	Notes     *string         `json:"notes"`
 	CreatedAt time.Time       `json:"created_at"`
@@ -183,6 +190,7 @@ type ProposalSummary struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	Status    string    `json:"status"`
+	Version   int       `json:"version"`
 	Notes     *string   `json:"notes"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -249,3 +257,33 @@ type PilotPlan struct {
 }
 
 type PlanStatusIn struct{ Status string }
+
+// ---------- audit trail ----------
+
+// AuditEventIn is one successful edit or export. Actor stays nil until authentication exists.
+type AuditEventIn struct {
+	Action     string // e.g. proposal.update, export.download
+	EntityType string // e.g. proposal, portfolio, plan, export
+	EntityID   *string
+	Actor      *string
+	RequestID  string
+	Details    json.RawMessage // identifiers and status values only
+}
+
+type AuditEvent struct {
+	ID         int64           `json:"id"`
+	Action     string          `json:"action"`
+	EntityType string          `json:"entity_type"`
+	EntityID   *string         `json:"entity_id"`
+	Actor      *string         `json:"actor"`
+	RequestID  *string         `json:"request_id"`
+	Details    json.RawMessage `json:"details"`
+	CreatedAt  time.Time       `json:"created_at"`
+}
+
+// AuditFilter narrows the audit list. Empty fields do not filter; Limit is clamped by the store.
+type AuditFilter struct {
+	EntityType string
+	EntityID   string
+	Limit      int
+}

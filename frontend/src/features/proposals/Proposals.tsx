@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, ApiError } from '../../api/client'
-import type { Evidence, EvidenceKind, EvidenceQuality, Proposal, ProposalSummary } from '../../api/types'
+import type { EvaluationSummary, Evidence, EvidenceKind, EvidenceQuality, Proposal, ProposalSummary } from '../../api/types'
 import { formatDate, formatDateTime } from '../../domain/format'
 import { Empty, Skeleton } from '../../components/ui/Bits'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
@@ -171,10 +171,13 @@ function ProposalDetail({ doc: received }: { doc: Proposal }) {
   const [source, setSource] = useState('')
   const [note, setNote] = useState('')
   const [evErrs, setEvErrs] = useState<Partial<Record<'kind' | 'quality' | 'source' | 'note', string>>>({})
+  const [evals, setEvals] = useState<EvaluationSummary[] | null>(null)
+  const [evalsError, setEvalsError] = useState<unknown>(null)
 
   useEffect(() => {
     let alive = true
     api.listEvidence(received.id).then((l) => { if (alive) setEvidence(l) }).catch((e) => { if (alive) setEvError(e) })
+    api.listProposalEvaluations(received.id).then((l) => { if (alive) setEvals(l) }).catch((e) => { if (alive) setEvalsError(e) })
     return () => { alive = false }
   }, [received.id])
 
@@ -211,7 +214,7 @@ function ProposalDetail({ doc: received }: { doc: Proposal }) {
       {err != null && <ErrorNotice title="That change was not made." error={err} />}
       <div>
         <h3 className="h2">{doc.name}</h3>
-        <p className="caption">Created {formatDateTime(doc.created_at)} · last updated {formatDateTime(doc.updated_at)} · id <span className="mono">{doc.id}</span></p>
+        <p className="caption">Inputs version {doc.version} · created {formatDateTime(doc.created_at)} · last updated {formatDateTime(doc.updated_at)} · id <span className="mono">{doc.id}</span></p>
       </div>
 
       <div className="stack">
@@ -264,6 +267,27 @@ function ProposalDetail({ doc: received }: { doc: Proposal }) {
                 <td className="strong">{ev.source}</td>
                 <td style={{ textTransform: 'capitalize' }}>{ev.quality && <span className="tag">{ev.quality}</span>}</td>
                 <td className="wrap-cell">{ev.note ?? <span className="muted">Not provided</span>}</td>
+              </tr>))}</tbody>
+          </table></div>
+        )}
+      </div>
+
+      <div className="stack">
+        <h4 className="h3">Evaluations of this proposal</h4>
+        {evalsError != null && <ErrorNotice title="Evaluations could not be loaded." error={evalsError} />}
+        {evalsError == null && evals === null && <Skeleton rows={2} height={40} />}
+        {evals?.length === 0 && <p className="muted">No evaluation has been run for this proposal yet.</p>}
+        {evals && evals.length > 0 && (
+          <div className="tbl-wrap"><table className="tbl">
+            <caption className="sr">Evaluations run for this proposal</caption>
+            <thead><tr><th className="num" scope="col">Id</th><th scope="col">When</th><th scope="col">Inputs version</th></tr></thead>
+            <tbody>{evals.map((ev) => (
+              <tr key={ev.id}>
+                <td className="num mono">{ev.id}</td>
+                <td>{formatDateTime(ev.created_at)}</td>
+                <td>{ev.proposal_version == null
+                  ? <span className="muted">Not recorded</span>
+                  : <>v{ev.proposal_version}{ev.proposal_version < doc.version && <> <span className="tag tag-assumed" title="The stored inputs changed after this evaluation">stale inputs</span></>}</>}</td>
               </tr>))}</tbody>
           </table></div>
         )}

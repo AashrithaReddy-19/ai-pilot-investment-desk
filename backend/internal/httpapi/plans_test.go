@@ -229,6 +229,58 @@ func TestSetPlanStatusValidated(t *testing.T) {
 	}
 }
 
+// Malformed pilot ids on the plan routes are rejected with 422 before any store or engine call.
+// fakeStore{} panics on any store use (recovered as a 500), so a 422 proves nothing was queried.
+func TestPlanRoutesRejectBadIdsBeforeTheStore(t *testing.T) {
+	f := &fakeRules{do: func(string, string, []byte) (*model.Upstream, error) {
+		t.Fatal("the engine must not be called for a malformed pilot id")
+		return nil, nil
+	}}
+	h := newRouter(f, fakeStore{})
+	for name, id := range map[string]string{
+		"too long":        strings.Repeat("x", 41),
+		"space":           "bad%20id",
+		"semicolon":       "AI1;DROP",
+		"quote":           "AI1%27",
+		"non-ascii":       "AI%C3%A91",
+		"encoded control": "AI1%0A",
+	} {
+		if w := do(h, "GET", "/api/v1/plans/"+id, ""); w.Code != 422 || !contains(w.Body.String(), `"code":"invalid_pilot_id"`) {
+			t.Errorf("GET %s: want 422 invalid_pilot_id, got %d %s", name, w.Code, w.Body.String())
+		}
+		if w := do(h, "POST", "/api/v1/plans/"+id+"/status", `{"status":"active"}`, "Content-Type", "application/json"); w.Code != 422 || !contains(w.Body.String(), `"code":"invalid_pilot_id"`) {
+			t.Errorf("POST status %s: want 422 invalid_pilot_id, got %d %s", name, w.Code, w.Body.String())
+		}
+	}
+	// an empty id segment is rejected like any other malformed id
+	if w := do(h, "POST", "/api/v1/plans//status", `{"status":"active"}`, "Content-Type", "application/json"); w.Code != 422 || !contains(w.Body.String(), `"code":"invalid_pilot_id"`) {
+		t.Errorf("empty id: want 422 invalid_pilot_id, got %d %s", w.Code, w.Body.String())
+	}
+	// the id is checked before the body, so a bad id with a bad body still reports the id
+	if w := do(h, "POST", "/api/v1/plans/bad%20id/status", `{bad`, "Content-Type", "application/json"); w.Code != 422 || !contains(w.Body.String(), "invalid_pilot_id") {
+		t.Errorf("bad id + bad body: want 422 invalid_pilot_id, got %d %s", w.Code, w.Body.String())
+	}
+}
+
+// Every character pilotRe allows (letters, digits, _ . -) still reaches the store unchanged.
+func TestPlanRoutesKeepValidIds(t *testing.T) {
+	const id = "AI-1.v2_x"
+	st := &planStub{plan: samplePlan("active"), hist: sampleHistory()}
+	f := &fakeRules{do: ok200(`{"checkpoint":"extend"}`)}
+	if w := do(newRouter(f, st), "GET", "/api/v1/plans/"+id, ""); w.Code != 200 || !contains(w.Body.String(), `"pilot_id":"`+id+`"`) {
+		t.Fatalf("valid id progress: want 200, got %d %s", w.Code, w.Body.String())
+	}
+	if f.lastPath != "/checkpoint/"+id {
+		t.Fatalf("valid id must reach the engine unchanged, got path %q", f.lastPath)
+	}
+	if w := do(newRouter(f, st), "POST", "/api/v1/plans/"+strings.Repeat("x", 40)+"/status", `{"status":"active"}`, "Content-Type", "application/json"); w.Code != 200 {
+		t.Fatalf("40-char id is the maximum and must be accepted, got %d %s", w.Code, w.Body.String())
+	}
+	if w := do(newRouter(f, st), "POST", "/api/v1/plans/"+id+"/status", `{"status":"active"}`, "Content-Type", "application/json"); w.Code != 200 || st.statusSet == nil || st.statusSet.PilotID != id {
+		t.Fatalf("valid id status: want 200 with id %q stored, got %d %+v", id, w.Code, st.statusSet)
+	}
+}
+
 func reallocEcho(t *testing.T, probe map[string]string) func(string, string, []byte) (*model.Upstream, error) {
 	return func(_ string, path string, b []byte) (*model.Upstream, error) {
 		if path != "/reallocation" {

@@ -1,4 +1,4 @@
-import type { Evidence, EvidenceKind, EvidenceQuality, Proposal, ProposalSummary } from './types'
+import type { EvaluationSummary, Evidence, EvidenceKind, EvidenceQuality, Proposal, ProposalSummary } from './types'
 import { V1, enc, json } from './http'
 
 export const createProposal = (b: { name: string; inputs?: unknown; notes?: string | null }) => json<Proposal>('POST', `${V1}/proposals`, b)
@@ -12,3 +12,6 @@ export const deleteProposal = (id: string) => json<void>('DELETE', `${V1}/propos
 export const addEvidence = (id: string, b: { kind: EvidenceKind; source: string; quality?: EvidenceQuality | null; note?: string | null }) =>
   json<Evidence>('POST', `${V1}/proposals/${enc(id)}/evidence`, b)
 export const listEvidence = async (id: string) => (await json<{ evidence: Evidence[] | null }>('GET', `${V1}/proposals/${enc(id)}/evidence`)).data.evidence ?? []
+/** Evaluations run for this proposal, each with the inputs version it used. */
+export const listProposalEvaluations = async (id: string) =>
+  (await json<{ evaluations: EvaluationSummary[] | null }>('GET', `${V1}/proposals/${enc(id)}/evaluations`)).data.evaluations ?? []

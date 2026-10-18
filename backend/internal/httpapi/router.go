@@ -23,6 +23,7 @@ type Store interface {
 	History(ctx context.Context, pilotID string, limit int) (*model.History, error)
 	SaveEvaluation(ctx context.Context, e model.EvaluationIn) (int64, error)
 	ListEvaluations(ctx context.Context, limit int) ([]model.EvaluationSummary, error)
+	ListProposalEvaluations(ctx context.Context, proposalID string, limit int) ([]model.EvaluationSummary, error)
 	GetEvaluation(ctx context.Context, id int64) (*model.Evaluation, error)
 	HistoryTimeline(ctx context.Context, limit int) ([]model.HistoryEvent, error)
 	AddInterview(ctx context.Context, in model.InterviewIn) (*model.Interview, error)
@@ -54,11 +55,26 @@ type Cache interface {
 	Enabled() bool
 }
 
+// Auditor records successful edits and exports and reads them back. The Postgres store implements it.
+type Auditor interface {
+	AddAuditEvent(ctx context.Context, e model.AuditEventIn) error
+	ListAuditEvents(ctx context.Context, f model.AuditFilter) ([]model.AuditEvent, error)
+}
+
+// noAudit is used when Deps.Audit is nil (e.g. handler unit tests): nothing is recorded.
+type noAudit struct{}
+
+func (noAudit) AddAuditEvent(context.Context, model.AuditEventIn) error { return nil }
+func (noAudit) ListAuditEvents(context.Context, model.AuditFilter) ([]model.AuditEvent, error) {
+	return []model.AuditEvent{}, nil
+}
+
 type Deps struct {
 	Cfg   config.Config
 	Store Store
 	Rules Rules
 	Cache Cache
+	Audit Auditor // optional; nil records nothing
 	Log   *slog.Logger
 }
 
@@ -67,7 +83,11 @@ func NewRouter(d Deps) *gin.Engine {
 	_ = r.SetTrustedProxies(nil)
 	r.Use(requestID(), accessLog(d.Log), gin.CustomRecovery(recoverJSON(d.Log)), cors(d.Cfg.AllowedOrigins), timeout(d.Cfg.RequestTimeout))
 
-	h := &Handlers{cfg: d.Cfg, store: d.Store, rules: d.Rules, cache: d.Cache, log: d.Log}
+	var audit Auditor = noAudit{}
+	if d.Audit != nil {
+		audit = d.Audit
+	}
+	h := &Handlers{cfg: d.Cfg, store: d.Store, rules: d.Rules, cache: d.Cache, audit: audit, log: d.Log}
 
 	r.GET("/health", h.health)
 	r.GET("/ready", h.ready)
@@ -97,6 +117,7 @@ func NewRouter(d Deps) *gin.Engine {
 	api.GET("/evaluations", h.listEvaluations)
 	api.GET("/evaluations/:id", h.getEvaluation)
 	api.GET("/history", h.timeline) // merged evaluation + decision timeline
+	api.GET("/audit", h.listAudit)  // who changed or exported what (actor empty until auth exists)
 
 	// Saved portfolios (starting state + negotiated scope + final evidence)
 	api.POST("/portfolios", h.savePortfolio)
@@ -131,6 +152,7 @@ func NewRouter(d Deps) *gin.Engine {
 	api.DELETE("/proposals/:id", h.deleteProposal)
 	api.POST("/proposals/:id/evidence", h.addEvidence)
 	api.GET("/proposals/:id/evidence", h.listEvidence)
+	api.GET("/proposals/:id/evaluations", h.listProposalEvaluations)
 
 	r.NoRoute(func(c *gin.Context) {
 		fail(c, http.StatusNotFound, "not_found", "no such route", "")

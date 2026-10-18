@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -75,6 +77,7 @@ func (h *Handlers) createProposal(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "proposal.create", "proposal", p.ID, gin.H{"version": p.Version})
 	c.JSON(http.StatusCreated, p)
 }
 
@@ -150,6 +153,14 @@ func (h *Handlers) updateProposal(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	changed := []string{}
+	for field, set := range map[string]bool{"inputs": in.Inputs != nil, "name": in.Name != nil, "notes": in.Notes != nil} {
+		if set {
+			changed = append(changed, field)
+		}
+	}
+	sort.Strings(changed)
+	h.record(c, "proposal.update", "proposal", p.ID, gin.H{"fields": changed, "version": p.Version})
 	c.JSON(http.StatusOK, p)
 }
 
@@ -165,6 +176,11 @@ func (h *Handlers) archiveProposal(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	action := "proposal.archive"
+	if restore {
+		action = "proposal.restore"
+	}
+	h.record(c, action, "proposal", p.ID, nil)
 	c.JSON(http.StatusOK, p)
 }
 
@@ -178,6 +194,7 @@ func (h *Handlers) deleteProposal(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "proposal.delete", "proposal", id, nil)
 	c.Status(http.StatusNoContent)
 }
 
@@ -240,6 +257,7 @@ func (h *Handlers) addEvidence(c *gin.Context) {
 		h.storeErr(c, err)
 		return
 	}
+	h.record(c, "evidence.add", "evidence", strconv.FormatInt(e.ID, 10), gin.H{"proposal_id": id, "kind": kind})
 	c.JSON(http.StatusCreated, e)
 }
 
